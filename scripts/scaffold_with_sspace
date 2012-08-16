@@ -1,0 +1,78 @@
+#!/usr/bin/env perl
+
+=head1 NAME
+
+scaffold_with_sspace
+
+=head1 SYNOPSIS
+
+scaffold_with_sspace - Given an assembly and some reads in fastq format, try and scaffold the assembly.
+
+=head1 DESCRIPTION
+
+Given an assembly and some reads in fastq format, try and scaffold the assembly. Do multiple iterations with different values, and cleanup all intermediate files.
+
+=head1 CONTACT
+
+path-help@sanger.ac.uk
+
+=head1 METHODS
+
+=cut
+
+package ScaffoldWithSSpace::Main;
+
+BEGIN { unshift( @INC, './modules' ) }
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Cwd;
+use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
+use Pathogen::Scaffold::SSpace::Iterative;
+
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $help );
+
+GetOptions(
+    'a|assembly=s'        => \$assembly_file,
+    'f|forward_fastq=s'   => \$forward_reads_file,
+    'r|reverse_fastq=s'   => \$reverse_reads_file,
+    'i|insert_size=i'     => \$insert_size,
+    's|scaffolder_exec=s' => \$scaffolder_exec,
+    'h|help'              => \$help,
+);
+
+( ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) !$help ) or die <<USAGE;
+Usage: scaffold_with_sspace [options]
+Take in an assembly in FASTA format and reads in FASTQ format, then iteratively scaffold with SSPACE.
+
+# outputs a file called contigs.scaffolded.fa
+scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
+
+# Gzipped input files are accepted
+scaffold_with_sspace -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
+
+# Insert size defaults to 250 if not specified
+scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
+
+# This help message
+scaffold_with_sspace -h
+
+USAGE
+
+$insert_size     ||= 250;
+$scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
+
+my @input_files = ( $forward_reads_file, $reverse_reads_file );
+
+my $preprocess_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+    input_files    => \@input_files,
+    input_assembly => $assembly_file
+);
+
+my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
+    input_files     => $preprocess_input_files->processed_input_files,
+    input_assembly  => $preprocess_input_files->processed_input_assembly,
+    insert_size     => $insert_size,
+    scaffolder_exec => $scaffolder_exec,
+)->run();
+
