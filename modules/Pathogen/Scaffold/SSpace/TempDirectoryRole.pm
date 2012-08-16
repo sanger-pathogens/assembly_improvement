@@ -3,7 +3,7 @@ use Moose::Role;
 use Cwd;
 use File::Temp;
 
-has '_temp_directory_obj' => ( is => 'ro', isa => 'Str', lazy     => 1, builder => '_build__temp_directory_obj' );
+has '_temp_directory_obj' => ( is => 'ro', isa => 'File::Temp::Dir', lazy     => 1, builder => '_build__temp_directory_obj' );
 has '_temp_directory'     => ( is => 'ro', isa => 'Str', lazy     => 1, builder => '_build__temp_directory' );
 
 sub _build__temp_directory_obj {
