@@ -20,6 +20,7 @@ my $config_file_obj = Pathogen::Scaffold::SSpace::Main->new(
 package Pathogen::Scaffold::SSpace::Main;
 use Moose;
 use Cwd;
+use File::Copy;
 use Pathogen::Scaffold::SSpace::Config;
 with 'Pathogen::Scaffold::SSpace::OutputFilenameRole';
 with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
