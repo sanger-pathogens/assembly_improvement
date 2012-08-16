@@ -54,7 +54,7 @@ sub _single_scaffolding_iteration {
         merge_size      => $merge_size,
         scaffolder_exec => $self->scaffolder_exec
     )->run;
-    move( $scaffold->output_filename, $self->output_filename );
+    move( $scaffold->output_filename, $self->_intermediate_filename );
     return $self;
 }
 
@@ -70,7 +70,7 @@ sub run {
         $self->_single_scaffolding_iteration($merge_size);
     }
 
-    move( $self->_intermediate_filename, $self->_scaffolded_filename );
+    move( $self->_intermediate_filename, $self->output_filename );
 
     chdir($original_cwd);
     return $self;
