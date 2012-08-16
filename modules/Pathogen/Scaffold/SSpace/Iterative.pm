@@ -31,7 +31,14 @@ has 'insert_size'     => ( is => 'ro', isa => 'Int',           required => 1 );
 has 'merge_sizes'     => ( is => 'ro', isa => 'ArrayRef[Int]', lazy     => 1, builder => '_build_merge_sizes' );
 has 'scaffolder_exec' => ( is => 'ro', isa => 'Str',           required => 1 );
 
+has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
 has '_intermediate_filename' => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build__intermediate_filename' );
+
+sub _build_output_base_directory
+{
+  my ($self) = @_;
+  return getcwd();
+}
 
 sub _build_merge_sizes {
     my ($self) = @_;
@@ -58,9 +65,16 @@ sub _single_scaffolding_iteration {
     return $self;
 }
 
+sub _final_output_filename
+{
+  my ($self) = @_;
+  my ( $filename, $directories, $suffix ) = fileparse( $self->input_assembly, qr/\.[^.]*/ );
+  return $self->output_base_directory . $filename . "." . $self->_output_prefix . $suffix; 
+}
+
 sub run {
     my ($self) = @_;
-
+    $self->output_base_directory();
     my $original_cwd = getcwd();
     chdir( $self->_temp_directory );
 
@@ -70,7 +84,7 @@ sub run {
         $self->_single_scaffolding_iteration($merge_size);
     }
 
-    move( $self->_intermediate_filename, $self->output_filename );
+    move( $self->_intermediate_filename, $self->_final_output_filename );
 
     chdir($original_cwd);
     return $self;

@@ -76,5 +76,3 @@ my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
     insert_size     => $insert_size,
     scaffolder_exec => $scaffolder_exec,
 )->run();
-
-my $prevent_tmp_going_out_of_scope = $process_input_files_tmp_dir_obj->_temp_directory_obj();
