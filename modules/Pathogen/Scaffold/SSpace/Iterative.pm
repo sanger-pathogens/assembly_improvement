@@ -20,6 +20,8 @@ my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
 package Pathogen::Scaffold::SSpace::Iterative;
 use Moose;
 use Cwd;
+use File::Basename;
+use File::Copy;
 use Pathogen::Scaffold::SSpace::Main;
 with 'Pathogen::Scaffold::SSpace::OutputFilenameRole';
 with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
@@ -33,12 +35,12 @@ has '_intermediate_filename' => ( is => 'ro', isa => 'Str', lazy => 1, builder =
 
 sub _build_merge_sizes {
     my ($self) = @_;
-    return ( 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10, 10, 10, 7, 7, 7, 5, 5, 5, 5 );
+    return [ 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10, 10, 10, 7, 7, 7, 5, 5, 5, 5 ];
 }
 
 sub _build__intermediate_filename {
     my ($self) = @_;
-    my ( $filename, $directories, $suffix ) = fileparse( $self->input_assembly, qr/\.[^.]*/ );
+    my ( $filename, $directories, $suffix ) = fileparse( $self->input_assembly );
     return join( '/', ( $self->_temp_directory, $filename ) );
 }
 
