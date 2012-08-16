@@ -19,6 +19,7 @@ my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
 
 package Pathogen::Scaffold::SSpace::Iterative;
 use Moose;
+use Cwd;
 use Pathogen::Scaffold::SSpace::Main;
 with 'Pathogen::Scaffold::SSpace::OutputFilenameRole';
 with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';

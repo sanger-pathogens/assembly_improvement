@@ -41,7 +41,7 @@ GetOptions(
     'h|help'              => \$help,
 );
 
-( ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) !$help ) or die <<USAGE;
+( defined($assembly_file) && defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
 Usage: scaffold_with_sspace [options]
 Take in an assembly in FASTA format and reads in FASTQ format, then iteratively scaffold with SSPACE.
 
