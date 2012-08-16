@@ -67,7 +67,7 @@ sub run {
     copy( $self->input_assembly, $self->_intermediate_filename );
 
     for my $merge_size ( @{ $self->merge_sizes } ) {
-        $self->_single_scaffolding_iteration;
+        $self->_single_scaffolding_iteration($merge_size);
     }
 
     move( $self->_intermediate_filename, $self->_scaffolded_filename );

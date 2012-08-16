@@ -29,7 +29,7 @@ has 'insert_size'     => ( is => 'ro', isa => 'Int',      required => 1 );
 has 'merge_size'      => ( is => 'ro', isa => 'Int',      default  => 10 );
 has 'scaffolder_exec' => ( is => 'rw', isa => 'Str',      required => 1 );
 
-has '_config_file_obj' => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build__config_file_obj' );
+has '_config_file_obj' => ( is => 'ro', isa => 'Pathogen::Scaffold::SSpace::Config', lazy => 1, builder => '_build__config_file_obj' );
 
 sub _build__config_file_obj {
     my ($self) = @_;

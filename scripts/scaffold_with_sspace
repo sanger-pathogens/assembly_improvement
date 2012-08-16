@@ -68,6 +68,7 @@ my $preprocess_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->n
     input_files    => \@input_files,
     input_assembly => $assembly_file
 );
+my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
 
 my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
     input_files     => $preprocess_input_files->processed_input_files,
@@ -76,3 +77,4 @@ my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
     scaffolder_exec => $scaffolder_exec,
 )->run();
 
+my $prevent_tmp_going_out_of_scope = $process_input_files_tmp_dir_obj->_temp_directory_obj();

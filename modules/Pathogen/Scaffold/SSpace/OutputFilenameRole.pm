@@ -11,7 +11,7 @@ has '_output_prefix' => ( is => 'ro', isa => 'Str', default => "scaffolded" );
 sub _build_output_filename {
     my ($self) = @_;
     my ( $filename, $directories, $suffix ) = fileparse( $self->input_assembly, qr/\.[^.]*/ );
-    $directories . $filename . "." . $self->output_prefix . $suffix;
+    $directories . $filename . "." . $self->_output_prefix . $suffix;
 }
 
 no Moose;
