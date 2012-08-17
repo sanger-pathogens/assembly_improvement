@@ -17,7 +17,8 @@ ok((my $iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative->new(
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
   gap_filler_exec => $cwd.'/t/dummy_gap_filler_script.pl',
-  _output_prefix => 'gapfilled'
+  _output_prefix => 'gapfilled',
+  debug  => 0
 )),'Create overall iterative object');
 
 is_deeply($iterative_scaffolding->merge_sizes, [ 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10, 10, 7, 7, 5, 5 ], 'iteration merge sizes');

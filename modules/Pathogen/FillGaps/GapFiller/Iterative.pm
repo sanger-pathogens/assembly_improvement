@@ -34,6 +34,7 @@ has 'merge_sizes'     => ( is => 'ro', isa => 'ArrayRef[Int]', lazy     => 1, bu
 
 has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
 has '_intermediate_filename' => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build__intermediate_filename' );
+has 'debug'                  => ( is => 'ro', isa => 'Bool', default => 0);
 
 sub _build_output_base_directory
 {

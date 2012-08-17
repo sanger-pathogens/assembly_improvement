@@ -28,7 +28,7 @@ use Moose;
 use Getopt::Long;
 use Cwd;
 use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
-use Pathogen::Scaffold::SSpace::Iterative;
+use Pathogen::FillGaps::GapFiller::Iterative;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $gapfiller_exec, $debug, $help );
 
@@ -43,7 +43,7 @@ GetOptions(
 );
 
 ( defined($assembly_file) && defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
-Usage: _g [options]
+Usage: fill_gaps_with_gapfiller [options]
 Take in an assembly in FASTA format and reads in FASTQ format, then iteratively fill in the gaps with GapFiller.
 
 # outputs a file called contigs.scaffolded.fa
@@ -72,11 +72,11 @@ my $preprocess_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->n
 );
 my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
 
-my $iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative;->new(
+my $iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative->new(
     input_files     => $preprocess_input_files->processed_input_files,
     input_assembly  => $preprocess_input_files->processed_input_assembly,
     insert_size     => $insert_size,
-    gapfiller_exec  => $gapfiller_exec,
+    gap_filler_exec  => $gapfiller_exec,
     debug           => $debug,
     _output_prefix  => 'gapfilled'
 )->run();

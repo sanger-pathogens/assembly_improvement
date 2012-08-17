@@ -32,7 +32,7 @@ has 'insert_size'     => ( is => 'ro', isa => 'Int',      required => 1 );
 has 'mapper'          => ( is => 'ro', isa => 'Str',      default  => 'bwa' );
 has 'merge_size'      => ( is => 'ro', isa => 'Int',      default  => 10 );
 has 'gap_filler_exec' => ( is => 'rw', isa => 'Str',      required => 1 );
-
+has 'debug'               => ( is => 'ro', isa => 'Bool', default => 0);
 has 'num_iterations'  => ( is => 'ro', isa => 'Int',      default  => 10 );
 
 has '_config_file_obj' => ( is => 'ro', isa => 'Pathogen::FillGaps::GapFiller::Config', lazy => 1, builder => '_build__config_file_obj' );

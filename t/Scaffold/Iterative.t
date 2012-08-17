@@ -17,6 +17,7 @@ ok((my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
   scaffolder_exec => $cwd.'/t/dummy_sspace_script.pl',
+  debug  => 0
 )),'Create overall iterative object');
 
 is_deeply($iterative_scaffolding->merge_sizes, [ 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10, 10, 7, 7, 5, 5 ], 'iteration merge sizes');
