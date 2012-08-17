@@ -59,7 +59,8 @@ sub _single_scaffolding_iteration {
         input_assembly  => $self->_intermediate_filename,
         insert_size     => $self->insert_size,
         merge_size      => $merge_size,
-        scaffolder_exec => $self->scaffolder_exec
+        scaffolder_exec => $self->scaffolder_exec,
+        debug           => $self->debug
     )->run;
     move( $scaffold->output_filename, $self->_intermediate_filename );
     return $self;
@@ -69,7 +70,7 @@ sub _final_output_filename
 {
   my ($self) = @_;
   my ( $filename, $directories, $suffix ) = fileparse( $self->input_assembly, qr/\.[^.]*/ );
-  return $self->output_base_directory . $filename . "." . $self->_output_prefix . $suffix; 
+  return $self->output_base_directory.'/' . $filename . "." . $self->_output_prefix . $suffix; 
 }
 
 sub run {

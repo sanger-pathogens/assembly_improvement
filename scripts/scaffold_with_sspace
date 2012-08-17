@@ -22,7 +22,7 @@ path-help@sanger.ac.uk
 
 package ScaffoldWithSSpace::Main;
 
-BEGIN { unshift( @INC, './modules' ) }
+BEGIN { unshift( @INC, '../modules' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
@@ -30,7 +30,7 @@ use Cwd;
 use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
 use Pathogen::Scaffold::SSpace::Iterative;
 
-my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $help );
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $debug, $help );
 
 GetOptions(
     'a|assembly=s'        => \$assembly_file,
@@ -38,6 +38,7 @@ GetOptions(
     'r|reverse_fastq=s'   => \$reverse_reads_file,
     'i|insert_size=i'     => \$insert_size,
     's|scaffolder_exec=s' => \$scaffolder_exec,
+    'd|debug'             => \$debug,
     'h|help'              => \$help,
 );
 
@@ -59,6 +60,7 @@ scaffold_with_sspace -h
 
 USAGE
 
+$debug           ||= 0;
 $insert_size     ||= 250;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
 
@@ -75,4 +77,5 @@ my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
     input_assembly  => $preprocess_input_files->processed_input_assembly,
     insert_size     => $insert_size,
     scaffolder_exec => $scaffolder_exec,
+    debug           => $debug
 )->run();
