@@ -29,6 +29,7 @@ has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );
 has 'insert_size'     => ( is => 'ro', isa => 'Int',      required => 1 );
 has 'merge_size'      => ( is => 'ro', isa => 'Int',      default  => 10 );
 has 'scaffolder_exec' => ( is => 'rw', isa => 'Str',      required => 1 );
+has 'debug'           => ( is => 'ro', isa => 'Bool', default => 0);
 
 has '_config_file_obj' => ( is => 'ro', isa => 'Pathogen::Scaffold::SSpace::Config', lazy => 1, builder => '_build__config_file_obj' );
 
@@ -50,6 +51,9 @@ sub run {
     my ($self) = @_;
     my $original_cwd = getcwd();
     chdir( $self->_temp_directory );
+    
+    my $stdout_of_program = '';
+    $stdout_of_program =  "> /dev/null 2>&1"  if($self->debug == 1);
 
     system(
         join(
@@ -61,7 +65,8 @@ sub run {
                 '-s', $self->input_assembly, 
                 '-x', 1, 
                 '-k', $self->merge_size, 
-                '-b', $self->_output_prefix
+                '-b', $self->_output_prefix,
+                $stdout_of_program
             )
         )
     );

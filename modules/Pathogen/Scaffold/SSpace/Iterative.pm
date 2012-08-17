@@ -30,6 +30,7 @@ has 'input_files'     => ( is => 'ro', isa => 'ArrayRef',      required => 1 );
 has 'insert_size'     => ( is => 'ro', isa => 'Int',           required => 1 );
 has 'merge_sizes'     => ( is => 'ro', isa => 'ArrayRef[Int]', lazy     => 1, builder => '_build_merge_sizes' );
 has 'scaffolder_exec' => ( is => 'ro', isa => 'Str',           required => 1 );
+has 'debug'           => ( is => 'ro', isa => 'Bool', default => 0);
 
 has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
 has '_intermediate_filename' => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build__intermediate_filename' );
