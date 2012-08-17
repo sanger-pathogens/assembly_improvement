@@ -7,16 +7,17 @@ BEGIN { unshift( @INC, './modules' ) }
 
 BEGIN {
     use Test::Most;
-    use_ok('Pathogen::Scaffold::SSpace::Iterative');
+    use_ok('Pathogen::FillGaps::GapFiller::Iterative');
 }
 
 my $cwd = getcwd();
 
-ok((my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
+ok((my $iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative->new(
   input_files => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
-  scaffolder_exec => $cwd.'/t/dummy_sspace_script.pl',
+  gap_filler_exec => $cwd.'/t/dummy_gap_filler_script.pl',
+  _output_prefix => 'gapfilled',
   debug  => 0
 )),'Create overall iterative object');
 
@@ -26,8 +27,8 @@ ok(($iterative_scaffolding->_intermediate_filename  =~ m/contigs\.fa$/),'Interme
 
 ok($iterative_scaffolding->run, 'Run the scaffolder with a dummy script');
 
-is($iterative_scaffolding->_final_output_filename, $cwd.'/contigs.scaffolded.fa', 'final scaffolded filename');
-ok((-e $iterative_scaffolding->_final_output_filename),'Scaffolding file exists in expected location');
+is($iterative_scaffolding->_final_output_filename, $cwd.'/contigs.gapfilled.fa', 'final gapfilled filename');
+ok((-e $iterative_scaffolding->_final_output_filename),'gap filled file exists in expected location');
 
-unlink('contigs.scaffolded.fa');
+unlink('contigs.gapfilled.fa');
 done_testing();
