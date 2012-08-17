@@ -1,0 +1,82 @@
+#!/usr/bin/env perl
+
+=head1 NAME
+
+fill_gaps_with_gapfiller
+
+=head1 SYNOPSIS
+
+fill_gaps_with_gapfiller - Given an assembly iteratively fill gaps
+
+=head1 DESCRIPTION
+
+Given an assembly and some reads in fastq format, try and fill in the gaps. Do multiple iterations with different values, and cleanup all intermediate files.
+
+=head1 CONTACT
+
+path-help@sanger.ac.uk
+
+=head1 METHODS
+
+=cut
+
+package FillGapsWithGapFiller::Main;
+
+BEGIN { unshift( @INC, '../modules' ) }
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Cwd;
+use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
+use Pathogen::Scaffold::SSpace::Iterative;
+
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $gapfiller_exec, $debug, $help );
+
+GetOptions(
+    'a|assembly=s'        => \$assembly_file,
+    'f|forward_fastq=s'   => \$forward_reads_file,
+    'r|reverse_fastq=s'   => \$reverse_reads_file,
+    'i|insert_size=i'     => \$insert_size,
+    's|gapfiller_exec=s'  => \$gapfiller_exec,
+    'd|debug'             => \$debug,
+    'h|help'              => \$help,
+);
+
+( defined($assembly_file) && defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
+Usage: _g [options]
+Take in an assembly in FASTA format and reads in FASTQ format, then iteratively fill in the gaps with GapFiller.
+
+# outputs a file called contigs.scaffolded.fa
+fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
+
+# Gzipped input files are accepted
+fill_gaps_with_gapfiller -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
+
+# Insert size defaults to 250 if not specified
+fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
+
+# This help message
+fill_gaps_with_gapfiller -h
+
+USAGE
+
+$debug           ||= 0;
+$insert_size     ||= 250;
+$gapfiller_exec ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+
+my @input_files = ( $forward_reads_file, $reverse_reads_file );
+
+my $preprocess_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+    input_files    => \@input_files,
+    input_assembly => $assembly_file
+);
+my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
+
+my $iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative;->new(
+    input_files     => $preprocess_input_files->processed_input_files,
+    input_assembly  => $preprocess_input_files->processed_input_assembly,
+    insert_size     => $insert_size,
+    gapfiller_exec  => $gapfiller_exec,
+    debug           => $debug,
+    _output_prefix  => 'gapfilled'
+)->run();

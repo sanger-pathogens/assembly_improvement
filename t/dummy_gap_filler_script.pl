@@ -1,0 +1,1 @@
+system("touch gapfilled.gapclosed.fa");
