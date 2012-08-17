@@ -57,7 +57,7 @@ sub _build__intermediate_filename {
 
 sub _build_merge_sizes {
     my ($self) = @_;
-    return [ 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10, 10, 7, 7, 5, 5 ];
+    return [ 90, 70, 50, 30, 20, 10];
 }
 
 sub _build_mappers

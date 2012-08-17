@@ -49,7 +49,7 @@ sub _build__config_file_obj {
 
 sub _intermediate_file_name {
     my ($self) = @_;
-    $self->_output_prefix . '.gapclosed.fa';
+    $self->_output_prefix.'/'.$self->_output_prefix . '.gapfilled.final.fa';
 }
 
 sub run {
