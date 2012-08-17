@@ -58,7 +58,7 @@ sub run {
     chdir( $self->_temp_directory );
     
     my $stdout_of_program = '';
-    $stdout_of_program =  "> /dev/null 2>&1"  if($self->debug == 1);
+    $stdout_of_program =  "> /dev/null 2>&1"  if($self->debug == 0);
 
     system(
         join(
