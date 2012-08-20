@@ -28,11 +28,12 @@ use Moose;
 use Getopt::Long;
 use Cwd;
 use Cwd 'abs_path';
+use File::Path qw(make_path);
 use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
 use Pathogen::Scaffold::SSpace::Iterative;
 use Pathogen::Abacas::Main;
 
-my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference, $help );
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference,$output_directory, $help );
 
 GetOptions(
     'a|assembly=s'        => \$assembly_file,
@@ -44,6 +45,7 @@ GetOptions(
     'b|abacas_exec=s'     => \$abacas_exec,
     'g|gapfiller_exec=s'  => \$gapfiller_exec,
     'd|debug'             => \$debug,
+    'o|output_directory=s' => \$output_directory,
     'h|help'              => \$help,
 );
 
@@ -63,6 +65,9 @@ improve_assembly -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
 # Insert size defaults to 250 if not specified
 improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
 
+# Output to a specific directory
+improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -o my_directory
+
 # This help message
 improve_assembly -h
 
@@ -73,6 +78,9 @@ $insert_size     ||= 250;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
 $gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
 $abacas_exec     ||= 'abacas.pl';
+$output_directory || getcwd();
+
+make_path($output_directory);
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
 
@@ -91,7 +99,8 @@ if(defined($reference))
     reference      => $preprocess_input_files->processed_reference,
     input_assembly => $preprocess_input_files->processed_input_assembly,
     abacas_exec    => $abacas_exec,
-    debug          => $debug
+    debug          => $debug,
+    output_base_directory => $output_directory
   )->run;
 }
 else
@@ -101,7 +110,8 @@ else
       input_assembly  => $preprocess_input_files->processed_input_assembly,
       insert_size     => $insert_size,
       scaffolder_exec => $scaffolder_exec,
-      debug           => $debug
+      debug           => $debug,
+      output_base_directory => $output_directory
   )->run();
 }
 
@@ -112,5 +122,6 @@ my $fill_gaps_obj = Pathogen::FillGaps::GapFiller::Iterative->new(
     insert_size     => $insert_size,
     gap_filler_exec => $gapfiller_exec,
     debug           => $debug,
-    _output_prefix  => 'gapfilled'
+    _output_prefix  => 'gapfilled',
+    output_base_directory => $output_directory
 )->run();

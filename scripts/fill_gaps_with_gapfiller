@@ -26,11 +26,12 @@ BEGIN { unshift( @INC, '../modules' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
+use File::Path qw(make_path);
 use Cwd;
 use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
 use Pathogen::FillGaps::GapFiller::Iterative;
 
-my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $gapfiller_exec, $debug, $help );
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $gapfiller_exec, $debug,$output_directory, $help );
 
 GetOptions(
     'a|assembly=s'        => \$assembly_file,
@@ -39,6 +40,7 @@ GetOptions(
     'i|insert_size=i'     => \$insert_size,
     's|gapfiller_exec=s'  => \$gapfiller_exec,
     'd|debug'             => \$debug,
+    'o|output_directory=s' => \$output_directory,
     'h|help'              => \$help,
 );
 
@@ -63,6 +65,8 @@ USAGE
 $debug           ||= 0;
 $insert_size     ||= 250;
 $gapfiller_exec ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+$output_directory || getcwd();
+make_path($output_directory);
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
 
@@ -78,5 +82,6 @@ my $iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative->new(
     insert_size     => $insert_size,
     gap_filler_exec  => $gapfiller_exec,
     debug           => $debug,
-    _output_prefix  => 'gapfilled'
+    _output_prefix  => 'gapfilled',
+    output_base_directory => $output_directory
 )->run();
