@@ -27,8 +27,8 @@ ok(($iterative_scaffolding->_intermediate_filename  =~ m/contigs\.fa$/),'Interme
 
 ok($iterative_scaffolding->run, 'Run the scaffolder with a dummy script');
 
-is($iterative_scaffolding->_final_output_filename, $cwd.'/contigs.gapfilled.fa', 'final gapfilled filename');
-ok((-e $iterative_scaffolding->_final_output_filename),'gap filled file exists in expected location');
+is($iterative_scaffolding->final_output_filename, $cwd.'/contigs.gapfilled.fa', 'final gapfilled filename');
+ok((-e $iterative_scaffolding->final_output_filename),'gap filled file exists in expected location');
 
 unlink('contigs.gapfilled.fa');
 done_testing();

@@ -42,7 +42,7 @@ sub _build_output_base_directory
   return getcwd();
 }
 
-sub _final_output_filename
+sub final_output_filename
 {
   my ($self) = @_;
   my ( $filename, $directories, $suffix ) = fileparse( $self->input_assembly, qr/\.[^.]*/ );
@@ -99,7 +99,7 @@ sub run {
         }
     }
 
-    move( $self->_intermediate_filename, $self->_final_output_filename );
+    move( $self->_intermediate_filename, $self->final_output_filename );
 
     chdir($original_cwd);
     return $self;

@@ -27,13 +27,13 @@ use Pathogen::FillGaps::GapFiller::Config;
 with 'Pathogen::Scaffold::SSpace::OutputFilenameRole';
 with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
 
-has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );
-has 'insert_size'     => ( is => 'ro', isa => 'Int',      required => 1 );
+has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1     );
+has 'insert_size'     => ( is => 'ro', isa => 'Int',      required => 1     );
 has 'mapper'          => ( is => 'ro', isa => 'Str',      default  => 'bwa' );
-has 'merge_size'      => ( is => 'ro', isa => 'Int',      default  => 10 );
-has 'gap_filler_exec' => ( is => 'rw', isa => 'Str',      required => 1 );
-has 'debug'           => ( is => 'ro', isa => 'Bool',     default => 0);
-has 'num_iterations'  => ( is => 'ro', isa => 'Int',      default  => 10 );
+has 'merge_size'      => ( is => 'ro', isa => 'Int',      default  => 10    );
+has 'gap_filler_exec' => ( is => 'rw', isa => 'Str',      required => 1     );
+has 'debug'           => ( is => 'ro', isa => 'Bool',     default  => 0     );
+has 'num_iterations'  => ( is => 'ro', isa => 'Int',      default  => 20    );
 
 has '_config_file_obj' => ( is => 'ro', isa => 'Pathogen::FillGaps::GapFiller::Config', lazy => 1, builder => '_build__config_file_obj' );
 
