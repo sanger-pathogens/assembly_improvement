@@ -27,9 +27,11 @@ with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
 
 has 'input_assembly' => ( is => 'ro', isa => 'Str',      required => 1 );
 has 'input_files'    => ( is => 'ro', isa => 'ArrayRef', required => 1 );
+has 'reference'      => ( is => 'ro', isa => 'Str' );
 
-has 'processed_input_assembly' => ( is => 'ro', isa => 'Str',      lazy => 1, builder => '_build_processed_input_assembly' );
-has 'processed_input_files'    => ( is => 'ro', isa => 'ArrayRef', lazy => 1, builder => '_build_processed_input_files' );
+has 'processed_input_assembly' => ( is => 'ro', isa => 'Str',        lazy => 1, builder => '_build_processed_input_assembly' );
+has 'processed_input_files'    => ( is => 'ro', isa => 'ArrayRef',   lazy => 1, builder => '_build_processed_input_files' );
+has 'processed_reference'      => ( is => 'ro', isa => 'Maybe[Str]', lazy => 1, builder => '_build_processed_reference' );
 
 sub _build_processed_input_files {
     my ($self) = @_;
@@ -44,6 +46,12 @@ sub _build_processed_input_files {
 sub _build_processed_input_assembly {
     my ($self) = @_;
     return $self->_gunzip_file_if_needed($self->input_assembly);
+}
+
+sub _build_processed_reference {
+    my ($self) = @_;
+    return undef unless(defined($self->reference));
+    return $self->_gunzip_file_if_needed($self->reference);
 }
 
 sub _gunzip_file_if_needed {
