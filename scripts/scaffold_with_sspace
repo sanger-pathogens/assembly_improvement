@@ -65,7 +65,7 @@ USAGE
 $debug           ||= 0;
 $insert_size     ||= 250;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
-$output_directory || getcwd();
+$output_directory ||= getcwd();
 make_path($output_directory);
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
