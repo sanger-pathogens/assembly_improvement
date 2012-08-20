@@ -38,7 +38,7 @@ GetOptions(
     'a|assembly=s'        => \$assembly_file,
     'f|forward_fastq=s'   => \$forward_reads_file,
     'r|reverse_fastq=s'   => \$reverse_reads_file,
-    'f|reference=s'       => \$reference,
+    'c|reference=s'       => \$reference,
     'i|insert_size=i'     => \$insert_size,
     's|scaffolder_exec=s' => \$scaffolder_exec,
     'b|abacas_exec=s'     => \$abacas_exec,
@@ -55,7 +55,7 @@ Take in an assembly in FASTA format,reads in FASTQ format, and optionally a refe
 improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
 
 # Provide a reference
-improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq  -f my_reference.fa
+improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq  -c my_reference.fa
 
 # Gzipped input files are accepted
 improve_assembly -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
