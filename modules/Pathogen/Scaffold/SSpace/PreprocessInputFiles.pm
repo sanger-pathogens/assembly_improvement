@@ -27,7 +27,7 @@ with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
 
 has 'input_assembly' => ( is => 'ro', isa => 'Str',      required => 1 );
 has 'input_files'    => ( is => 'ro', isa => 'ArrayRef', required => 1 );
-has 'reference'      => ( is => 'ro', isa => 'Str' );
+has 'reference'      => ( is => 'ro', isa => 'Maybe[Str]' );
 
 has 'processed_input_assembly' => ( is => 'ro', isa => 'Str',        lazy => 1, builder => '_build_processed_input_assembly' );
 has 'processed_input_files'    => ( is => 'ro', isa => 'ArrayRef',   lazy => 1, builder => '_build_processed_input_files' );
