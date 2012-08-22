@@ -31,6 +31,7 @@ use Cwd 'abs_path';
 use File::Path qw(make_path);
 use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
 use Pathogen::Scaffold::SSpace::Iterative;
+use Pathogen::FillGaps::GapFiller::Iterative;
 use Pathogen::Abacas::Main;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference,$output_directory, $help );
