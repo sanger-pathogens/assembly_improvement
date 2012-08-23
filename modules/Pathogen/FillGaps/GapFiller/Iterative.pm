@@ -99,9 +99,8 @@ sub run {
         }
     }
 
-    move( $self->_intermediate_filename, $self->final_output_filename );
-
     chdir($original_cwd);
+    move( $self->_intermediate_filename, $self->final_output_filename );
     return $self;
 }
 

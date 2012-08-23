@@ -85,10 +85,8 @@ sub run {
     for my $merge_size ( @{ $self->merge_sizes } ) {
         $self->_single_scaffolding_iteration($merge_size);
     }
-
-    move( $self->_intermediate_filename, $self->final_output_filename );
-
     chdir($original_cwd);
+    move( $self->_intermediate_filename, $self->final_output_filename );
     return $self;
 }
 

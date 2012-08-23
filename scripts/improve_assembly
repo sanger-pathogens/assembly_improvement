@@ -80,7 +80,7 @@ $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.
 $gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
 $abacas_exec     ||= 'abacas.pl';
 $output_directory ||= getcwd();
-
+$output_directory  = abs_path($output_directory);
 make_path($output_directory);
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
