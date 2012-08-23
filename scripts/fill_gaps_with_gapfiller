@@ -26,7 +26,7 @@ BEGIN { unshift( @INC, '../modules' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
-use File::Path qw(make_path);
+use File::Path 2.07 qw(make_path);
 use Cwd;
 use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
 use Pathogen::FillGaps::GapFiller::Iterative;
