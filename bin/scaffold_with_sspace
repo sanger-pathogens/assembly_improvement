@@ -27,8 +27,8 @@ use Moose;
 use Getopt::Long;
 use File::Path qw(make_path);
 use Cwd;
-use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
-use Pathogen::Scaffold::SSpace::Iterative;
+use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
+use Bio::AssemblyImprovement::Scaffold::SSpace::Iterative;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $debug,$output_directory, $help );
 
@@ -69,13 +69,13 @@ make_path($output_directory);
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
 
-my $preprocess_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+my $preprocess_input_files = Bio::AssemblyImprovement::SSpace::PreprocessInputFiles->new(
     input_files    => \@input_files,
     input_assembly => $assembly_file
 );
 my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
 
-my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
+my $iterative_scaffolding = Bio::AssemblyImprovement::SSpace::Iterative->new(
     input_files     => $preprocess_input_files->processed_input_files,
     input_assembly  => $preprocess_input_files->processed_input_assembly,
     insert_size     => $insert_size,
