@@ -22,8 +22,9 @@ use File::Copy;
 use File::Basename;
 with 'Pathogen::Scaffold::SSpace::OutputFilenameRole';
 with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
+with 'Pathogen::Abacas::DelimiterRole';
 
-has 'reference'       => ( is => 'ro', isa => 'Str',  required => 1 );
+has 'reference'       => ( is => 'rw', isa => 'Str',  required => 1 );
 has 'abacas_exec'     => ( is => 'rw', isa => 'Str',  default  => 'abacas.pl' );
 has 'debug'           => ( is => 'ro', isa => 'Bool', default  => 0 );
 has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
@@ -52,6 +53,10 @@ sub final_output_filename
 
 sub run {
     my ($self) = @_;
+    
+    my $merged_reference  = $self->_merge_contigs_into_one_sequence($self->reference);
+    $self->reference($merged_reference);
+    
     $self->output_base_directory();
     my $original_cwd = getcwd();
     chdir( $self->_temp_directory );
@@ -72,7 +77,9 @@ sub run {
         )
     );
     chdir($original_cwd);
-    move( $self->_intermediate_file_name, $self->final_output_filename );
+    
+    my $split_sequence = $self->_split_sequence_on_delimiter($self->_intermediate_file_name);
+    move( $split_sequence, $self->final_output_filename );
     return $self;
 }
 

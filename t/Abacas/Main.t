@@ -42,5 +42,47 @@ ok((-e $abacas_obj->final_output_filename),'Scaffolding file exists in expected 
 remove_tree("different_directory");
 
 
+ok(($abacas_obj = Pathogen::Abacas::Main->new(
+  input_assembly => 't/data/contigs.fa',
+  reference      => 't/data/reference_over_multiple_lines.fa',
+  abacas_exec => $cwd.'/t/dummy_abacas_script.pl',
+  debug  => 0
+)),'Create overall main object where reference is split over multiple lines');
+is(
+  ($abacas_obj->_merge_contigs_into_one_sequence('t/data/reference_over_multiple_lines.fa')),
+  't/data/reference_over_multiple_lines.fa.union.fa',
+  'New merged reference is outputted'
+);
+compare_files('t/data/reference_over_multiple_lines.fa.union.fa', 't/data/expected_reference_over_multiple_lines.fa.union.fa');
+is(
+  ($abacas_obj->_split_sequence_on_delimiter('t/data/reference_over_multiple_lines.fa.union.fa')),
+  't/data/reference_over_multiple_lines.fa.union.fa.split.fa',
+  'Split reference is outputted'
+);
+compare_files('t/data/reference_over_multiple_lines.fa.union.fa.split.fa', 't/data/reference_over_multiple_lines.fa');
+
+unlink('t/data/reference_over_multiple_lines.fa.union.fa');
+unlink('t/data/reference_over_multiple_lines.fa.union.fa.split.fa');
 
 done_testing();
+
+
+sub compare_files
+{
+  my($expected_file, $actual_file) = @_;
+  ok((-e $actual_file),' results file exist');
+  ok((-e $expected_file)," $expected_file expected file exist");
+  local $/ = undef;
+  open(EXPECTED, $expected_file);
+  open(ACTUAL, $actual_file);
+  my $expected_line = <EXPECTED>;
+  my $actual_line = <ACTUAL>;
+  
+  # parallel processes mean the order isnt guaranteed.
+  my @split_expected  = split(/\n/,$expected_line);
+  my @split_actual  = split(/\n/,$actual_line);
+  my @sorted_expected = sort(@split_expected);
+  my @sorted_actual  = sort(@split_actual);
+  
+  is_deeply(\@sorted_expected,\@sorted_actual, "Content matches expected $expected_file");
+}

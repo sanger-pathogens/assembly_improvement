@@ -24,6 +24,7 @@ use Cwd 'abs_path';
 use File::Basename;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
+with 'Pathogen::Abacas::DelimiterRole';
 
 has 'input_assembly' => ( is => 'ro', isa => 'Str',      required => 1 );
 has 'input_files'    => ( is => 'ro', isa => 'ArrayRef', required => 1 );
@@ -53,6 +54,7 @@ sub _build_processed_reference {
     return undef unless(defined($self->reference));
     return $self->_gunzip_file_if_needed($self->reference);
 }
+
 
 sub _gunzip_file_if_needed {
     my ( $self, $input_filename ) = @_;
