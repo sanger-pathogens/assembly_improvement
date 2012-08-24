@@ -1,4 +1,4 @@
-package Pathogen::Abacas::DelimiterRole;
+package Bio::AssemblyImprovement::Abacas::DelimiterRole;
 use Moose::Role;
 use Bio::SeqIO;
 

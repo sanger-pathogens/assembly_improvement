@@ -1,13 +1,13 @@
 
 =head1 NAME
 
-Pathogen::Abacas::Main   - Wrapper script for Abacas, just runs it in a separate directory.
+Bio::AssemblyImprovement::Abacas::Main   - Wrapper script for Abacas, just runs it in a separate directory.
 
 =head1 SYNOPSIS
 
-use Pathogen::Abacas::Main;
+use Bio::AssemblyImprovement::Abacas::Main;
 
-my $config_file_obj = Pathogen::Abacas::Main->new(
+my $config_file_obj = Bio::AssemblyImprovement::Abacas::Main->new(
   reference   => 'reference.fa'
   input_assembly => 'contigs.fa'
   abacas_exec => 'abacas.pl'
@@ -15,14 +15,14 @@ my $config_file_obj = Pathogen::Abacas::Main->new(
 
 =cut
 
-package Pathogen::Abacas::Main;
+package Bio::AssemblyImprovement::Abacas::Main;
 use Moose;
 use Cwd;
 use File::Copy;
 use File::Basename;
-with 'Pathogen::Scaffold::SSpace::OutputFilenameRole';
-with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
-with 'Pathogen::Abacas::DelimiterRole';
+with 'Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole';
+with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
+with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
 
 has 'reference'       => ( is => 'rw', isa => 'Str',  required => 1 );
 has 'abacas_exec'     => ( is => 'rw', isa => 'Str',  default  => 'abacas.pl' );

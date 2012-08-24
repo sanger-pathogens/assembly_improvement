@@ -6,9 +6,9 @@ because it creates temp files which are cleaned up when it goes out of scope.
 
 =head1 SYNOPSIS
 
-use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
+use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 
-my $process_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+my $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
   input_files => ['abc_1.fastq.gz', 'abc_2.fastq'],
   input_assembly => 'contigs.fa'
 );
@@ -18,13 +18,13 @@ $process_input_files->processed_input_assembly;
 
 =cut
 
-package Pathogen::Scaffold::SSpace::PreprocessInputFiles;
+package Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 use Moose;
 use Cwd 'abs_path';
 use File::Basename;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
-with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
-with 'Pathogen::Abacas::DelimiterRole';
+with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
+with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
 
 has 'input_assembly' => ( is => 'ro', isa => 'Str',      required => 1 );
 has 'input_files'    => ( is => 'ro', isa => 'ArrayRef', required => 1 );

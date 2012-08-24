@@ -8,12 +8,12 @@ BEGIN { unshift( @INC, './lib' ) }
 
 BEGIN {
     use Test::Most;
-    use_ok('Pathogen::Scaffold::SSpace::Iterative');
+    use_ok('Bio::AssemblyImprovement::Scaffold::SSpace::Iterative');
 }
 
 my $cwd = getcwd();
 
-ok((my $iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
+ok((my $iterative_scaffolding = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
   input_files => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
@@ -30,7 +30,7 @@ unlink('contigs.scaffolded.fa');
 
 
 make_path("different_directory");
-ok(($iterative_scaffolding = Pathogen::Scaffold::SSpace::Iterative->new(
+ok(($iterative_scaffolding = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
   input_files => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,

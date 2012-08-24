@@ -5,9 +5,9 @@ Config   - Create the config file thats used to drive GapFiller
 
 =head1 SYNOPSIS
 
-use Pathogen::FillGaps::GapFiller::Config;
+use Bio::AssemblyImprovement::FillGaps::GapFiller::Config;
 
-my $config_file_obj = Pathogen::FillGaps::GapFiller::Config->new(
+my $config_file_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Config->new(
   input_files => ['abc_1.fastq', 'abc_2.fastq'],
   insert_size => 250,
   mapper => 'bwa'
@@ -15,7 +15,7 @@ my $config_file_obj = Pathogen::FillGaps::GapFiller::Config->new(
 
 =cut
 
-package Pathogen::FillGaps::GapFiller::Config;
+package Bio::AssemblyImprovement::FillGaps::GapFiller::Config;
 use Moose;
 
 has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );

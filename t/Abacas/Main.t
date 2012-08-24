@@ -9,11 +9,11 @@ BEGIN { unshift( @INC, './lib' ) }
 
 BEGIN {
     use Test::Most;
-    use_ok('Pathogen::Abacas::Main');
+    use_ok('Bio::AssemblyImprovement::Abacas::Main');
 }
 
 my $cwd = getcwd();
-ok((my $abacas_obj = Pathogen::Abacas::Main->new(
+ok((my $abacas_obj = Bio::AssemblyImprovement::Abacas::Main->new(
   input_assembly => 't/data/contigs.fa',
   reference      => 't/data/my_reference.fa',
   abacas_exec => $cwd.'/t/dummy_abacas_script.pl',
@@ -29,7 +29,7 @@ unlink('contigs.scaffolded.fa');
 
 my $output_directory = abs_path('different_directory' );
 make_path($output_directory);
-ok(($abacas_obj = Pathogen::Abacas::Main->new(
+ok(($abacas_obj = Bio::AssemblyImprovement::Abacas::Main->new(
   input_assembly => 't/data/contigs.fa',
   reference      => 't/data/my_reference.fa',
   abacas_exec => $cwd.'/t/dummy_abacas_script.pl',
@@ -42,7 +42,7 @@ ok((-e $abacas_obj->final_output_filename),'Scaffolding file exists in expected 
 remove_tree("different_directory");
 
 
-ok(($abacas_obj = Pathogen::Abacas::Main->new(
+ok(($abacas_obj = Bio::AssemblyImprovement::Abacas::Main->new(
   input_assembly => 't/data/contigs.fa',
   reference      => 't/data/reference_over_multiple_lines.fa',
   abacas_exec => $cwd.'/t/dummy_abacas_script.pl',

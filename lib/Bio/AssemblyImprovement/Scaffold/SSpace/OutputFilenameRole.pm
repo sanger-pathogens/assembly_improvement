@@ -1,4 +1,4 @@
-package Pathogen::Scaffold::SSpace::OutputFilenameRole;
+package Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole;
 use Moose::Role;
 use File::Basename;
 use Cwd;

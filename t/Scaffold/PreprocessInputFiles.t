@@ -9,14 +9,14 @@ BEGIN { unshift( @INC, './lib' ) }
 
 BEGIN {
     use Test::Most;
-    use_ok('Pathogen::Scaffold::SSpace::PreprocessInputFiles');
+    use_ok('Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles');
 }
 
 my $current_dir = abs_path( getcwd() );
 
 ok(
     (
-        my $process_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+        my $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
             input_files    => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
             input_assembly => 't/data/small_contigs.fa'
         )
@@ -37,7 +37,7 @@ is_deeply(
 
 ok(
     (
-        $process_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+        $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
             input_files    => [ 't/data/forward.fastq.gz', 't/data/reverse.fastq' ],
             input_assembly => 't/data/small_contigs.fa.gz'
         )
@@ -66,7 +66,7 @@ is($forward_filename_post_unzip, 'forward.fastq', 'correct unzipped filename');
 
 ok(
     (
-        $process_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+        $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
             input_files    => [ 't/data/forward.fastq.gz', 't/data/reverse.fastq.gz' ],
             input_assembly => 't/data/small_contigs.fa.gz'
         )
