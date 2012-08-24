@@ -5,7 +5,7 @@ use File::Basename;
 use Cwd;
 use Cwd qw(abs_path);
 
-BEGIN { unshift( @INC, './modules' ) }
+BEGIN { unshift( @INC, './lib' ) }
 
 BEGIN {
     use Test::Most;

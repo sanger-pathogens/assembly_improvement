@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use File::Temp;
 
-BEGIN { unshift( @INC, './modules' ) }
+BEGIN { unshift( @INC, './lib' ) }
 
 BEGIN {
     use Test::Most;

@@ -22,7 +22,6 @@ path-help@sanger.ac.uk
 
 package ImproveAssembly::Main;
 
-BEGIN { unshift( @INC, '../modules' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;

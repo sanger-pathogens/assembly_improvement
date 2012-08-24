@@ -1,7 +1,7 @@
 
 =head1 NAME
 
-Main   - Wrapper script for Abacas, just runs it in a separate directory.
+Pathogen::Abacas::Main   - Wrapper script for Abacas, just runs it in a separate directory.
 
 =head1 SYNOPSIS
 
