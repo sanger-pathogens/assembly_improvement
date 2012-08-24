@@ -1,4 +1,4 @@
-package Pathogen::Scaffold::SSpace::TempDirectoryRole;
+package Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole;
 use Moose::Role;
 use Cwd;
 use File::Temp;

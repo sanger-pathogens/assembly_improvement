@@ -5,9 +5,9 @@ Main   - Create the config file thats used to drive SSpace
 
 =head1 SYNOPSIS
 
-use Pathogen::Scaffold::SSpace::Main;
+use Bio::AssemblyImprovement::Scaffold::SSpace::Main;
 
-my $config_file_obj = Pathogen::Scaffold::SSpace::Main->new(
+my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Main->new(
   input_files => ['abc_1.fastq', 'abc_2.fastq'],
   input_assembly => 'contigs.fa'
   insert_size => 250,
@@ -17,13 +17,13 @@ my $config_file_obj = Pathogen::Scaffold::SSpace::Main->new(
 
 =cut
 
-package Pathogen::Scaffold::SSpace::Main;
+package Bio::AssemblyImprovement::Scaffold::SSpace::Main;
 use Moose;
 use Cwd;
 use File::Copy;
-use Pathogen::Scaffold::SSpace::Config;
-with 'Pathogen::Scaffold::SSpace::OutputFilenameRole';
-with 'Pathogen::Scaffold::SSpace::TempDirectoryRole';
+use Bio::AssemblyImprovement::Scaffold::SSpace::Config;
+with 'Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole';
+with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 
 has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );
 has 'insert_size'     => ( is => 'ro', isa => 'Int',      required => 1 );
@@ -31,11 +31,11 @@ has 'merge_size'      => ( is => 'ro', isa => 'Int',      default  => 10 );
 has 'scaffolder_exec' => ( is => 'rw', isa => 'Str',      required => 1 );
 has 'debug'           => ( is => 'ro', isa => 'Bool', default => 0);
 
-has '_config_file_obj' => ( is => 'ro', isa => 'Pathogen::Scaffold::SSpace::Config', lazy => 1, builder => '_build__config_file_obj' );
+has '_config_file_obj' => ( is => 'ro', isa => 'Bio::AssemblyImprovement::Scaffold::SSpace::Config', lazy => 1, builder => '_build__config_file_obj' );
 
 sub _build__config_file_obj {
     my ($self) = @_;
-    Pathogen::Scaffold::SSpace::Config->new(
+    Bio::AssemblyImprovement::Scaffold::SSpace::Config->new(
         input_files     => $self->input_files,
         insert_size     => $self->insert_size,
         output_filename => join( '/', ( $self->_temp_directory, '_scaffolder_config_file' ) )

@@ -4,16 +4,16 @@ use warnings;
 use Cwd;
 use File::Path qw(make_path remove_tree);
 
-BEGIN { unshift( @INC, './modules' ) }
+BEGIN { unshift( @INC, './lib' ) }
 
 BEGIN {
     use Test::Most;
-    use_ok('Pathogen::FillGaps::GapFiller::Iterative');
+    use_ok('Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative');
 }
 
 my $cwd = getcwd();
 
-ok((my $iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative->new(
+ok((my $iterative_scaffolding = Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative->new(
   input_files => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
@@ -32,7 +32,7 @@ unlink('contigs.gapfilled.fa');
 
 
 make_path("different_directory");
-ok(($iterative_scaffolding = Pathogen::FillGaps::GapFiller::Iterative->new(
+ok(($iterative_scaffolding = Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative->new(
   input_files => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
