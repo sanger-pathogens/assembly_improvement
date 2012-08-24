@@ -37,7 +37,7 @@ has 'processed_reference'      => ( is => 'ro', isa => 'Maybe[Str]', lazy => 1, 
 sub _build_processed_input_files {
     my ($self) = @_;
     my @processed_input_files;
-    return undef unless(defined($self->processed_input_files));
+    return undef unless(defined($self->input_files));
 
     for my $filename ( @{ $self->input_files } ) {
         push( @processed_input_files, $self->_gunzip_file_if_needed($filename) );
