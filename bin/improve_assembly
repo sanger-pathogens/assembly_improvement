@@ -90,32 +90,37 @@ my $preprocess_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::Preproc
     reference      => $reference,
 );
 my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
+my $scaffolding_obj;
 
-# scaffold and extend contigs
-my $scaffolding_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
-    input_files     => $preprocess_input_files->processed_input_files,
-    input_assembly  => $preprocess_input_files->processed_input_assembly,
-    insert_size     => $insert_size,
-    scaffolder_exec => $scaffolder_exec,
-    debug           => $debug,
-    output_base_directory => $output_directory
-);
-$scaffolding_obj->run();
-
-my $scaffolding_filename = $scaffolding_obj->final_output_filename;
 
 # order contigs on an assembly
 if(defined($reference))
 {
   $scaffolding_obj = Bio::AssemblyImprovement::Abacas::Main->new(
     reference      => $preprocess_input_files->processed_reference,
-    input_assembly => $scaffolding_filename,
+    input_assembly => $preprocess_input_files->processed_input_assembly,
     abacas_exec    => $abacas_exec,
     debug          => $debug,
     output_base_directory => $output_directory
   );
   $scaffolding_obj->run();
 }
+else
+{
+  # scaffold and extend contigs
+  $scaffolding_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
+      input_files     => $preprocess_input_files->processed_input_files,
+      input_assembly  => $preprocess_input_files->processed_input_assembly,
+      insert_size     => $insert_size,
+      scaffolder_exec => $scaffolder_exec,
+      debug           => $debug,
+      output_base_directory => $output_directory
+  );
+  $scaffolding_obj->run(); 
+}
+
+my $scaffolding_filename = $scaffolding_obj->final_output_filename;
+
 
 # fill gaps
 my $fill_gaps_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative->new(

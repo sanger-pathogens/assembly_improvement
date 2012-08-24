@@ -71,7 +71,7 @@ sub run {
                 $self->abacas_exec, 
                 '-r', $self->reference,
                 '-q', $self->input_assembly, 
-                '-p', 'nucmer', 
+                '-p', 'promer', 
                 $stdout_of_program
             )
         )

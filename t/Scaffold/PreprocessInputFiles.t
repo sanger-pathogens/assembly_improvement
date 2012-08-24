@@ -18,14 +18,15 @@ ok(
     (
         my $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
             input_files    => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
-            input_assembly => 't/data/small_contigs.fa'
+            input_assembly => 't/data/small_contigs.fa',
+            minimum_contig_size_in_assembly => 1
         )
     ),
     'all unzipped'
 );
 is(
     $process_input_files->processed_input_assembly,
-    $current_dir . '/t/data/small_contigs.fa',
+    $process_input_files->_temp_directory . '/small_contigs.fa.filtered',
     'unzipped contigs file the same location'
 );
 is_deeply(
@@ -39,7 +40,8 @@ ok(
     (
         $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
             input_files    => [ 't/data/forward.fastq.gz', 't/data/reverse.fastq' ],
-            input_assembly => 't/data/small_contigs.fa.gz'
+            input_assembly => 't/data/small_contigs.fa.gz',
+            minimum_contig_size_in_assembly => 1
         )
     ),
     'some zipped'
@@ -68,7 +70,8 @@ ok(
     (
         $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
             input_files    => [ 't/data/forward.fastq.gz', 't/data/reverse.fastq.gz' ],
-            input_assembly => 't/data/small_contigs.fa.gz'
+            input_assembly => 't/data/small_contigs.fa.gz',
+            minimum_contig_size_in_assembly => 1
         )
     ),
     'all zipped'

@@ -30,9 +30,14 @@ has 'input_assembly' => ( is => 'ro', isa => 'Str',      required => 1 );
 has 'input_files'    => ( is => 'ro', isa => 'Maybe[ArrayRef]');
 has 'reference'      => ( is => 'ro', isa => 'Maybe[Str]' );
 
+has 'minimum_contig_size_in_assembly'  => ( is => 'ro', isa => 'Int', default => 300 );
+has 'minimum_perc_to_turn_off_filtering'  => ( is => 'ro', isa => 'Int', default => 95 );
+
 has 'processed_input_assembly' => ( is => 'ro', isa => 'Str',        lazy => 1, builder => '_build_processed_input_assembly' );
 has 'processed_input_files'    => ( is => 'ro', isa => 'Maybe[ArrayRef]',   lazy => 1, builder => '_build_processed_input_files' );
 has 'processed_reference'      => ( is => 'ro', isa => 'Maybe[Str]', lazy => 1, builder => '_build_processed_reference' );
+
+
 
 sub _build_processed_input_files {
     my ($self) = @_;
@@ -47,13 +52,41 @@ sub _build_processed_input_files {
 
 sub _build_processed_input_assembly {
     my ($self) = @_;
-    return $self->_gunzip_file_if_needed($self->input_assembly);
+    return $self->_remove_small_contigs($self->_gunzip_file_if_needed($self->input_assembly));
 }
 
 sub _build_processed_reference {
     my ($self) = @_;
     return undef unless(defined($self->reference));
     return $self->_gunzip_file_if_needed($self->reference);
+}
+
+# Throw away small contigs, but not if the overall size of the genome drops too low
+sub _remove_small_contigs
+{
+  my ($self,$input_filename) = @_;
+  my $base_filename = fileparse( $input_filename);
+  my $output_filename = join( '/', ( $self->_temp_directory, $base_filename.'.filtered' ) );
+  
+  my $fasta_obj =  Bio::SeqIO->new( -file => $input_filename , -format => 'Fasta');
+  my $out_fasta_obj = Bio::SeqIO->new(-file => "+>".$output_filename , -format => 'Fasta');
+ 
+  my $sequence_length = 0;
+  my $sequences_kept = 0;
+  while(my $seq = $fasta_obj->next_seq())
+  {
+    $sequence_length +=  $seq->length();
+    next if($seq->length < $self->minimum_contig_size_in_assembly);
+    $out_fasta_obj->write_seq($seq);
+    $sequences_kept += $seq->length();
+  }
+  
+  if(($sequences_kept /$sequence_length) *100 <  $self->minimum_perc_to_turn_off_filtering )
+  {
+    return $input_filename;
+  }
+  
+  return $output_filename;
 }
 
 
