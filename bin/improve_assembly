@@ -22,17 +22,16 @@ path-help@sanger.ac.uk
 
 package ImproveAssembly::Main;
 
-BEGIN { unshift( @INC, '../modules' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Cwd;
 use Cwd 'abs_path';
 use File::Path qw(make_path);
-use Pathogen::Scaffold::SSpace::PreprocessInputFiles;
-use Pathogen::Scaffold::SSpace::Iterative;
-use Pathogen::FillGaps::GapFiller::Iterative;
-use Pathogen::Abacas::Main;
+use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
+use Bio::AssemblyImprovement::Scaffold::SSpace::Iterative;
+use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
+use Bio::AssemblyImprovement::Abacas::Main;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference,$output_directory, $help );
 
@@ -85,41 +84,46 @@ make_path($output_directory);
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
 
-my $preprocess_input_files = Pathogen::Scaffold::SSpace::PreprocessInputFiles->new(
+my $preprocess_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
     input_files    => \@input_files,
     input_assembly => $assembly_file,
     reference      => $reference,
 );
 my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
+my $scaffolding_obj;
 
-# scaffold and extend contigs
-my $scaffolding_obj = Pathogen::Scaffold::SSpace::Iterative->new(
-    input_files     => $preprocess_input_files->processed_input_files,
-    input_assembly  => $preprocess_input_files->processed_input_assembly,
-    insert_size     => $insert_size,
-    scaffolder_exec => $scaffolder_exec,
-    debug           => $debug,
-    output_base_directory => $output_directory
-);
-$scaffolding_obj->run();
-
-my $scaffolding_filename = $scaffolding_obj->final_output_filename;
 
 # order contigs on an assembly
 if(defined($reference))
 {
-  $scaffolding_obj = Pathogen::Abacas::Main->new(
+  $scaffolding_obj = Bio::AssemblyImprovement::Abacas::Main->new(
     reference      => $preprocess_input_files->processed_reference,
-    input_assembly => $scaffolding_filename,
+    input_assembly => $preprocess_input_files->processed_input_assembly,
     abacas_exec    => $abacas_exec,
     debug          => $debug,
     output_base_directory => $output_directory
   );
   $scaffolding_obj->run();
 }
+else
+{
+  # scaffold and extend contigs
+  $scaffolding_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
+      input_files     => $preprocess_input_files->processed_input_files,
+      input_assembly  => $preprocess_input_files->processed_input_assembly,
+      insert_size     => $insert_size,
+      scaffolder_exec => $scaffolder_exec,
+      debug           => $debug,
+      output_base_directory => $output_directory
+  );
+  $scaffolding_obj->run(); 
+}
+
+my $scaffolding_filename = $scaffolding_obj->final_output_filename;
+
 
 # fill gaps
-my $fill_gaps_obj = Pathogen::FillGaps::GapFiller::Iterative->new(
+my $fill_gaps_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative->new(
     input_files     => $preprocess_input_files->processed_input_files,
     input_assembly  => $scaffolding_obj->final_output_filename,
     insert_size     => $insert_size,

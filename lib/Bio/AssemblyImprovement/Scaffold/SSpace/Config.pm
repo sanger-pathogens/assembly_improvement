@@ -5,16 +5,16 @@ Config   - Create the config file thats used to drive SSpace
 
 =head1 SYNOPSIS
 
-use Pathogen::Scaffold::SSpace::Config;
+use Bio::AssemblyImprovement::Scaffold::SSpace::Config;
 
-my $config_file_obj = Pathogen::Scaffold::SSpace::Config->new(
+my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Config->new(
   input_files => ['abc_1.fastq', 'abc_2.fastq'],
   insert_size => 250
 )->create_config_file;
 
 =cut
 
-package Pathogen::Scaffold::SSpace::Config;
+package Bio::AssemblyImprovement::Scaffold::SSpace::Config;
 use Moose;
 
 has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );
