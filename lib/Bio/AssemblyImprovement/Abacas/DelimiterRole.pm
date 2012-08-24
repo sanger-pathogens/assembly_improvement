@@ -1,6 +1,7 @@
 package Bio::AssemblyImprovement::Abacas::DelimiterRole;
 use Moose::Role;
 use Bio::SeqIO;
+use File::Basename;
 
 sub _sequence_delimiter
 {
@@ -28,8 +29,9 @@ sub _merge_contigs_into_one_sequence
 {
   my ($self, $filename) = @_;
   return $filename if($self->_count_sequences($filename) == 1);
+  my ( $base_filename, $directories, $suffix ) = fileparse(  $filename );
   
-  my $output_filename = $filename.".union.fa";
+  my $output_filename =  $self->_temp_directory.'/'.$base_filename.".union.fa";
   my $fasta_obj =  Bio::SeqIO->new( -file => $filename , -format => 'Fasta');
   my $out_fasta_obj = Bio::SeqIO->new(-file => "+>".$output_filename , -format => 'Fasta');
   

@@ -27,6 +27,7 @@ use Cwd;
 use Cwd 'abs_path';
 use File::Path qw(make_path);
 use Bio::AssemblyImprovement::Abacas::Main;
+use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 
 my ( $assembly_file,  $abacas_exec,$debug,$reference,$output_directory, $help );
 
@@ -62,9 +63,7 @@ my $preprocess_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::Preproc
 );
 my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
 
-my $scaffolding_filename = $scaffolding_obj->final_output_filename;
-
-$scaffolding_obj = Bio::AssemblyImprovement::Abacas::Main->new(
+my $scaffolding_obj = Bio::AssemblyImprovement::Abacas::Main->new(
   reference      => $preprocess_input_files->processed_reference,
   input_assembly => $preprocess_input_files->processed_input_assembly,
   abacas_exec    => $abacas_exec,

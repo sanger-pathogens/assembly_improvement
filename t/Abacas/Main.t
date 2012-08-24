@@ -50,19 +50,16 @@ ok(($abacas_obj = Bio::AssemblyImprovement::Abacas::Main->new(
 )),'Create overall main object where reference is split over multiple lines');
 is(
   ($abacas_obj->_merge_contigs_into_one_sequence('t/data/reference_over_multiple_lines.fa')),
-  't/data/reference_over_multiple_lines.fa.union.fa',
+  $abacas_obj->_temp_directory.'/reference_over_multiple_lines.fa.union.fa',
   'New merged reference is outputted'
 );
-compare_files('t/data/reference_over_multiple_lines.fa.union.fa', 't/data/expected_reference_over_multiple_lines.fa.union.fa');
+compare_files($abacas_obj->_temp_directory.'/reference_over_multiple_lines.fa.union.fa', 't/data/expected_reference_over_multiple_lines.fa.union.fa');
 is(
-  ($abacas_obj->_split_sequence_on_delimiter('t/data/reference_over_multiple_lines.fa.union.fa')),
-  't/data/reference_over_multiple_lines.fa.union.fa.split.fa',
+  ($abacas_obj->_split_sequence_on_delimiter($abacas_obj->_temp_directory.'/reference_over_multiple_lines.fa.union.fa')),
+  $abacas_obj->_temp_directory.'/reference_over_multiple_lines.fa.union.fa.split.fa',
   'Split reference is outputted'
 );
-compare_files('t/data/reference_over_multiple_lines.fa.union.fa.split.fa', 't/data/reference_over_multiple_lines.fa');
-
-unlink('t/data/reference_over_multiple_lines.fa.union.fa');
-unlink('t/data/reference_over_multiple_lines.fa.union.fa.split.fa');
+compare_files($abacas_obj->_temp_directory.'/reference_over_multiple_lines.fa.union.fa.split.fa', 't/data/reference_over_multiple_lines.fa');
 
 done_testing();
 
