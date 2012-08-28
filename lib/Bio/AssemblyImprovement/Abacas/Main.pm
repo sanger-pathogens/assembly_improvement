@@ -28,6 +28,7 @@ with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
 has 'reference'       => ( is => 'rw', isa => 'Str',  required => 1 );
 has 'abacas_exec'     => ( is => 'rw', isa => 'Str',  default  => 'abacas.pl' );
 has 'debug'           => ( is => 'ro', isa => 'Bool', default  => 0 );
+has 'mode'            => ( is => 'ro', isa => 'Str',  default  => 'nucmer' );
 has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
 
 sub _build_output_base_directory
@@ -52,20 +53,6 @@ sub final_output_filename
   return $self->output_base_directory.'/' . $filename . "." . $self->_output_prefix . $suffix; 
 }
 
-sub _count_genomic_bases
-{
-  my ($self, $filename) = @_;
-  my $genomic_bases_counter = 0;
-  my $fasta_obj =  Bio::SeqIO->new( -file => $filename , -format => 'Fasta');
-  while(my $seq = $fasta_obj->next_seq())
-  {
-    $_ = $seq->seq();
-    my $number = $_ =~ s/[ACGT]//gi;
-    $genomic_bases_counter += $number ;
-  }
-  
-  return $genomic_bases_counter;
-}
 
 sub run {
     my ($self) = @_;
@@ -87,7 +74,7 @@ sub run {
                 $self->abacas_exec, 
                 '-r', $self->reference,
                 '-q', $self->input_assembly, 
-                '-p', 'promer', 
+                '-p', $self->mode, 
                 $stdout_of_program
             )
         )
