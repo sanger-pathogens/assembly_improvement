@@ -25,6 +25,7 @@ ok(($abacas_obj->_intermediate_file_name  =~ m/contigs\.fa_my_reference\.fa\.fas
 ok($abacas_obj->run, 'Run the scaffolder with a dummy script');
 is($abacas_obj->final_output_filename, $cwd.'/contigs.scaffolded.fa', 'final scaffolded filename');
 ok((-e $abacas_obj->final_output_filename),'Scaffolding file exists in expected location');
+is(10, $abacas_obj->_count_genomic_bases('t/data/contigs_with_Ns.fa'),'Count the bases excluding N');
 unlink('contigs.scaffolded.fa');
 
 my $output_directory = abs_path('different_directory' );

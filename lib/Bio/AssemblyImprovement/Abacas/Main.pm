@@ -20,6 +20,7 @@ use Moose;
 use Cwd;
 use File::Copy;
 use File::Basename;
+use Bio::SeqIO;
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole';
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
@@ -49,6 +50,21 @@ sub final_output_filename
   my ($self) = @_;
   my ( $filename, $directories, $suffix ) = fileparse( $self->input_assembly, qr/\.[^.]*/ );
   return $self->output_base_directory.'/' . $filename . "." . $self->_output_prefix . $suffix; 
+}
+
+sub _count_genomic_bases
+{
+  my ($self, $filename) = @_;
+  my $genomic_bases_counter = 0;
+  my $fasta_obj =  Bio::SeqIO->new( -file => $filename , -format => 'Fasta');
+  while(my $seq = $fasta_obj->next_seq())
+  {
+    $_ = $seq->seq();
+    my $number = $_ =~ s/[ACGT]//gi;
+    $genomic_bases_counter += $number ;
+  }
+  
+  return $genomic_bases_counter;
 }
 
 sub run {
