@@ -17,7 +17,9 @@ my $iterative_contig_ordering = Bio::AssemblyImprovement::Abacas::Iterative->new
 
 package Bio::AssemblyImprovement::Abacas::Iterative;
 use Moose;
-
+use Bio::SeqIO;
+use Cwd;
+use Bio::AssemblyImprovement::Abacas::Main;
 
 has 'reference'       => ( is => 'rw', isa => 'Str',  required => 1 );
 has 'abacas_exec'     => ( is => 'rw', isa => 'Str',  default  => 'abacas.pl' );
@@ -27,6 +29,13 @@ has 'minimum_perc_to_keep'  => ( is => 'ro', isa => 'Int', default => 95 );
 has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole';
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
+
+sub _build_output_base_directory
+{
+  my ($self) = @_;
+  return getcwd();
+}
+
 
 sub _count_genomic_bases
 {
@@ -83,6 +92,4 @@ sub _run_abacas
 no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
-
-
 

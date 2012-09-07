@@ -20,7 +20,7 @@ use Moose;
 use Cwd;
 use File::Copy;
 use File::Basename;
-use Bio::SeqIO;
+
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole';
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
