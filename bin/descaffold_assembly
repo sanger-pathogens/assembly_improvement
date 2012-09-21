@@ -1,0 +1,51 @@
+#!/usr/bin/env perl
+
+=head1 NAME
+
+descaffold_assembly
+
+=head1 SYNOPSIS
+
+descaffold_assembly - Given an assembly in FASTA format, output a descaffolded assembly.
+
+=head1 DESCRIPTION
+
+Given an assembly in FASTA format, output a descaffolded assembly.
+
+=head1 CONTACT
+
+path-help@sanger.ac.uk
+
+=head1 METHODS
+
+=cut
+
+package FillGapsWithGapFiller::Main;
+
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Bio::AssemblyImprovement::Scaffold::Descaffold;
+
+my ( $assembly_file, $help );
+
+GetOptions(
+    'a|assembly=s'        => \$assembly_file,
+    'h|help'              => \$help,
+);
+
+( defined($assembly_file) && ( -e $assembly_file ) && !$help ) or die <<USAGE;
+Usage: descaffold_assembly [options]
+Given an assembly in multi FASTA format, output a descaffolded assembly.
+
+# outputs a file called contigs.scaffolded.fa
+descaffold_assembly -a contigs.fa 
+
+# This help message
+descaffold_assembly -h
+
+USAGE
+
+
+my $descaffold_obj = Bio::AssemblyImprovement::Scaffold::Descaffold->new(input_assembly => $assembly_file);
+$descaffold_obj->run();
