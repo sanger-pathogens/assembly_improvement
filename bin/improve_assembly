@@ -90,7 +90,6 @@ my $preprocess_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::Preproc
     reference      => $reference,
 );
 my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
-my $scaffolding_obj;
 
 # scaffold and extend contigs
 my $scaffolding_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
