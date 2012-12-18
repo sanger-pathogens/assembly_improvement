@@ -1,21 +1,32 @@
+package Bio::AssemblyImprovement::FillGaps::GapFiller::Config;
 
-=head1 NAME
-
-Config   - Create the config file thats used to drive GapFiller
+# ABSTRACT: Create the config file thats used to drive GapFiller
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::FillGaps::GapFiller::Config;
+Create the config file thats used to drive GapFiller.
 
-my $config_file_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Config->new(
-  input_files => ['abc_1.fastq', 'abc_2.fastq'],
-  insert_size => 250,
-  mapper => 'bwa'
-)->create_config_file;
+   use Bio::AssemblyImprovement::FillGaps::GapFiller::Config;
+
+   my $config_file_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Config->new(
+     input_files => ['abc_1.fastq', 'abc_2.fastq'],
+     insert_size => 250,
+     mapper => 'bwa'
+   )->create_config_file;
+   
+
+=method create_config_file
+
+Create the gapfiller config file.
+
+=head1 SEE ALSO
+
+=for :list
+* L<Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative>
+* L<Bio::AssemblyImprovement::FillGaps::GapFiller::Main>
 
 =cut
 
-package Bio::AssemblyImprovement::FillGaps::GapFiller::Config;
 use Moose;
 
 has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );

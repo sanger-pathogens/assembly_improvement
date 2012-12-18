@@ -1,21 +1,30 @@
-
-=head1 NAME
-
-Iterative   - Iteratively run abacas to order contigs
+package Bio::AssemblyImprovement::Abacas::Iterative;
+# ABSTRACT: Iteratively run abacas to order contigs
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::Abacas::Iterative;
+Iteratively run abacas to order contigs.
 
-my $iterative_contig_ordering = Bio::AssemblyImprovement::Abacas::Iterative->new(
-  reference   => 'reference.fa'
-  input_assembly => 'contigs.fa'
-  abacas_exec => 'abacas.pl'
-)->run();
+   use Bio::AssemblyImprovement::Abacas::Iterative;
+   
+   my $iterative_contig_ordering = Bio::AssemblyImprovement::Abacas::Iterative->new(
+     reference   => 'reference.fa'
+     input_assembly => 'contigs.fa'
+     abacas_exec => 'abacas.pl'
+   )->run();
+
+=method run
+
+Run abacas.
+
+=head1 SEE ALSO
+
+=for :list
+* L<Bio::AssemblyImprovement::Abacas::Main>
+* L<Bio::AssemblyImprovement::Abacas::DelimiterRole>
 
 =cut
 
-package Bio::AssemblyImprovement::Abacas::Iterative;
 use Moose;
 use Bio::SeqIO;
 use Cwd;

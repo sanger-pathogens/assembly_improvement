@@ -1,27 +1,27 @@
 #!/usr/bin/env perl
+package Bio::AssemblyImprovement::Bin::FillGapsWithGapFiller;
 
-=head1 NAME
-
-fill_gaps_with_gapfiller
-
+# ABSTRACT: Given an assembly iteratively fill gaps
+# PODNAME: fill_gaps_with_gapfiller
 =head1 SYNOPSIS
-
-fill_gaps_with_gapfiller - Given an assembly iteratively fill gaps
-
-=head1 DESCRIPTION
 
 Given an assembly and some reads in fastq format, try and fill in the gaps. Do multiple iterations with different values, and cleanup all intermediate files.
 
-=head1 CONTACT
+   # outputs a file called contigs.scaffolded.fa
+   fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
 
-path-help@sanger.ac.uk
+   # Gzipped input files are accepted
+   fill_gaps_with_gapfiller -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
 
-=head1 METHODS
+   # Insert size defaults to 250 if not specified
+   fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
 
+   # This help message
+   fill_gaps_with_gapfiller -h
+   
 =cut
 
-package FillGapsWithGapFiller::Main;
-
+BEGIN { unshift( @INC, '../lib' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
@@ -29,6 +29,7 @@ use File::Path 2.07 qw(make_path);
 use Cwd;
 use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
+use Bio::AssemblyImprovement::Validate::Executable;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $gapfiller_exec, $debug,$output_directory, $help );
 
@@ -64,6 +65,8 @@ USAGE
 $debug           ||= 0;
 $insert_size     ||= 250;
 $gapfiller_exec ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+$gapfiller_exec = 'GapFiller.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec));
+
 $output_directory ||= getcwd();
 make_path($output_directory);
 

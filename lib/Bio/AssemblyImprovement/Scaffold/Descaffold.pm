@@ -1,21 +1,26 @@
-
-=head1 NAME
-
-Descaffold - given a fasta file as input, output a descaffolded multi-fasta file.
+package Bio::AssemblyImprovement::Scaffold::Descaffold;
+# ABSTRACT: Given a fasta file as input, output a descaffolded multi-fasta file.
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::Scaffold::Descaffold;
+Given a fasta file as input, output a descaffolded multi-fasta file.
 
-my $descaffold_obj = Bio::AssemblyImprovement::Scaffold::Descaffold->new(
-  input_assembly => 'contigs.fa'
-);
+   use Bio::AssemblyImprovement::Scaffold::Descaffold;
 
-$descaffold_obj->run();
+   my $descaffold_obj = Bio::AssemblyImprovement::Scaffold::Descaffold->new(
+     input_assembly => 'contigs.fa'
+   );
+
+   $descaffold_obj->run();
+   
+=method run
+
+Descaffold a FASTA file.
 
 =cut
 
-package Bio::AssemblyImprovement::Scaffold::Descaffold;
+
+
 use Moose;
 use Bio::SeqIO;
 

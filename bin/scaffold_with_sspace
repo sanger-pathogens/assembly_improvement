@@ -1,27 +1,27 @@
 #!/usr/bin/env perl
-
-=head1 NAME
-
-scaffold_with_sspace
-
+package Bio::AssemblyImprovement::Bin::ScaffoldWithSSpace;
+# ABSTRACT: Given an assembly and some reads in fastq format, try and scaffold the assembly.
+# PODNAME: scaffold_with_sspace
 =head1 SYNOPSIS
 
-scaffold_with_sspace - Given an assembly and some reads in fastq format, try and scaffold the assembly.
-
-=head1 DESCRIPTION
-
 Given an assembly and some reads in fastq format, try and scaffold the assembly. Do multiple iterations with different values, and cleanup all intermediate files.
+   
+   # outputs a file called contigs.scaffolded.fa
+   scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
 
-=head1 CONTACT
+   # Gzipped input files are accepted
+   scaffold_with_sspace -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
 
-path-help@sanger.ac.uk
+   # Insert size defaults to 250 if not specified
+   scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
 
-=head1 METHODS
-
+   # This help message
+   scaffold_with_sspace -h
+   
 =cut
 
-package ScaffoldWithSSpace::Main;
 
+BEGIN { unshift( @INC, '../lib' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
@@ -29,6 +29,7 @@ use File::Path qw(make_path);
 use Cwd;
 use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 use Bio::AssemblyImprovement::Scaffold::SSpace::Iterative;
+use Bio::AssemblyImprovement::Validate::Executable;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $debug,$output_directory, $help );
 
@@ -64,6 +65,7 @@ USAGE
 $debug           ||= 0;
 $insert_size     ||= 250;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
+$scaffolder_exec = 'SSPACE_Basic_v2.0.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec));
 $output_directory ||= getcwd();
 make_path($output_directory);
 

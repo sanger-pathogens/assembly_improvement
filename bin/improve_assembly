@@ -1,27 +1,33 @@
 #!/usr/bin/env perl
-
-=head1 NAME
-
-improve_assembly 
-
+package Bio::AssemblyImprovement::Bin::ImproveAssembly;
+# ABSTRACT: Given an assembly, some reads and optionally a reference, reduce the number of contigs and fill gaps.
+# PODNAME: improve_assembly
 =head1 SYNOPSIS
-
-improve_assembly - Given an assembly, some reads and optionally a reference, reduce the number of contigs and fill gaps.
-
-=head1 DESCRIPTION
 
 Given an assembly, some reads and optionally a reference, reduce the number of contigs and fill gaps.
 
-=head1 CONTACT
+   # Improve the assembly without a reference
+   improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
 
-path-help@sanger.ac.uk
+   # Provide a reference
+   improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq  -c my_reference.fa
 
-=head1 METHODS
+   # Gzipped input files are accepted
+   improve_assembly -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
 
+   # Insert size defaults to 250 if not specified
+   improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
+
+   # Output to a specific directory
+   improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -o my_directory
+
+   # This help message
+   improve_assembly -h
+   
 =cut
 
-package ImproveAssembly::Main;
 
+BEGIN { unshift( @INC, '../lib' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
@@ -32,6 +38,7 @@ use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 use Bio::AssemblyImprovement::Scaffold::SSpace::Iterative;
 use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
 use Bio::AssemblyImprovement::Abacas::Iterative;
+use Bio::AssemblyImprovement::Validate::Executable;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference,$output_directory, $help );
 
@@ -77,6 +84,9 @@ $debug           ||= 0;
 $insert_size     ||= 250;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
 $gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+$scaffolder_exec = 'SSPACE_Basic_v2.0.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec));
+$gapfiller_exec = 'GapFiller.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec));
+
 $abacas_exec     ||= 'abacas.pl';
 $output_directory ||= getcwd();
 $output_directory  = abs_path($output_directory);

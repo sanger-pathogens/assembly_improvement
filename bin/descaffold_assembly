@@ -1,27 +1,18 @@
 #!/usr/bin/env perl
+package Bio::AssemblyImprovement::Bin::DescaffoldAssembly;
 
-=head1 NAME
-
-descaffold_assembly
-
+# ABSTRACT: Given an assembly in FASTA format, output a descaffolded assembly.
+# PODNAME: descaffold_assembly
 =head1 SYNOPSIS
-
-descaffold_assembly - Given an assembly in FASTA format, output a descaffolded assembly.
-
-=head1 DESCRIPTION
 
 Given an assembly in FASTA format, output a descaffolded assembly.
 
-=head1 CONTACT
-
-path-help@sanger.ac.uk
-
-=head1 METHODS
-
+   descaffold_assembly -a contigs.fa
+   
 =cut
 
-package FillGapsWithGapFiller::Main;
 
+BEGIN { unshift( @INC, '../lib' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
