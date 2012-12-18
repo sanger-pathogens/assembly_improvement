@@ -1,21 +1,32 @@
-
-=head1 NAME
-
-Bio::AssemblyImprovement::Abacas::Main   - Wrapper script for Abacas, just runs it in a separate directory.
+package Bio::AssemblyImprovement::Abacas::Main;
+# ABSTRACT: Wrapper script for Abacas, just runs it in a separate directory.
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::Abacas::Main;
+Wrapper script for Abacas, just runs it in a separate directory.
 
-my $config_file_obj = Bio::AssemblyImprovement::Abacas::Main->new(
-  reference   => 'reference.fa'
-  input_assembly => 'contigs.fa'
-  abacas_exec => 'abacas.pl'
-)->run;
+   use Bio::AssemblyImprovement::Abacas::Main;
+
+   my $config_file_obj = Bio::AssemblyImprovement::Abacas::Main->new(
+     reference   => 'reference.fa'
+     input_assembly => 'contigs.fa'
+     abacas_exec => 'abacas.pl'
+   )->run;
+
+=method run
+
+Run abacas.
+
+=head1 SEE ALSO
+
+=for :list
+* L<Bio::AssemblyImprovement::Abacas::Iterative>
+* L<Bio::AssemblyImprovement::Abacas::DelimiterRole>
 
 =cut
 
-package Bio::AssemblyImprovement::Abacas::Main;
+
+
 use Moose;
 use Cwd;
 use File::Copy;

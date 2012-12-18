@@ -1,23 +1,33 @@
-
-=head1 NAME
-
-Main   - Create the config file thats used to drive SSpace
+package Bio::AssemblyImprovement::Scaffold::SSpace::Main;
+# ABSTRACT: Run one iteration of SSpace
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::Scaffold::SSpace::Main;
+Run one iteration of SSpace
 
-my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Main->new(
-  input_files => ['abc_1.fastq', 'abc_2.fastq'],
-  input_assembly => 'contigs.fa'
-  insert_size => 250,
-  merge_size => 5,
-  scaffolder_exec => '/path/to/SSPACE.pl'
-)->run;
+   use Bio::AssemblyImprovement::Scaffold::SSpace::Main;
+   
+   my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Main->new(
+     input_files => ['abc_1.fastq', 'abc_2.fastq'],
+     input_assembly => 'contigs.fa'
+     insert_size => 250,
+     merge_size => 5,
+     scaffolder_exec => '/path/to/SSPACE.pl'
+   )->run;
+   
+=method run
+
+Run an iteration of SSpace.
+
+=head1 SEE ALSO
+
+=for :list
+* L<Bio::AssemblyImprovement::Scaffold::SSpace::Config>
+* L<Bio::AssemblyImprovement::Scaffold::SSpace::Iterative>
 
 =cut
 
-package Bio::AssemblyImprovement::Scaffold::SSpace::Main;
+
 use Moose;
 use Cwd;
 use File::Copy;

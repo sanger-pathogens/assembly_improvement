@@ -1,23 +1,33 @@
-
-=head1 NAME
-
-Iterative   - Iteratively close gaps. Use different mappers in rotation, picking the most confident gaps first
+package Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
+# ABSTRACT: Iteratively close gaps
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
+Iteratively close gaps. Use different mappers in rotation, picking the most confident gaps first
 
-my $iterative_gapfilling = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
-  input_files => ['abc_1.fastq', 'abc_2.fastq'],
-  input_assembly => 'contigs.fa'
-  insert_size => 250,
-  gap_filler_exec => '/path/to/SSPACE.pl',
-  merge_sizes => [100,50,30,10]
-)->run;
+   use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
+
+   my $iterative_gapfilling = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
+     input_files => ['abc_1.fastq', 'abc_2.fastq'],
+     input_assembly => 'contigs.fa'
+     insert_size => 250,
+     gap_filler_exec => '/path/to/SSPACE.pl',
+     merge_sizes => [100,50,30,10]
+   )->run;
+   
+=method run
+
+Iteratively run gapfiller.
+
+=head1 SEE ALSO
+
+=for :list
+* L<Bio::AssemblyImprovement::FillGaps::GapFiller::Config>
+* L<Bio::AssemblyImprovement::FillGaps::GapFiller::Main>
 
 =cut
 
-package Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
+
 use Moose;
 use Cwd;
 use File::Basename;

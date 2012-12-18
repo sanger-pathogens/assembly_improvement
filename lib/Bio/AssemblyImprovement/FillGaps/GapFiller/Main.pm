@@ -1,25 +1,34 @@
-
-=head1 NAME
-
-Main   - Create the config file thats used to drive SSpace
+package Bio::AssemblyImprovement::FillGaps::GapFiller::Main;
+# ABSTRACT: Run a single iteration of gapfiller
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::FillGaps::GapFiller::Main;
+Run a single iteration of gapfiller.
 
-my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Main->new(
-  input_files => ['abc_1.fastq', 'abc_2.fastq'],
-  input_assembly => 'contigs.fa'
-  insert_size => 250,
-  merge_size => 5,
-  gap_filler_exec => '/path/to/SSPACE.pl',
-  
-  _output_prefix => 'gapfilled'
-)->run;
+   use Bio::AssemblyImprovement::FillGaps::GapFiller::Main;
+
+   my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Main->new(
+     input_files => ['abc_1.fastq', 'abc_2.fastq'],
+     input_assembly => 'contigs.fa'
+     insert_size => 250,
+     merge_size => 5,
+     gap_filler_exec => '/path/to/SSPACE.pl',
+
+     _output_prefix => 'gapfilled'
+   )->run;
+   
+=method run
+
+Iteratively run gapfiller.
+
+=head1 SEE ALSO
+
+=for :list
+* L<Bio::AssemblyImprovement::FillGaps::GapFiller::Config>
+* L<Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative>
 
 =cut
 
-package Bio::AssemblyImprovement::FillGaps::GapFiller::Main;
 use Moose;
 use Cwd;
 use File::Copy;

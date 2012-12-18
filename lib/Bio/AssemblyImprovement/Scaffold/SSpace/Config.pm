@@ -1,20 +1,29 @@
-
-=head1 NAME
-
-Config   - Create the config file thats used to drive SSpace
+package Bio::AssemblyImprovement::Scaffold::SSpace::Config;
+# ABSTRACT: Create the config file thats used to drive SSpace
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::Scaffold::SSpace::Config;
+Create the config file thats used to drive SSpace
 
-my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Config->new(
-  input_files => ['abc_1.fastq', 'abc_2.fastq'],
-  insert_size => 250
-)->create_config_file;
+   use Bio::AssemblyImprovement::Scaffold::SSpace::Config;
+
+   my $config_file_obj = Bio::AssemblyImprovement::Scaffold::SSpace::Config->new(
+     input_files => ['abc_1.fastq', 'abc_2.fastq'],
+     insert_size => 250
+   )->create_config_file;
+   
+=method create_config_file
+
+Create a config file for SSpace.
+
+=head1 SEE ALSO
+
+=for :list
+* L<Bio::AssemblyImprovement::Scaffold::SSpace::Iterative>
+* L<Bio::AssemblyImprovement::Scaffold::SSpace::Main>
 
 =cut
 
-package Bio::AssemblyImprovement::Scaffold::SSpace::Config;
 use Moose;
 
 has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );
