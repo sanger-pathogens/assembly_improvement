@@ -1,4 +1,13 @@
 package Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole;
+# ABSTRACT: Role for handling temp directories
+
+=head1 SYNOPSIS
+
+Role for handling temp directories.
+   
+=cut
+
+
 use Moose::Role;
 use Cwd;
 use File::Temp;

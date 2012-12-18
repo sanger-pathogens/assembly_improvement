@@ -1,4 +1,26 @@
 package Bio::AssemblyImprovement::Abacas::DelimiterRole;
+# ABSTRACT: Moose Role for putting in delimiters for Abacas to join up contigs
+
+=head1 SYNOPSIS
+
+Moose Role for putting in delimiters for Abacas to join up contigs
+
+   use Bio::AssemblyImprovement::Abacas::DelimiterRole;
+   with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
+   
+=method _merge_contigs_into_one_sequence
+
+Given a fasta file with multiple sequences, merge into a single sequence with a known delimiter.
+ 
+=method _split_sequence_on_delimiter
+
+Deplex a sequence which contains delimited sub sequences.
+
+=cut
+
+
+
+
 use Moose::Role;
 use Bio::SeqIO;
 use File::Basename;

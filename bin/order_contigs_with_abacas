@@ -1,25 +1,19 @@
 #!/usr/bin/env perl
-
-=head1 NAME
-
-order_contigs_with_abacas 
-
+package Bio::AssemblyImprovement::Bin::OrderContigsWithAbacas;
+# ABSTRACT: Given an assembly and a reference, order the contigs
+# PODNAME: order_contigs_with_abacas
 =head1 SYNOPSIS
 
-order_contigs_with_abacas - Given an assembly and a reference, order the contigs
+Given an assembly and a reference, order the contigs.
+   
+   order_contigs_with_abacas -a contigs.fa -c my_reference.fa
 
-=head1 DESCRIPTION
-Given an assembly and a reference, order the contigs
-=head1 CONTACT
-
-path-help@sanger.ac.uk
-
-=head1 METHODS
-
+   # This help message
+   order_contigs_with_abacas -h
+   
 =cut
 
-package ImproveAssembly::Main;
-
+BEGIN { unshift( @INC, '../lib' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;

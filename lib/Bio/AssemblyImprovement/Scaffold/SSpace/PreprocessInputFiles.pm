@@ -1,24 +1,31 @@
-
-=head1 NAME
-
-PreprocessInputFiles   - make sure the input files are in the correct format, and paths are resolved. This object needs to be kept in scope 
-because it creates temp files which are cleaned up when it goes out of scope.
+package Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
+# ABSTRACT: Make sure the input files are in the correct format, and paths are resolved. 
 
 =head1 SYNOPSIS
 
-use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
+Make sure the input files are in the correct format, and paths are resolved. This object needs to be kept in scope 
+because it creates temp files which are cleaned up when it goes out of scope.
 
-my $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
-  input_files => ['abc_1.fastq.gz', 'abc_2.fastq'],
-  input_assembly => 'contigs.fa'
-);
+   use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 
-$process_input_files->processed_input_files;
-$process_input_files->processed_input_assembly;
+   my $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
+     input_files => ['abc_1.fastq.gz', 'abc_2.fastq'],
+     input_assembly => 'contigs.fa'
+   );
+
+   $process_input_files->processed_input_files;
+   $process_input_files->processed_input_assembly;
+   
+=method processed_input_files
+
+Process the input FASTQ files and return their location.
+
+=method processed_input_assembly
+
+Process the input FASTA file and return its location.
 
 =cut
 
-package Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 use Moose;
 use Cwd 'abs_path';
 use File::Basename;

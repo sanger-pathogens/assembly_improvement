@@ -1,4 +1,14 @@
 package Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole;
+# ABSTRACT: Role for handling output filenames
+
+=head1 SYNOPSIS
+
+Role for handling output filenames.
+   
+=cut
+
+
+
 use Moose::Role;
 use File::Basename;
 use Cwd;
