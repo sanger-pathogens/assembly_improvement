@@ -21,7 +21,6 @@ ok(
     my $sga_preprocessor = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
             input_files     => [ 't/data/forward.fastq', 't/data/reverse.fastq.gz' ] ,
             sga_exec        => $current_dir.'/t/dummy_sga_script.pl',
-            debug			=> 1,
     	)
     ),
     'some zipped'
@@ -43,7 +42,7 @@ ok((-e (join ('/', $sga_preprocessor->_temp_directory, $reverse_filename_post_un
 ok($sga_preprocessor->run(), 'Run the SGA preprocess step with a dummy script');
 is($sga_preprocessor->output_filename, '_sga_preprocessed.fastq', 'correct default processed filename');
 
-ok((-e (join ('/', $sga_preprocessor->_temp_directory, $sga_preprocessor->output_filename))),
-    'SGA preprocessed file exists in expected location');
+ok(-e $sga_preprocessor->_output_filename(),
+   'SGA preprocessed file exists in expected location');
 
 done_testing();
