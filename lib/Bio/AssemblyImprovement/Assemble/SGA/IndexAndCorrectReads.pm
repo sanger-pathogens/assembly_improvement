@@ -5,8 +5,8 @@ package Bio::AssemblyImprovement::Assemble::SGA::IndexAndCorrectReads;
 =head1 SYNOPSIS
 
 Runs SGA index and correct. Results file (by default called _sga_error_corrected.fastq) and intermediate files
-placed in a temporary directory (unless an alternative directory is given). This temporary directory is cleaned
-up when this object goes out of scope.
+placed in a temporary directory. This temporary directory is cleaned up when this object goes out of scope.
+Any script/module wishing to use the results should copy them into a more permanent location.
 
    use Bio::AssemblyImprovement::Assemble::SGA::IndexAndCorrectReads;
 
@@ -39,13 +39,13 @@ use File::Basename;
 
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
+with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 
 has 'input_filename'    => ( is => 'ro', isa => 'Str',   required => 1);
 has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'ropebwt'); # BWT construction algorithm: sais or ropebwt
 has 'threads'	        => ( is => 'ro', isa => 'Num',   default => 1); # Use this many threads for computation
 has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 31); # TODO: Calculate sensible default value
 has 'output_filename'   => ( is => 'rw', isa => 'Str',   default  => '_sga_error_corrected.fastq' );
-has 'output_directory'  => ( is => 'rw', isa => 'Str'				); # Default to temporary directory in current working directory. 
 has 'sga_exec'          => ( is => 'rw', isa => 'Str',   required => 1 );
 has 'debug'             => ( is => 'ro', isa => 'Bool',  default => 0);
 
@@ -56,15 +56,13 @@ sub run {
    
     my $original_cwd = getcwd();
     
-    unless (defined $self->output_directory) {
-    	$self->output_directory( $self->_temp_directory );
-    }
-    chdir( $self->output_directory );
+    # Change to temporary directory for all intermediate steps
+    chdir( $self->_temp_directory );
     
     my $stdout_of_program = '';
     $stdout_of_program =  "> /dev/null 2>&1"  if($self->debug == 0);
 	
-	# Run the command to create the index (in temporary directory)
+	# Run the command to create the index 
     system(
         join(
             ' ',
@@ -96,13 +94,14 @@ sub run {
         )
     );
     
+    # change back to original cwd
     chdir($original_cwd);
     return $self;
 }
 
 sub _output_filename {
 	my ($self) = @_;
-	return join ('/', $self->output_directory, $self->output_filename);
+	return join ('/', $self->_temp_directory, $self->output_filename);
 }
 
 

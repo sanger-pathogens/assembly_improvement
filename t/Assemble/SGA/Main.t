@@ -12,19 +12,18 @@ BEGIN {
     use_ok('Bio::AssemblyImprovement::Assemble::SGA::Main');
 }
 
-my $current_dir = abs_path( getcwd() );
+my $current_dir = getcwd();
 
-# Test: Has SGA 'preprocess' and 'correct' been run on input files?
+
 
 ok(
     (
     my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
-            input_files     => [ 't/data/forward.fastq', 't/data/reverse.fastq' ] ,
+            input_files     => [ $current_dir.'/t/data/forward.fastq', $current_dir.'/t/data/reverse.fastq' ] ,
             algorithm      	=> 'ropebwt',
       		threads         => 8,
       		kmer_length	    => 40,
             sga_exec        => $current_dir.'/t/dummy_sga_script.pl',
-            output_directory => _temp_directory,
     	)
     ),
     'Create Bio::AssemblyImprovement::Assemble::SGA::Main object '
@@ -32,11 +31,17 @@ ok(
 
 ok($sga->run(), 'Run the SGA preprocess and correct steps with dummy scripts');
 
-is(
-  (join ('/', $sga->_temp_directory, '_sga_preprocessed_and_corrected.fastq')), 
-  $sga->_output_filename,
-  'Default results file name ok');
+# is (got, expected, name)
 
-#ok(-e $sga->_output_filename(), 'SGA results file exists in expected location');
+# Test: Is the name of the results file as expected?
+is(
+    $sga->_final_results_file,
+    join ('/', $current_dir, '_sga_error_corrected.fastq'),   
+   'Default results file name ok');
+
+# Test: Is the results file available?
+ok(-e $sga->_final_results_file, 'SGA results file exists in expected location');
+
+unlink($sga->_final_results_file);
 
 done_testing();

@@ -67,7 +67,7 @@ sub _build_processed_input_assembly {
 sub _build_processed_reference {
     my ($self) = @_;
     return undef unless(defined($self->reference));
-    return $self->_gunzip_file_if_needed($self->reference);
+    return $self->_gunzip_file_if_needed($self->reference, $self->_temp_directory);
 }
 
 # Throw away small contigs, but not if the overall size of the genome drops too low

@@ -7,11 +7,10 @@ Role for unzipping input files if they are zipped.
 
 	with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
-   	my $process_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
-     	input_files => ['abc_1.fastq.gz', 'abc_2.fastq'],
-     	input_assembly => 'contigs.fa'
-   	);
-   
+   	for my $filename ( @{ $self->input_files } ) {
+    	
+        push( @prepared_input_files, $self->_gunzip_file_if_needed( $filename,$self->_temp_directory));
+    }    
 =cut
 
 use Moose::Role;

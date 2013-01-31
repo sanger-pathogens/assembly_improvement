@@ -5,8 +5,9 @@ package Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads;
 =head1 SYNOPSIS
 
 Runs SGA step to preprocess reads. The preprocessed reads will be in a file called _sga_preprocessed.fastq
-in a temporary directory (unless an alternative file name and directory are provided). When this object
-goes out of scope this temporary directory will be cleaned up.
+in a temporary directory (unless an alternative file name is provided). When this object
+goes out of scope this temporary directory will be cleaned up. Any module/script wishing to use these results
+should move them to desired location.
 
 
    use Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads;
@@ -45,7 +46,6 @@ with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
 has 'input_files'      => ( is => 'ro', isa => 'ArrayRef' , required => 1);
 has 'output_filename'  => ( is => 'rw', isa => 'Str',       default  => '_sga_preprocessed.fastq' );
-has 'output_directory' => ( is => 'rw', isa => 'Str'); # Default to temporary directory in current working directory. 
 has 'sga_exec'         => ( is => 'rw', isa => 'Str',       required => 1 );
 has 'debug'            => ( is => 'ro', isa => 'Bool',      default  => 0);
 
@@ -54,10 +54,9 @@ sub run {
     my ($self) = @_;
     my $prepared_input_files = $self->_prepare_input_files();
     my $original_cwd = getcwd();
-    unless (defined $self->output_directory) {
-    	$self->output_directory( $self->_temp_directory );
-    }
-    chdir( $self->output_directory );
+   
+    # Do all the steps in a temporary directory
+    chdir( $self->_temp_directory );
     
     my $stdout_of_program = '';
     $stdout_of_program =  "> /dev/null 2>&1"  if($self->debug == 0);
@@ -75,13 +74,15 @@ sub run {
             )
         )
     );
+    
+    # Return to original cwd
     chdir($original_cwd);
     return $self;
 }
 
 sub _output_filename {
 	my ($self) = @_;
-	return join ('/', $self->output_directory, $self->output_filename);
+	return join ('/', $self->_temp_directory, $self->output_filename);
 }
 
 sub _prepare_input_files {
