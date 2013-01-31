@@ -1,0 +1,110 @@
+#!/usr/bin/env perl
+package Bio::AssemblyImprovement::Bin::ReadCorrectionWithSGA;
+# ABSTRACT: Given two fastq files (forward and reverse), try and correct the reads using SGA before doing the assembly
+# PODNAME: read_correction_with_sga
+=head1 SYNOPSIS
+
+Given two input fastq files, perform error correction on them. The results are put into a fastq file called _sga_error_corrected.fastq in the current
+working directory (or, if specified, a directory of your choice).
+  
+Usage: read_correction_with_sga [options]
+	
+		-f|forward_fastq       <forward reads file - zipped or unzipped>
+        -r|reverse_fastq       <reverse reads files - zipped or unzipped >
+        -s|sga_exec	 		   <path to sga script>
+        -a|algorithm		   <indexing algorithm - ropebwt or sais>
+        -t|threads	           <number of threads to use for computation>
+        -k|kmer_length	       <the length of kmer to be used>
+        -o|output_directory	   <output directory for results file(s)>
+        -d|debug			   <debug>
+        -h|help      		   <this message>
+        
+Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
+
+# outputs a file called _sga_error_corrected.fastq
+read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
+
+# Gzipped input files are accepted
+read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
+
+# This help message
+read_correction_with_sga -h 
+  
+   
+=cut
+
+
+BEGIN { unshift( @INC, '../lib' ) }
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Cwd;
+use Cwd 'abs_path';
+
+use Bio::AssemblyImprovement::Assemble::SGA::Main;
+
+my ( $forward_reads_file, $reverse_reads_file, $sga_exec, $algorithm, $threads, $kmer_length, $output_directory, $debug, $help );
+
+GetOptions(
+    'f|forward_fastq=s'     => \$forward_reads_file,
+    'r|reverse_fastq=s'     => \$reverse_reads_file,
+    's|sga_exec=s'		    => \$sga_exec,
+    'a|algorithm=s'		    => \$algorithm,
+    't|threads=i'		    => \$threads,
+    'k|kmer_length=i'       => \$kmer_length,
+    'o|output_directory=s'  => \$output_directory,
+    'd|debug'               => \$debug,
+    'h|help'                => \$help,
+);
+
+
+( defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
+Usage: read_correction_with_sga [options]
+	
+        -f|forward_fastq       <forward reads file - zipped or unzipped>
+        -r|reverse_fastq       <reverse reads files - zipped or unzipped >
+        -s|sga_exec	 		   <path to sga script>
+        -a|algorithm		   <indexing algorithm - ropebwt or sais>
+        -t|threads	           <number of threads to use for computation>
+        -k|kmer_length	       <the length of kmer to be used>
+        -o|output_directory	   <output directory for results file(s)>
+        -d|debug			   <debug>
+        -h|help      		   <this message>
+        
+Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
+
+# outputs a file called _sga_error_corrected.fastq
+read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
+
+# Gzipped input files are accepted
+read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
+
+# Sga_exec defaults to standard sga installation, threads default to 1, indexing algorithm defaults to ropebwt and kmer_length defaults to 60% of read length if not specified
+read_correction_with_sgq -f 123_1.fastq -r 123_2.fastq -a sais -t 8 -k 41
+
+# This help message
+read_correction_with_sga -h
+
+USAGE
+
+$sga_exec ||= '/software/pathogen/external/apps/usr/local/src/SGA/sga'; #Do we need to check if executable available?
+$algorithm ||= 'ropebwt';
+$threads ||= 1;
+$kmer_length ||=41; #calculate a % of read length
+$output_directory ||= abs_path (getcwd());
+$debug           ||= 0;
+
+my @input_files = ( $forward_reads_file, $reverse_reads_file );
+
+my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
+    input_files      => \@input_files, 
+    algorithm 		 => $algorithm,
+    threads			 => $threads,
+    kmer_length		 => $kmer_length,
+    output_directory => $output_directory,
+    sga_exec		 => $sga_exec,
+    debug            => $debug,
+)->run();
+
+
+
