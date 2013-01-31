@@ -37,8 +37,7 @@ ok((-e (join ('/', $sga_error_corrector->_temp_directory, $base_filename.'.sai')
    '.sai index file exists in right location');
 
 # Test: Has the final fastq file being produced with the corrected reads?
-ok(-e $sga_error_corrector->_output_filename(),
-   'Final fastq file exists in right location');
+ok(-e $sga_error_corrector->_output_filename(), 'Final fastq file exists in right location');
    
 done_testing();
 

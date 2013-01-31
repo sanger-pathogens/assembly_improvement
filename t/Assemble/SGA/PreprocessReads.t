@@ -37,10 +37,15 @@ is($reverse_filename_post_unzip, 'reverse.fastq', 'correct unzipped reverse file
 ok((-e (join ('/', $sga_preprocessor->_temp_directory, $reverse_filename_post_unzip))),
    'Reversed unzipped file exists in correct location');
 
-# Test: Has the read preprocess stage of SGA returned an appropriately named FASTQ file?
+# Test: Has the read preprocess stage of SGA created an appropriately named FASTQ file?
 
 ok($sga_preprocessor->run(), 'Run the SGA preprocess step with a dummy script');
-is($sga_preprocessor->output_filename, '_sga_preprocessed.fastq', 'correct default processed filename');
+
+is(
+  (join ('/', $sga_preprocessor->_temp_directory, '_sga_preprocessed.fastq')), 
+  $sga_preprocessor->_output_filename,
+  'Default results file name ok');
+
 
 ok(-e $sga_preprocessor->_output_filename(),
    'SGA preprocessed file exists in expected location');
