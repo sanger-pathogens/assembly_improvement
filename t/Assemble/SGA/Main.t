@@ -23,7 +23,7 @@ ok(
             algorithm      	=> 'ropebwt',
       		threads         => 8,
       		kmer_length	    => 40,
-            sga_exec        => $current_dir.'/t/dummy_sga_script.pl',
+            sga_exec        => $current_dir.'/t/dummy_sga_script',
     	)
     ),
     'Create Bio::AssemblyImprovement::Assemble::SGA::Main object '

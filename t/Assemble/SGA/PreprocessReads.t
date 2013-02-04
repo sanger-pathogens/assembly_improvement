@@ -20,7 +20,7 @@ ok(
     (
     my $sga_preprocessor = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
             input_files     => [ 't/data/forward.fastq', 't/data/reverse.fastq.gz' ] ,
-            sga_exec        => $current_dir.'/t/dummy_sga_script.pl',
+            sga_exec        => $current_dir.'/t/dummy_sga_script',
     	)
     ),
     'some zipped'

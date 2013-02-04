@@ -45,9 +45,12 @@ with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
 has 'input_files'      => ( is => 'ro', isa => 'ArrayRef' , required => 1);
-has 'output_filename'  => ( is => 'rw', isa => 'Str',       default  => '_sga_preprocessed.fastq' );
-has 'sga_exec'         => ( is => 'rw', isa => 'Str',       required => 1 );
-has 'debug'            => ( is => 'ro', isa => 'Bool',      default  => 0);
+has 'output_filename'  => ( is => 'rw', isa => 'Str', default  => '_sga_preprocessed.fastq' );
+has 'min_length'	   => ( is => 'ro', isa => 'Num', default => 51);
+has 'quality_filter'   => ( is => 'ro', isa => 'Num', default => 3);
+has 'quality_trim'	   => ( is => 'ro', isa => 'Num', default => 3);
+has 'sga_exec'         => ( is => 'rw', isa => 'Str', required => 1 );
+has 'debug'            => ( is => 'ro', isa => 'Bool', default  => 0);
 
 
 sub run {
@@ -66,8 +69,12 @@ sub run {
             ' ',
             (
                 $self->sga_exec, 'preprocess',
-                '--pe-mode 1', #--permuteAmbiguous parameter (investigate)
-                '-o', $self->output_filename, 
+                '--pe-mode 1', # Input presented in two files with paired reads (forward and reverse)
+                '--permute-ambiguous', # Randomly change ambiguous base calls
+                '--min-length', $self->min_length,
+                '--quality-filter', $self->quality_filter,
+                '--quality-trim', $self->quality_trim,
+                '--out', $self->output_filename, 
                	$prepared_input_files->[0],
                	$prepared_input_files->[1],
                 $stdout_of_program
