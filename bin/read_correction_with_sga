@@ -96,6 +96,9 @@ $debug           ||= 0;
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
 
+print "$forward_reads_file $reverse_reads_file $algorithm $threads $kmer_length $output_directory $sga_exec $debug \n";
+
+
 my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
     input_files      => \@input_files, 
     algorithm 		 => $algorithm,

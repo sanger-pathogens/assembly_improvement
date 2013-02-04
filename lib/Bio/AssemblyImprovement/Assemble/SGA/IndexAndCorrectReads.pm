@@ -67,7 +67,7 @@ sub run {
         join(
             ' ',
             (
-                'perl', $self->sga_exec, 'index',
+                $self->sga_exec, 'index',
                 '-a', $self->algorithm,
                 '-t', $self->threads, 
                 '--no-reverse', 
@@ -82,7 +82,7 @@ sub run {
         join(
             ' ',
             (
-                'perl', $self->sga_exec, 'correct',
+                $self->sga_exec, 'correct',
                 '-k', $self->kmer_length,
                 '--discard',
                 '--learn',

@@ -65,8 +65,8 @@ sub run {
         join(
             ' ',
             (
-                'perl', $self->sga_exec, 'preprocess',
-                '-pe-mode 1', #--permuteAmbiguous parameter (investigate)
+                $self->sga_exec, 'preprocess',
+                '--pe-mode 1', #--permuteAmbiguous parameter (investigate)
                 '-o', $self->output_filename, 
                	$prepared_input_files->[0],
                	$prepared_input_files->[1],
