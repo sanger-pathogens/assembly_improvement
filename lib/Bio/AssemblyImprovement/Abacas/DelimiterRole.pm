@@ -49,17 +49,21 @@ sub _count_sequences
 
 sub _merge_contigs_into_one_sequence
 {
-  my ($self, $filename) = @_;
+  my ($self, $filename, $directory) = @_;
+  $directory ||= $self->_temp_directory; # Default to temporary directory if alternative not provided
+  
   return $filename if($self->_count_sequences($filename) == 1);
+  
   my ( $base_filename, $directories, $suffix ) = fileparse(  $filename );
   
-  my $output_filename =  $self->_temp_directory.'/'.$base_filename.".union.fa";
+  my $output_filename =  $directory.'/'.$base_filename.".union.fa";
   my $fasta_obj =  Bio::SeqIO->new( -file => $filename , -format => 'Fasta');
   my $out_fasta_obj = Bio::SeqIO->new(-file => "+>".$output_filename , -format => 'Fasta');
   
   my $concat_sequence = "";
   my $seq_counter = 0;
   my $sequence_delimiter = $self->_sequence_delimiter;
+  
   while(my $seq = $fasta_obj->next_seq())
   {
     if($seq_counter == 0)

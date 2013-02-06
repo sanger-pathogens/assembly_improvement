@@ -41,6 +41,7 @@ is($abacas_obj->final_output_filename, $output_directory.'/contigs.scaffolded.fa
 ok((-e $abacas_obj->final_output_filename),'Scaffolding file exists in expected location');
 remove_tree("different_directory");
 
+# Test: Can we handle fasta files split over multiple lines?
 
 ok(($abacas_obj = Bio::AssemblyImprovement::Abacas::Main->new(
   input_assembly => 't/data/contigs.fa',
@@ -60,6 +61,28 @@ is(
   'Split reference is outputted'
 );
 compare_files($abacas_obj->_temp_directory.'/reference_over_multiple_lines.fa.union.fa.split.fa', 't/data/reference_over_multiple_lines.fa');
+
+# Test: Can we handle fasta files where each sequence has multiple lines?
+
+ok(($abacas_obj = Bio::AssemblyImprovement::Abacas::Main->new(
+  input_assembly => 't/data/contigs.fa',
+  reference      => 't/data/reference_several_lines.fa',
+  abacas_exec => $cwd.'/t/dummy_abacas_script.pl',
+  debug  => 0
+)),'Create overall main object where a sequence in the reference is split over multiple lines');
+
+is(
+  ($abacas_obj->_merge_contigs_into_one_sequence('t/data/reference_several_lines.fa')),
+  $abacas_obj->_temp_directory.'/reference_several_lines.fa.union.fa',
+  'New merged reference is outputted'
+);
+compare_files($abacas_obj->_temp_directory.'/reference_several_lines.fa.union.fa', 't/data/expected_reference_over_multiple_lines.fa.union.fa');
+is(
+  ($abacas_obj->_split_sequence_on_delimiter($abacas_obj->_temp_directory.'/reference_several_lines.fa.union.fa')),
+  $abacas_obj->_temp_directory.'/reference_several_lines.fa.union.fa.split.fa',
+  'Split reference is outputted'
+);
+compare_files($abacas_obj->_temp_directory.'/reference_several_lines.fa.union.fa.split.fa', 't/data/reference_over_multiple_lines.fa');
 
 done_testing();
 

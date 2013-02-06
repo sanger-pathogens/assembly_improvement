@@ -81,7 +81,6 @@ sub run {
             min_length	     => $self->min_length,
             quality_filter	 => $self->quality_filter,
             quality_trim	 => $self->quality_trim,
-            output_directory => $self->output_directory,
             sga_exec         => $self->sga_exec,
             debug			 => $self->debug,
     );
@@ -98,7 +97,6 @@ sub run {
       kmer_threshold		=> $self->kmer_threshold,
       kmer_length	 		=> $self->kmer_length,
       output_filename		=> $self->output_filename, #If results needed in a file other than default
-      output_directory		=> $self->output_directory,
       sga_exec	     		=> $self->sga_exec,
       debug			        => $self->debug,
     );
