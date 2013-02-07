@@ -38,6 +38,7 @@ has 'minimum_perc_to_keep'  => ( is => 'ro', isa => 'Int', default => 95 );
 has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::OutputFilenameRole';
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
+with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
 
 sub _build_output_base_directory
 {
@@ -64,6 +65,12 @@ sub _count_genomic_bases
 sub run
 {
   my($self) = @_;
+  
+  # Create a merged fasta file if reference file contains multiple sequences. This saves having to do
+  # the merging twice for the two runs of abacas below. During each run, the reference file will be checked.
+  # If it contains just one sequence, the merging step will be skipped (Main.pm, DelimiterRole.pm)
+  my $merged_reference  = $self->_merge_contigs_into_one_sequence($self->reference, $self->_temp_directory);
+  $self->reference($merged_reference);
   
   my $original_base_count = $self->_count_genomic_bases($self->input_assembly);
   my $nucmer_filename = $self->_run_abacas('nucmer');

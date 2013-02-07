@@ -90,12 +90,11 @@ sub run {
         )
     );
     
+    chdir($original_cwd);
     # Not implemented properly yet in "split2Multifasta.pl" as part of PAGIT
     my $split_sequence = $self->_split_sequence_on_delimiter($self->_intermediate_file_name);
     move( $split_sequence, $self->final_output_filename );
-    
-    chdir($original_cwd);
-     
+ 
     return $self;
 }
 
