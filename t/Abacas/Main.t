@@ -61,6 +61,7 @@ is(
 );
 compare_files($abacas_obj->_temp_directory.'/reference_over_multiple_lines.fa.union.fa.split.fa', 't/data/reference_over_multiple_lines.fa');
 
+
 done_testing();
 
 

@@ -29,9 +29,7 @@ sub _sequence_delimiter
 {
   my ($self, $filename) = @_;
   my $spacer = "";
-  for (1..100){ $spacer.="NNNNNNNNNN"; }
-  for (1..500) { $spacer.="GGGGGGGGGG"; }
-  for (1..100){ $spacer.="NNNNNNNNNN"; }
+  for (1..100){ $spacer.="N"; }
   return $spacer;
 }
 
