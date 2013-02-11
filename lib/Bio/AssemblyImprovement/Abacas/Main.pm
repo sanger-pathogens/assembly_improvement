@@ -49,10 +49,11 @@ sub _build_output_base_directory
 }
 
 sub _intermediate_file_name {
-    my ($self) = @_;    
+    my ($self) = @_;
+    
     my $input_assembly_filename = fileparse( $self->input_assembly);
     my $reference_filename = fileparse( $self->reference);
-    # Return path and name of the fasta file produced by abacas.pl
+    $input_assembly_filename.'_'.$reference_filename.'.fasta';
     return join( '/', ( $self->_temp_directory, $input_assembly_filename.'_'.$reference_filename.'.fasta' ) );
 }
 
@@ -89,13 +90,11 @@ sub run {
             )
         )
     );
+    chdir($original_cwd);
     
     # Not implemented properly yet in "split2Multifasta.pl" as part of PAGIT
     my $split_sequence = $self->_split_sequence_on_delimiter($self->_intermediate_file_name);
     move( $split_sequence, $self->final_output_filename );
-    
-    chdir($original_cwd);
-     
     return $self;
 }
 
