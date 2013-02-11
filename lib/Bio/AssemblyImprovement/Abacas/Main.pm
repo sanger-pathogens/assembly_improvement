@@ -68,7 +68,7 @@ sub final_output_filename
 sub run {
     my ($self) = @_;
     
-    my $merged_reference  = $self->_merge_contigs_into_one_sequence($self->reference, $self->_temp_directory);
+    my $merged_reference  = $self->_merge_contigs_into_one_sequence($self->reference);
     $self->reference($merged_reference);
     
     $self->output_base_directory();
