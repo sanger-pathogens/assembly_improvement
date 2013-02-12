@@ -15,7 +15,6 @@ Role for unzipping input files if they are zipped.
 
 use Moose::Role;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
-use Cwd qw(abs_path);
 use Cwd;
 use File::Basename;
 
@@ -23,7 +22,6 @@ sub _gunzip_file_if_needed {
   
     my ( $self, $input_filename, $output_directory ) = @_;
 	return undef unless(defined($input_filename));
-	$input_filename = abs_path($input_filename);
     $output_directory ||= abs_path (getcwd()); # If not given, default to current working directory
     
     if ( $input_filename =~ /\.gz$/ ) {
