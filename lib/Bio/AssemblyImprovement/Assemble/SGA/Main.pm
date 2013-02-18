@@ -70,6 +70,11 @@ sub _final_results_file {
 	return $self->output_directory.'/'.$self->output_filename;
 }
 
+# Intermediate preprocessed file
+sub _intermediate_file {
+	my ($self) = @_;
+	return $self->_temp_directory.'/_sga_preprocessed.fastq';
+}
 
 sub run {
     my ($self) = @_;
@@ -96,15 +101,13 @@ sub run {
 	$sga_preprocessor->run();
 	
 	# Move preprocessed file to this temporary directory
-	my ( $filename, $directories, $suffix ) = fileparse( $sga_preprocessor->_output_filename() );
-	my $intermediate_results_file = $self->_temp_directory.'/'.$filename.'.'.$suffix; # Construct intermediate filename to store preprocessed results
-	move ( $sga_preprocessor->_output_filename(), $intermediate_results_file  );
+	move ( $sga_preprocessor->_output_filename(), $self->_intermediate_file  );
 	
 
 	
 	# SGA error correction (on the results from above)
 	my $sga_error_corrector = Bio::AssemblyImprovement::Assemble::SGA::IndexAndCorrectReads->new(
-      input_filename 		=> $intermediate_results_file,
+      input_filename 		=> $self->_intermediate_file,
       algorithm      		=> $self->algorithm,
       threads        		=> $self->threads,
       disk					=> $self->disk,
