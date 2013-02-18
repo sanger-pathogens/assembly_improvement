@@ -29,6 +29,7 @@ ok(
 my $prepared_input_files = $sga_preprocessor->_prepare_input_files();
 
 my $forward_filename_post_unzip = fileparse($prepared_input_files->[0] );
+# test (got, expected, message)
 is($forward_filename_post_unzip, 'forward.fastq', 'correct unzipped forward filename');
 
 my $reverse_filename_post_unzip = fileparse($prepared_input_files->[1] );

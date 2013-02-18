@@ -68,7 +68,7 @@ sub _build_output_directory
 sub run {
     my ($self) = @_;
     my $original_cwd = getcwd();
-    $self->output_directory;
+    $self->output_directory; # Essentially setting output directory to cwd
     
     # Do all the intermediate steps in a temporary directory (which will be cleaned up when object out of scope)
     chdir( $self->_temp_directory ); # Default to temporary directory if alternative not provided
