@@ -34,6 +34,7 @@ use Moose;
 use Cwd;
 use Cwd 'abs_path';
 use File::Copy;
+use File::Basename;
 
 use Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads;
 use Bio::AssemblyImprovement::Assemble::SGA::IndexAndCorrectReads;
@@ -59,11 +60,16 @@ has 'output_directory'  => ( is => 'rw', isa => 'Str', lazy => 1, builder => '_b
 has 'sga_exec'          => ( is => 'rw', isa => 'Str',   required => 1 );
 has 'debug'             => ( is => 'ro', isa => 'Bool',  default => 0);
 
-sub _build_output_directory
-{
+sub _build_output_directory{
   my ($self) = @_;
   return getcwd();
 }
+
+sub _final_results_file {
+	my ($self) = @_;
+	return $self->output_directory.'/'.$self->output_filename;
+}
+
 
 sub run {
     my ($self) = @_;
@@ -88,11 +94,17 @@ sub run {
     );
     
 	$sga_preprocessor->run();
-	my $preprocessed_file  = $sga_preprocessor->_output_filename();
+	
+	# Move preprocessed file to this temporary directory
+	my ( $filename, $directories, $suffix ) = fileparse( $sga_preprocessor->_output_filename() );
+	my $intermediate_results_file = $self->_temp_directory.'/'.$filename.'.'.$suffix; # Construct intermediate filename to store preprocessed results
+	move ( $sga_preprocessor->_output_filename(), $intermediate_results_file  );
+	
+
 	
 	# SGA error correction (on the results from above)
 	my $sga_error_corrector = Bio::AssemblyImprovement::Assemble::SGA::IndexAndCorrectReads->new(
-      input_filename 		=> $preprocessed_file,
+      input_filename 		=> $intermediate_results_file,
       algorithm      		=> $self->algorithm,
       threads        		=> $self->threads,
       disk					=> $self->disk,
@@ -115,10 +127,6 @@ sub run {
     return $self;
 }
 
-sub _final_results_file {
-	my ($self) = @_;
-	return $self->output_directory.'/'.$self->output_filename;
-}
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
