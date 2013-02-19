@@ -18,8 +18,8 @@ Usage: read_correction_with_sga [options]
         -l|quality_filter	   <discard read if it contains more than this many low-quality bases>
         
         -a|algorithm		   <indexing algorithm - ropebwt or sais>
-        -t|threads	           <number of threads to use for computation>
-        -d|disk				   <to be described>
+        -t|threads	           <number of threads to use for computation. Choose carefully>
+        -i|disk				   <for disk based index algorithm>
         -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
         -k|kmer_length	       <the length of kmer to be used>
         -o|output_directory	   <output directory for results file>
@@ -63,7 +63,7 @@ GetOptions(
     'l|quality_filter=i'	=> \$quality_filter,
     'a|algorithm=s'		    => \$algorithm,
     't|threads=i'		    => \$threads,
-    'd|disk=i'				=> \$disk,
+    'i|disk=i'				=> \$disk,
     'h|kmer_threshold=i'	=> \$kmer_threshold,
     'k|kmer_length=i'       => \$kmer_length,
     'o|output_directory=s'  => \$output_directory,
@@ -86,7 +86,9 @@ Usage: read_correction_with_sga [options]
         
         -a|algorithm		   <indexing algorithm - ropebwt or sais>
         -t|threads	           <number of threads to use for computation>
-        -d|disk				   <to be described>
+        -i|disk				   <use disk-based BWT construction algorithm. The suffix array/BWT will be constructed
+                                for batchs of this many reads at a time. To construct the suffix array of 200 megabases of sequence
+                                requires ~2GB of memory, set this parameter accordingly.>
         -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
         -k|kmer_length	       <the length of kmer to be used>
         
@@ -104,7 +106,7 @@ read_correction_with_sga -f 123_1.fastq -r 123_2.fastq
 read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
 
 # Sga_exec defaults to standard sga installation, threads default to 1, indexing algorithm defaults to ropebwt and kmer_length defaults to 60% of read length if not specified
-read_correction_with_sgq -f 123_1.fastq -r 123_2.fastq -a sais -t 8 -k 41
+read_correction_with_sga -f 123_1.fastq -r 123_2.fastq -a sais -t 8 -k 41
 
 # This help message
 read_correction_with_sga -h
