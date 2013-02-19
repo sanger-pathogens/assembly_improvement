@@ -88,6 +88,7 @@ sub run {
                 $self->sga_exec, 'correct',
                 '-k', $self->kmer_length,
                 '--discard',
+                '--learn',
                 '-x', $self->kmer_threshold,
                 '-t', $self->threads, 
                 '-o', $self->output_filename,
