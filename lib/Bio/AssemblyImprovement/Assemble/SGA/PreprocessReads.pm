@@ -27,7 +27,7 @@ Unzip input files if needed
 
 =method run
 
-Run sga preprocess with -pe-mode 1 on the input data. [TODO: Investigate other parameters]
+Run sga preprocess with -pe-mode 1 on the input data. 
 
 =method _output_filename
 
@@ -70,7 +70,7 @@ sub run {
             (
                 $self->sga_exec, 'preprocess',
                 '--pe-mode 1', # Input presented in two files with paired reads (forward and reverse)
-                '--permute-ambiguous', # Randomly change ambiguous base calls
+                #'--permute-ambiguous', # Randomly change ambiguous base calls - we would rather reads with ambiguous bases be thrown away
                 '--min-length', $self->min_length,
                 '--quality-filter', $self->quality_filter,
                 '--quality-trim', $self->quality_trim,
