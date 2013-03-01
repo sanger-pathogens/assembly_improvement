@@ -46,9 +46,9 @@ with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
 has 'input_files'      => ( is => 'ro', isa => 'ArrayRef' , required => 1);
 has 'output_filename'  => ( is => 'rw', isa => 'Str', default  => '_sga_preprocessed.fastq' );
-has 'min_length'	   => ( is => 'ro', isa => 'Num', default => 51);
-has 'quality_filter'   => ( is => 'ro', isa => 'Num', default => 3);
-has 'quality_trim'	   => ( is => 'ro', isa => 'Num', default => 3);
+has 'min_length'	   => ( is => 'ro', isa => 'Num', default => 66); # Change this to be the value of the minimum kmer length used by the assembler later on in the pipeline
+# has 'quality_filter'   => ( is => 'ro', isa => 'Num', default => 3); # Not going to do any filtering from now on. 1.3.2013
+has 'quality_trim'	   => ( is => 'ro', isa => 'Num', default => 20); # Use a quality score of 20 by default
 has 'sga_exec'         => ( is => 'rw', isa => 'Str', required => 1 );
 has 'debug'            => ( is => 'ro', isa => 'Bool', default  => 0);
 
