@@ -17,13 +17,15 @@ use File::Basename;
 
 sub _zip_file {
   
-    my ( $self, $input_filename ) = @_;
+    my ( $self, $input_filename, $output_directory ) = @_;
     
 	return undef unless(defined($input_filename));
 	
-    my $output_directory = abs_path (getcwd()); 
+    $output_directory ||= abs_path (getcwd()); 
     
-    my $filename = fileparse( $input_filename );
+    #my $filename = fileparse( $input_filename );
+    my ( $filename, $directories, $suffix ) = fileparse( $input_filename );
+    my $filename = join( '/', ( $output_directory, $filename.'.'.$suffix.'.gz' ) );
     my $output_filename = join( '/', ( $output_directory, $filename.'.gz' ) );
     gzip $input_filename => $output_filename or die "gzip failed: $GzipError\n";
     return $output_filename;

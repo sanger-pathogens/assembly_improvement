@@ -34,11 +34,13 @@ use Moose;
 use Cwd;
 use Cwd 'abs_path';
 use File::Copy;
+use File::Basename;
 
 use Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads;
 use Bio::AssemblyImprovement::Assemble::SGA::IndexAndCorrectReads;
 
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
+with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 
 has 'input_files'       => ( is => 'ro', isa => 'ArrayRef' , required => 1);
 
@@ -58,16 +60,26 @@ has 'output_directory'  => ( is => 'rw', isa => 'Str', lazy => 1, builder => '_b
 has 'sga_exec'          => ( is => 'rw', isa => 'Str',   required => 1 );
 has 'debug'             => ( is => 'ro', isa => 'Bool',  default => 0);
 
-sub _build_output_directory
-{
+sub _build_output_directory{
   my ($self) = @_;
   return getcwd();
+}
+
+sub _final_results_file {
+	my ($self) = @_;
+	return $self->output_directory.'/'.$self->output_filename;
+}
+
+# Intermediate preprocessed file
+sub _intermediate_file {
+	my ($self) = @_;
+	return $self->_temp_directory.'/_sga_preprocessed.fastq';
 }
 
 sub run {
     my ($self) = @_;
     my $original_cwd = getcwd();
-    $self->output_directory;
+    $self->output_directory; # Essentially setting output directory to cwd
     
     # Do all the intermediate steps in a temporary directory (which will be cleaned up when object out of scope)
     chdir( $self->_temp_directory ); # Default to temporary directory if alternative not provided
@@ -87,34 +99,37 @@ sub run {
     );
     
 	$sga_preprocessor->run();
-	my $preprocessed_file  = $sga_preprocessor->_output_filename();
+	
+	# Move preprocessed file to this temporary directory
+	move ( $sga_preprocessor->_output_filename(), $self->_intermediate_file  );
+	
+
 	
 	# SGA error correction (on the results from above)
 	my $sga_error_corrector = Bio::AssemblyImprovement::Assemble::SGA::IndexAndCorrectReads->new(
-      input_filename 		=> $preprocessed_file,
+      input_filename 		=> $self->_intermediate_file,
       algorithm      		=> $self->algorithm,
       threads        		=> $self->threads,
       disk					=> $self->disk,
       kmer_threshold		=> $self->kmer_threshold,
       kmer_length	 		=> $self->kmer_length,
-      output_filename		=> $self->output_filename, #If results needed in a file other than default
-      output_directory		=> $self->output_directory,
       sga_exec	     		=> $self->sga_exec,
       debug			        => $self->debug,
     );
  
 	$sga_error_corrector->run();
 	
-	# Move the results file from sga error correction to the original cwd. TODO: Perhaps this should be zipped?
-	move ($sga_error_corrector->_output_filename, $self->_final_results_file); 
-    chdir($original_cwd);
+	chdir($original_cwd);
+	
+	# Move the results file from temporary directory to the original cwd and zip it. 
+	move ( $sga_error_corrector->_output_filename, $self->_final_results_file);
+	$self->_zip_file(  $self->_final_results_file, $self->output_directory );
+	
+
+    
     return $self;
 }
 
-sub _final_results_file {
-	my ($self) = @_;
-	return $self->output_directory.'/'.$self->output_filename;
-}
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
