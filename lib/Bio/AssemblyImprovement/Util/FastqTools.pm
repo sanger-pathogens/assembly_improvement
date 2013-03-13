@@ -67,12 +67,13 @@ sub calculate_kmer_sizes {
 sub calculate_coverage {
 
 	my ($self, $expected_genome_size) = @_;
-	unless ($expected_genome_size) return undef;
+	unless ($expected_genome_size) { return undef };
 	
 	my $arrayref = $self->_get_read_lengths($self->input_filename);
-	my $total_length_of_reads += $_ for @$arrayref;
+	my $total_length_of_reads = 0;
+	$total_length_of_reads += $_ for @$arrayref;
 	my $coverage = $total_length_of_reads/$expected_genome_size;
-	$coverage = sprintf ("%.0f", $coverage);	
+	$coverage = sprintf ("%.0f", $coverage);	# Rounding it up 
   	return $coverage;
 	
 }

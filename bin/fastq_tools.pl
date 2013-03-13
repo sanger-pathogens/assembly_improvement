@@ -47,20 +47,18 @@ my $fastq_processor  = Bio::AssemblyImprovement::Util::FastqTools->new(
 switch ($task) {
 
 	#Draws and saves a histogram of the read lengths in a file called histogram.png in the current working directory
-	case "histogram"    { 
-						  $fastq_processor->draw_histogram_of_read_lengths(); 
-						}
-						
+	case "histogram"    { $fastq_processor->draw_histogram_of_read_lengths(); }
+
 	case "kmer"			{
-						  my %kmer_sizes = $fastq_processor->calculate_kmer_sizes();
-						  print "Minimum kmer size: $kmer_sizes{min} \n Maximum kmer size: $kmer_sizes{max} \n";
+						my %kmer_sizes = $fastq_processor->calculate_kmer_sizes();
+						print "Minimum kmer size: $kmer_sizes{min} \n Maximum kmer size: $kmer_sizes{max} \n";
 						}
 	case "coverage"		{
-						  my $coverage = $fastq_processor->calculate_coverage($genome_size);
-						  print "Coverage is $coverage x \n"; 
-						 }
+						my $coverage = $fastq_processor->calculate_coverage($genome_size);
+						print "Coverage is $coverage x \n"; 
+						}
 						 
-	else				{ print "Task $task not recognised. Type fastq_tools -h for help." }
+	else				{ print "Task $task not recognised. Type fastq_tools -h for help."; }
 }
 							
 		
