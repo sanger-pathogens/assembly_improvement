@@ -72,7 +72,7 @@ sub run {
                 '--pe-mode 1', # Input presented in two files with paired reads (forward and reverse)
                 #'--permute-ambiguous', # Randomly change ambiguous base calls - we would rather reads with ambiguous bases be thrown away
                 '--min-length', $self->min_length,
-                '--quality-filter', $self->quality_filter,
+                #'--quality-filter', $self->quality_filter,
                 '--quality-trim', $self->quality_trim,
                 '--out', $self->output_filename, 
                	$prepared_input_files->[0],
