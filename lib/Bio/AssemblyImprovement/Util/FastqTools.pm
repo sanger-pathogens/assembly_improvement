@@ -9,9 +9,14 @@ package Bio::AssemblyImprovement::Util::FastqTools;
 
 use Moose;
 use Statistics::Lite qw(:all);
+use Cwd;
+use Cwd 'abs_path';
+use File::Basename;
 #use GD::Graph::histogram;
 
 with 'Bio::AssemblyImprovement::Util::GetReadLengthsRole';
+with 'Bio::AssemblyImprovement::Util::ZipFileRole';
+with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
 has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1);
 
@@ -44,7 +49,10 @@ has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1);
 sub calculate_kmer_sizes {
 
 	my ($self) = @_;
-	my $arrayref = $self->_get_read_lengths($self->input_filename);
+	
+	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
+		
+	my $arrayref = $self->_get_read_lengths($fastq_file);
 	my $median = median(@$arrayref);
 	my $mode = mode(@$arrayref);
 	my %kmer_size;
@@ -60,6 +68,10 @@ sub calculate_kmer_sizes {
     	$kmer_size{max}--;
   	}
   	
+  	if($fastq_file ne $self->input_filename){ #Which means we unzipped it
+  		unlink($fastq_file);
+  	}
+  	
   	return %kmer_size;
 	
 }
@@ -69,11 +81,18 @@ sub calculate_coverage {
 	my ($self, $expected_genome_size) = @_;
 	unless ($expected_genome_size) { return undef };
 	
-	my $arrayref = $self->_get_read_lengths($self->input_filename);
+	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
+	
+	my $arrayref = $self->_get_read_lengths($fastq_file);
 	my $total_length_of_reads = 0;
 	$total_length_of_reads += $_ for @$arrayref;
 	my $coverage = $total_length_of_reads/$expected_genome_size;
 	$coverage = sprintf ("%.0f", $coverage);	# Rounding it up 
+	
+	if($fastq_file ne $self->input_filename){ #Which means we unzipped it
+  		unlink($fastq_file);
+  	}
+  	
   	return $coverage;
 	
 }
