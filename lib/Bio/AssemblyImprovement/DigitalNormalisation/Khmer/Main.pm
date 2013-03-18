@@ -22,6 +22,7 @@ use Moose;
 use Cwd 'abs_path';
 use Cwd;
 use File::Basename;
+use File::Copy;
 
 use Bio::AssemblyImprovement::Util::FastqTools;
 
@@ -35,9 +36,30 @@ has 'min_hash_size'	    => ( is => 'ro', isa => 'Str', default => '2.5e8');
 has 'paired'	        => ( is => 'ro', isa => 'Bool', default => 1); # The pipeline will almost always be sending paired data
 has 'savehash'	        => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.kh'); # We will need this hash if we decide to implement subsequent steps in this program
 has 'report_file'	    => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.report'); # Optional report file that logs that actions of the normalisation
+has 'output_filename'   => ( is => 'rw', isa => 'Str',  default  => 'digitally_normalised.fastq' );
+has 'output_directory'  => ( is => 'rw', isa => 'Str', lazy => 1, builder => '_build_output_directory' ); # Default to cwd
 has 'khmer_exec'        => ( is => 'ro', isa => 'Str', required => 1 );
 has 'python_exec'	    => ( is => 'ro', isa => 'Str', default => 'python-2.7');
 has 'debug'             => ( is => 'ro', isa => 'Bool', default  => 0);
+
+
+sub _build_output_directory{
+  my ($self) = @_;
+  return getcwd();
+}
+
+sub _final_results_file {
+	my ($self) = @_;
+	return $self->output_directory.'/'.$self->output_filename;
+}
+
+sub _default_output_filename {
+	my ($self) = @_;
+	my ( $filename, $directories, $suffix ) = fileparse( $self->input_file );
+	# The output produced by the program is a fastq file (unzipped) named input_filename.keep	
+	return join ('/', getcwd(), $filename.'.keep');
+}
+
 
 
 sub run {
@@ -73,15 +95,15 @@ sub run {
         )
     );
     
+    # By default, the script produces a fastq file named with the input filename and a .keep suffix
+    # We want to have the flexibility of calling it something we like. Hence, the move below. 
+    
+    move( $self->_default_output_filename, $self->_final_results_file);
+    
     return $self;
 }
 
-sub _output_filename {
-	my ($self) = @_;
-	my ( $filename, $directories, $suffix ) = fileparse( $self->input_file );
-	# The output produced by the program is a fastq file (unzipped) named input_filename.keep	
-	return join ('/', getcwd(), $filename.'.keep');
-}
+
 
 
 no Moose;

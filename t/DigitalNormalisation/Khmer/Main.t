@@ -30,12 +30,12 @@ ok(
 ok($digi_norm->run(), 'Run the digital normalisation with a dummy script');
 
 is(
-  (join ('/', $current_dir, 'variable_length.fastq.keep')), 
-  $digi_norm->_output_filename,
+  (join ('/', $current_dir, 'digitally_normalised.fastq')), 
+  $digi_norm->_final_results_file,
   'Default results file name ok');
 
 
-ok(-e $digi_norm->_output_filename(), 'Digital normalised file exists in expected location');
+ok(-e $digi_norm->_final_results_file, 'Digital normalised file exists in expected location');
 
 #unlink($digi_norm->_output_filename());
 
