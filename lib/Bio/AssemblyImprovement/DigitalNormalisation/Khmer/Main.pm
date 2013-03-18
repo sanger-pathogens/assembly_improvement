@@ -1,4 +1,4 @@
-package Bio::AssemblyImprovement::Subsampling::Khmer::Main;
+package Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main;
 
 # ABSTRACT: Perform digital normalisation on sequencing reads
 
@@ -27,7 +27,7 @@ use Bio::AssemblyImprovement::Util::FastqTools;
 
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 
-has 'input_file'        => ( is => 'ro', isa => 'ArrayRef' , required => 1);
+has 'input_file'        => ( is => 'ro', isa => 'Str' , required => 1);
 has 'desired_coverage'  => ( is => 'ro', isa => 'Num', default  => 200 );
 has 'kmer_size'	        => ( is => 'ro', isa => 'Num', default => 40); 
 has 'number_of_hashes'	=> ( is => 'ro', isa => 'Num', default => 4); 
@@ -35,6 +35,8 @@ has 'min_hash_size'	    => ( is => 'ro', isa => 'Str', default => '2.5e8');
 has 'paired'	        => ( is => 'ro', isa => 'Bool', default => 1); # The pipeline will almost always be sending paired data
 has 'savehash'	        => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.kh'); # We will need this hash if we decide to implement subsequent steps in this program
 has 'report_file'	    => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.report'); # Optional report file that logs that actions of the normalisation
+has 'khmer_exec'        => ( is => 'ro', isa => 'Str', required => 1 );
+has 'python_exec'	    => ( is => 'ro', isa => 'Str', default => 'python-2.7');
 has 'debug'             => ( is => 'ro', isa => 'Bool', default  => 0);
 
 
@@ -57,7 +59,7 @@ sub run {
         join(
             ' ',
             (
-                'python-2.7', $self->khmer_exec, #Need atleast python-2.7 for this
+                $self->python_exec, $self->khmer_exec, #Need atleast python-2.7 for this
                 $paired_parameter, # Paired
                 '-C', $self->desired_coverage,
                 '-k', $self->kmer_size,
