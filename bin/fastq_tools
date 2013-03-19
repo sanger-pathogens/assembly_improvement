@@ -22,8 +22,8 @@ my ( $input_file, $task, $genome_size, $help);
 
 GetOptions(
     'i|input_file=s'        => \$input_file,
-    't|task'                => \$task,
-    'g|genome_size'		    => \$genome_size,
+    't|task=s'              => \$task,
+    'g|genome_size=i'		=> \$genome_size,
     'h|help'                => \$help,
 );
 
@@ -32,13 +32,14 @@ GetOptions(
 Usage: fastq_tools [options]
 	
         -i|input_file          <fastq file>
-        -h|histogram           <draw and save a histogram of the read lengths >
-        -k|kmer				   <calculate kmer sizes>
-        -c|coverage			   <coverage>
+        -t|task                <task can be kmer, coverage or histogram. If coverage, provide the genome size>
+        -g|genome_size		   <genome size>
   
         -h|help      		   <this message>
 
 USAGE
+
+if($task eq 'coverage' and 
 
 my $fastq_processor  = Bio::AssemblyImprovement::Util::FastqTools->new(
     input_filename   => $input_file, 
