@@ -25,8 +25,18 @@ ok(my $obj = Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs->new(
   base_contig_name => 'ERS00001234'
 )->run(),'Update the input file so that the contig names are renamed');
 
+is($obj->_generate_contig_name(5),'ERS00001234.5', 'Contig names follow convention');
+
 my $post_processed_assembly  = read_file($obj->input_assembly);
 isnt($post_processed_assembly, $pre_processed_assembly , 'Input and output assemblies should not be the same');
 is($expected_post_processed_assembly,$post_processed_assembly, 'Output assembly has correct naming scheme' );
+
+
+ok($obj = Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs->new(
+  input_assembly => $tmp_file_obj->filename,
+  base_contig_name => '_1234#.efg'
+),'base contig name with non word characters');
+is($obj->_generate_contig_name(5),'_1234__efg.5', 'Non word characters replaced with underscores');
+
 
 done_testing();
