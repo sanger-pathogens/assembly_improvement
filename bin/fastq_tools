@@ -39,7 +39,10 @@ Usage: fastq_tools [options]
 
 USAGE
 
-if($task eq 'coverage' and 
+if(($task eq 'coverage') and (not defined($genome_size))){
+
+	die "To calculate coverage, please provide the genome size. Use -h to see options. \n";
+}
 
 my $fastq_processor  = Bio::AssemblyImprovement::Util::FastqTools->new(
     input_filename   => $input_file, 
