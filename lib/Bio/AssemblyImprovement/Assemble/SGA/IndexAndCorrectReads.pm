@@ -46,7 +46,7 @@ has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'sais'); # B
 has 'threads'	        => ( is => 'ro', isa => 'Num',   default => 1); # Use this many threads for computation
 has 'disk'				=> ( is => 'ro', isa => 'Num', default => 1000000); # suffix array??
 has 'kmer_threshold'	=> ( is => 'ro', isa => 'Num',   default=> 5); # Attempt to correct kmers that are seen less than this many times
-has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 31); # TODO: Calculate sensible default value
+has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 41); # Since our coverage is usually high, we use 41. If not, 31 is OK.
 has 'output_filename'   => ( is => 'rw', isa => 'Str',   default  => '_sga_error_corrected.fastq' );
 has 'sga_exec'          => ( is => 'rw', isa => 'Str',   required => 1 );
 has 'debug'             => ( is => 'ro', isa => 'Bool',  default => 0);
@@ -87,7 +87,7 @@ sub run {
             (
                 $self->sga_exec, 'correct',
                 '-k', $self->kmer_length,
-                '--discard',
+                #'--discard', #Do not do discard. It creates orphan reads and does not make much of a difference with velvet
                 '--learn',
                 '-x', $self->kmer_threshold,
                 '-t', $self->threads, 
