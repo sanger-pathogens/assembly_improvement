@@ -4,40 +4,21 @@ package Bio::AssemblyImprovement::Bin::DiginormWithKhmer;
 # PODNAME: diginorm_with_khmer
 =head1 SYNOPSIS
 
-Given a fastq file, perform digital normalisation on it. The results are put into a fastq file called input_filename.keep
+Given a fastq file, perform digital normalisation on it. 
 
   
-Usage: diginorm_with_sga [options]
+Usage: diginorm_with_khmer [options]
 	
-		-f|forward_fastq       <forward reads file - zipped or unzipped>
-        -r|reverse_fastq       <reverse reads files - zipped or unzipped >
-        -s|sga_exec	 		   <path to sga script>
-        
-        -m|min_length	       <discard sequences that are shorter than this during preprocess>
-        -q|quality_trim	       <trim reads using Heng Li's BWT trimming algorithm>
-        -l|quality_filter	   <discard read if it contains more than this many low-quality bases>
-        
-        -a|algorithm		   <indexing algorithm - ropebwt or sais>
-        -t|threads	           <number of threads to use for computation. Choose carefully>
-        -i|disk				   <for disk based index algorithm>
-        -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
+		-i|input_file          <input fastq file>
         -k|kmer_length	       <the length of kmer to be used>
+        -n|number_of_hashes    <number of hashes>
+        -m|minimum_hash_size   <minimum hash size>
+        -p|paired			   <is the data paired?>
         -o|output_directory	   <output directory for results file>
         -z|output_filename	   <name of output filename if not using default of _sga_error_corrected.fastq.gz>
+        -e|khmer_exec		   <khmer exec>
         -d|debug			   <debug>
         -h|help      		   <this message>
-        
-Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
-
-# outputs a file called _sga_error_corrected.fastq
-read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
-
-# Gzipped input files are accepted
-read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
-
-# This help message
-read_correction_with_sga -h 
-  
    
 =cut
 
@@ -49,12 +30,17 @@ use Getopt::Long;
 use Cwd;
 use Cwd 'abs_path';
 
-use Bio::AssemblyImprovement::Assemble::SGA::Main;
+use Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main;
 
-my ( $forward_reads_file, $reverse_reads_file, $sga_exec, $min_length, $quality_filter, $quality_trim);
-my ($algorithm, $threads, $disk, $kmer_threshold, $kmer_length, $output_directory, $output_filename, $debug, $help );
+my ( $input_filename, $kmer_length, $no_of_hashes, $min_hash_size, $paired, $output_directory, $output_filename, $khmer_exec, $debug, $help );
 
 GetOptions(
+	'i|input_file=s'		=> \$input_filename,
+	'k|kmer_length=i'       => \$kmer_length,
+	'n|number_of_hashes
+
+
+
     'f|forward_fastq=s'     => \$forward_reads_file,
     'r|reverse_fastq=s'     => \$reverse_reads_file,
     's|sga_exec=s'		    => \$sga_exec,
@@ -65,7 +51,7 @@ GetOptions(
     't|threads=i'		    => \$threads,
     'i|disk=i'				=> \$disk,
     'h|kmer_threshold=i'	=> \$kmer_threshold,
-    'k|kmer_length=i'       => \$kmer_length,
+
     'o|output_directory=s'  => \$output_directory,
     'z|output_filename=s'   => \$output_filename,
     'd|debug'               => \$debug,
