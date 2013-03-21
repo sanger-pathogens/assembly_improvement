@@ -45,16 +45,16 @@ with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 has 'input_files'       => ( is => 'ro', isa => 'ArrayRef' , required => 1);
 
 # Parameters for preprocessing
-has 'min_length'	   => ( is => 'ro', isa => 'Num', default => 51);
-has 'quality_filter'   => ( is => 'ro', isa => 'Num', default => 3);
-has 'quality_trim'	   => ( is => 'ro', isa => 'Num', default => 3);
+has 'min_length'	   => ( is => 'ro', isa => 'Num', default => 66);
+has 'quality_trim'	   => ( is => 'ro', isa => 'Num', default => 20);
+has 'pe_mode'	   	   => ( is => 'ro', isa => 'Num', default => 2);
 
 # Parameters for indexing and correction
-has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'sais'); # BWT construction algorithm: sais or ropebwt
+has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'ropebwt'); # BWT construction algorithm: sais or ropebwt
 has 'threads'	        => ( is => 'ro', isa => 'Num',   default => 1); # Use this many threads for computation
-has 'disk'				=> ( is => 'ro', isa => 'Num', default => 28000000); # suffix array
+has 'disk'				=> ( is => 'ro', isa => 'Num', default => 1000000); # suffix array
 has 'kmer_threshold'	=> ( is => 'ro', isa => 'Num',   default=> 5); # Attempt to correct kmers that are seen less than this many times
-has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 31); # TODO: Calculate sensible default value
+has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 41); # TODO: Calculate sensible default value
 has 'output_filename'   => ( is => 'rw', isa => 'Str',  default  => '_sga_error_corrected.fastq' );
 has 'output_directory'  => ( is => 'rw', isa => 'Str', lazy => 1, builder => '_build_output_directory' ); # Default to cwd
 has 'sga_exec'          => ( is => 'rw', isa => 'Str',   required => 1 );
@@ -91,7 +91,6 @@ sub run {
     my $sga_preprocessor     = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
             input_files      => $self->input_files,
             min_length	     => $self->min_length,
-            quality_filter	 => $self->quality_filter,
             quality_trim	 => $self->quality_trim,
             output_directory => $self->output_directory,
             sga_exec         => $self->sga_exec,
