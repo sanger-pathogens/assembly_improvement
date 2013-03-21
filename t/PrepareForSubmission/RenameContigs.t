@@ -36,7 +36,19 @@ ok($obj = Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs->new(
   input_assembly => $tmp_file_obj->filename,
   base_contig_name => '_1234#.efg'
 ),'base contig name with non word characters');
-is($obj->_generate_contig_name(5),'_1234__efg.5', 'Non word characters replaced with underscores');
+is($obj->_generate_contig_name(5),'_1234_.efg.5', 'Non word characters replaced with underscores');
 
+
+ok($obj = Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs->new(
+  input_assembly => $tmp_file_obj->filename,
+  base_contig_name => 'ERS001935.3555_2'
+),'Dont replace full stops with underscores');
+is($obj->_generate_contig_name(5),'ERS001935.3555_2.5', 'Dont replace full stops with underscores');
+
+ok($obj = Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs->new(
+  input_assembly => $tmp_file_obj->filename,
+  base_contig_name => '.3555_2'
+),'allow fullstop as first character');
+is($obj->_generate_contig_name(5),'.3555_2.5', 'allow fullstop as first character');
 
 done_testing();
