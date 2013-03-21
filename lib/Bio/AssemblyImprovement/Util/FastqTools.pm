@@ -54,7 +54,12 @@ sub calculate_kmer_sizes {
 		
 	my $arrayref = $self->_get_read_lengths($fastq_file);
 	my $median = median(@$arrayref);
-	my $mode = mode(@$arrayref);
+	
+	# Set a minimum median so that the min kmer length stays at a reasonable value
+	if($median < 30){
+		$median = 30;
+	}
+
 	my %kmer_size;
 	
 	$kmer_size{min} = int($median*0.66); #66% of median read length will be minimum kmer length
