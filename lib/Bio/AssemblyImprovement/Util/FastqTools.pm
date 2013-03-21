@@ -12,7 +12,7 @@ use Statistics::Lite qw(:all);
 use Cwd;
 use Cwd 'abs_path';
 use File::Basename;
-#use GD::Graph::histogram;
+use GD::Graph::histogram;
 
 with 'Bio::AssemblyImprovement::Util::GetReadLengthsRole';
 with 'Bio::AssemblyImprovement::Util::ZipFileRole';
