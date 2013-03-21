@@ -56,7 +56,7 @@ sub _temp_output_filename {
 sub _generate_contig_name {
     my ( $self, $counter ) = @_;
     my $normalised_basename = $self->base_contig_name ;
-    $normalised_basename =~ s!\W!_!gi;
+    $normalised_basename =~ s![^\w\.]!_!gi;
     return join( '.', ( $normalised_basename, $counter ) );
 }
 
