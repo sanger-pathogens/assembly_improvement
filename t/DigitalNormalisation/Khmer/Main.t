@@ -34,6 +34,10 @@ is(
   $digi_norm->_final_results_file,
   'Default results file name ok');
 
+is(
+  (join ('/', $current_dir, 'digitally_normalised.fastq')), 
+   $digi_norm->_final_results_file,
+  'Default results file name ok');
 
 ok(-e $digi_norm->_final_results_file, 'Digital normalised file exists in expected location');
 
