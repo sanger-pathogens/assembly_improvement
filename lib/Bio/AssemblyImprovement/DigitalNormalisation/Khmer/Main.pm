@@ -33,7 +33,7 @@ has 'input_file'        => ( is => 'ro', isa => 'Str' , required => 1);
 has 'desired_coverage'  => ( is => 'ro', isa => 'Num', default  => 80 );
 has 'kmer_size'	        => ( is => 'ro', isa => 'Num', default => 40); 
 has 'number_of_hashes'	=> ( is => 'ro', isa => 'Num', default => 4); 
-has 'min_hash_size'	    => ( is => 'ro', isa => 'Str', default => '2.5e8'); 
+has 'min_hash_size'	    => ( is => 'ro', isa => 'Str', default => '5e8'); 
 has 'paired'	        => ( is => 'ro', isa => 'Bool', default => 1); # The pipeline will almost always be sending paired data
 has 'savehash'	        => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.kh'); # We will need this hash if we decide to implement subsequent steps in this program
 has 'report_file'	    => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.report'); # Optional report file that logs that actions of the normalisation
