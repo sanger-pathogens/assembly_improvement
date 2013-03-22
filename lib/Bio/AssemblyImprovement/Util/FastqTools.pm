@@ -20,31 +20,31 @@ with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
 has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1);
 
-# sub draw_histogram_of_read_lengths {
-# 	my ($self) = @_;
-# 	my $arrayref = $self->_get_read_lengths($input_filename);
-# 	# Set graph details
-# 	my $graph = new GD::Graph::histogram(400,600);	
-# 	$graph->set( 
-#                 x_label         => 'Read length',
-#                 y_label         => 'Number of reads',
-#                 title           => 'Histogram of read lengths for'.$input_filename,
-#                 x_labels_vertical => 1,
-#                 bar_spacing     => 0,
-#                 shadow_depth    => 1,
-#                 shadowclr       => 'dred',
-#                 transparent     => 0,
-#     ) 
-#     or warn $graph->error;
-#     #Draw the graph
-#     my $gd = $graph->plot(@$arrayref) or die $graph->error;
-#     #Store the graph
-#     open(IMG, '>histogram.png') or die "Could not open a file called histogram.png";
-#     binmode IMG;
-#     print IMG $gd->png;
-# 	
-#   
-# }
+sub draw_histogram_of_read_lengths {
+	my ($self) = @_;
+	my $arrayref = $self->_get_read_lengths($self->input_filename);
+	# Set graph details
+	my $graph = new GD::Graph::histogram(400,600);	
+	$graph->set( 
+                x_label         => 'Read length',
+                y_label         => 'Number of reads',
+                title           => 'Histogram of read lengths for '.$self->input_filename,
+                x_labels_vertical => 1,
+                bar_spacing     => 0,
+                shadow_depth    => 1,
+                shadowclr       => 'dred',
+                transparent     => 0,
+    ) 
+    or warn $graph->error;
+    #Draw the graph
+    my $gd = $graph->plot(@$arrayref) or die $graph->error;
+    #Store the graph
+    open(IMG, '>histogram.png') or die "Could not open a file called histogram.png";
+    binmode IMG;
+    print IMG $gd->png;
+	
+  
+}
 
 sub calculate_kmer_sizes {
 
