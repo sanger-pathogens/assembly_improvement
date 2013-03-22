@@ -27,6 +27,7 @@ use File::Copy;
 use Bio::AssemblyImprovement::Util::FastqTools;
 
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
+with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 
 has 'input_file'        => ( is => 'ro', isa => 'Str' , required => 1);
 has 'desired_coverage'  => ( is => 'ro', isa => 'Num', default  => 80 );
@@ -97,8 +98,9 @@ sub run {
     
     # By default, the script produces a fastq file named with the input filename and a .keep suffix
     # We want to have the flexibility of calling it something we like. Hence, the move below. 
-    
+        
     move( $self->_default_output_filename, $self->_final_results_file);
+    $self->_zip_file(  $self->_final_results_file, $self->output_directory );
     
     return $self;
 }
