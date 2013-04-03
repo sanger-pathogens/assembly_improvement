@@ -18,11 +18,16 @@ with 'Bio::AssemblyImprovement::Util::GetReadLengthsRole';
 with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
-has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1);
+has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
+
 
 sub draw_histogram_of_read_lengths {
 	my ($self) = @_;
-	my $arrayref = $self->_get_read_lengths($self->input_filename);
+	
+	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
+	
+	my $arrayref = $self->_get_read_lengths($fastq_file);
+	
 	# Set graph details
 	my $graph = new GD::Graph::histogram(400,600);	
 	$graph->set( 
@@ -42,6 +47,8 @@ sub draw_histogram_of_read_lengths {
     open(IMG, '>histogram.png') or die "Could not open a file called histogram.png";
     binmode IMG;
     print IMG $gd->png;
+    
+    $self->_cleaup_after_ourselves($fastq_file);
 	
   
 }
@@ -73,9 +80,7 @@ sub calculate_kmer_sizes {
     	$kmer_size{max}--;
   	}
   	
-  	if($fastq_file ne $self->input_filename){ #Which means we unzipped it
-  		unlink($fastq_file);
-  	}
+    $self->_cleaup_after_ourselves($fastq_file);
   	
   	return %kmer_size;
 	
@@ -94,12 +99,20 @@ sub calculate_coverage {
 	my $coverage = $total_length_of_reads/$expected_genome_size;
 	$coverage = sprintf ("%.0f", $coverage);	# Rounding it up 
 	
-	if($fastq_file ne $self->input_filename){ #Which means we unzipped it
-  		unlink($fastq_file);
-  	}
+	$self->_cleaup_after_ourselves($fastq_file);
   	
   	return $coverage;
 	
+}
+
+sub _cleaup_after_ourselves {
+
+	my ($self, $fastq_file) = @_;
+	if($fastq_file ne abs_path($self->input_filename)){ #Which means we unzipped it
+  		unlink($fastq_file);
+  	}
+	
+
 }
 
 
