@@ -55,7 +55,7 @@ switch ($task) {
 
 	case "kmer"			{
 						my %kmer_sizes = $fastq_processor->calculate_kmer_sizes();
-						print "Minimum kmer size: $kmer_sizes{min} \n Maximum kmer size: $kmer_sizes{max} \n";
+						print "Minimum kmer size: $kmer_sizes{min} \nMaximum kmer size: $kmer_sizes{max} \n";
 						}
 	case "coverage"		{
 						my $coverage = $fastq_processor->calculate_coverage($genome_size);
