@@ -32,10 +32,14 @@ GetOptions(
 Usage: fastq_tools [options]
 	
         -i|input_file          <fastq file>
-        -t|task                <task can be kmer, coverage or histogram. If coverage, provide the genome size>
+        -t|task                <task can be kmer, coverage or histogram. If coverage, provide the genome size. See below>
         -g|genome_size		   <genome size>
   
         -h|help      		   <this message>
+        
+'kmer': Calculate 66% and 90% of median read length as minimum and maximum kmer sizes. Uses for running VelvetOptimiser
+'coverage': Given a genome size, calculates the coverage
+'histogram': Produces a file called histogram.png in current directory with a histogram of the read lengths
 
 USAGE
 
