@@ -11,6 +11,7 @@ Usage: read_correction_with_sga [options]
 	
 		-f|forward_fastq       <forward reads file - zipped or unzipped>
         -r|reverse_fastq       <reverse reads files - zipped or unzipped >
+        -c|shuffled_fastq	   <shuffled fastq file>
         -s|sga_exec	 		   <path to sga script>
         
         -m|min_length	       <discard sequences that are shorter than this during preprocess>
@@ -27,13 +28,16 @@ Usage: read_correction_with_sga [options]
         -d|debug			   <debug>
         -h|help      		   <this message>
         
-Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
+Takes in two FASTQ files (forward and reverse) or a single SHUFFLED FASTQ file, and then performs read correction using SGA
 
 # outputs a file called _sga_error_corrected.fastq
 read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
 
 # Gzipped input files are accepted
 read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
+
+# Shuffled fastq file accepted
+read_correction_with_sga -c 123_shuffled.fastq.gz
 
 # This help message
 read_correction_with_sga -h 
@@ -51,12 +55,13 @@ use Cwd 'abs_path';
 
 use Bio::AssemblyImprovement::Assemble::SGA::Main;
 
-my ( $forward_reads_file, $reverse_reads_file, $sga_exec, $min_length, $quality_filter, $quality_trim);
+my ( $forward_reads_file, $reverse_reads_file, $shuffled_reads_file, $sga_exec, $min_length, $quality_filter, $quality_trim);
 my ($algorithm, $threads, $disk, $kmer_threshold, $kmer_length, $output_directory, $output_filename, $debug, $help );
 
 GetOptions(
     'f|forward_fastq=s'     => \$forward_reads_file,
     'r|reverse_fastq=s'     => \$reverse_reads_file,
+    'c|shuffled_fastq=s'	=> \$shuffled_reads_file
     's|sga_exec=s'		    => \$sga_exec,
     'm|min_length=i'		=> \$min_length,
     'q|quality_trim=i'		=> \$quality_trim,
@@ -72,12 +77,17 @@ GetOptions(
     'h|help'                => \$help,
 );
 
+# Either a forward AND reverse file should be given, or a single shuffled file should be given
 
-( defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
+( ((defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file )) ||
+  (defined($shuffled_reads_file) && ( -e $shuffled_reads_file )) )
+  && !$help )
+  or die <<USAGE;
 Usage: read_correction_with_sga [options]
 	
         -f|forward_fastq       <forward reads file - zipped or unzipped>
-        -r|reverse_fastq       <reverse reads files - zipped or unzipped >
+        -r|reverse_fastq       <reverse reads files - zipped or unzipped>
+        -c|shuffled_fastq	   <shuffled reads file - zipped or unzipped>
         -s|sga_exec	 		   <path to sga script>
         
         -m|min_length	       <discard sequences that are shorter than this during preprocess>
@@ -97,13 +107,16 @@ Usage: read_correction_with_sga [options]
         -d|debug			   <debug>
         -h|help      		   <this message>
         
-Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
+Takes in two FASTQ files (forward and reverse) or a single SHUFFLED FASTQ file, and then performs read correction using SGA
 
 # outputs a file called _sga_error_corrected.fastq.gz
 read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
 
 # Gzipped input files are accepted
 read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
+
+# Shuffled fastq file accepted
+read_correction_with_sga -c 123_shuffled.fastq.gz
 
 # Sga_exec defaults to standard sga installation, threads default to 1, indexing algorithm defaults to ropebwt and kmer_length defaults to 60% of read length if not specified
 read_correction_with_sga -f 123_1.fastq -r 123_2.fastq -a sais -t 8 -k 41
@@ -128,10 +141,20 @@ $output_directory ||= abs_path (getcwd());
 $output_filename ||= '_sga_error_corrected.fastq';
 $debug           ||= 0;
 
-my @input_files = ( $forward_reads_file, $reverse_reads_file );
+my @input_files;
+my $pe_mode = 1;
+
+# If a shuffled file is given, take that as the input for SGA.
+if(defined $shuffled_reads_file){
+	@input_files = ( $shuffled_reads_file );
+	$pe_mode = 2;
+}else{
+	@input_files = ( $forward_reads_file, $reverse_reads_file );
+}
 
 my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
     input_files      => \@input_files, 
+    pe_mode			 => $pe_mode,
     algorithm 		 => $algorithm,
     min_length	     => $min_length,
     quality_filter	 => $quality_filter,
