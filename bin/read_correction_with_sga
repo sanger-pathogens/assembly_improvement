@@ -61,7 +61,7 @@ my ($algorithm, $threads, $disk, $kmer_threshold, $kmer_length, $output_director
 GetOptions(
     'f|forward_fastq=s'     => \$forward_reads_file,
     'r|reverse_fastq=s'     => \$reverse_reads_file,
-    'c|shuffled_fastq=s'	=> \$shuffled_reads_file
+    'c|shuffled_fastq=s'	=> \$shuffled_reads_file,
     's|sga_exec=s'		    => \$sga_exec,
     'm|min_length=i'		=> \$min_length,
     'q|quality_trim=i'		=> \$quality_trim,
@@ -142,12 +142,12 @@ $output_filename ||= '_sga_error_corrected.fastq';
 $debug           ||= 0;
 
 my @input_files;
-my $pe_mode = 1;
+my $pe_mode = 1; #Tells SGA preprocess that reads are paired and in two files
 
 # If a shuffled file is given, take that as the input for SGA.
 if(defined $shuffled_reads_file){
 	@input_files = ( $shuffled_reads_file );
-	$pe_mode = 2;
+	$pe_mode = 2; #Tells SGA preprocess that reads are shuffled and in one file
 }else{
 	@input_files = ( $forward_reads_file, $reverse_reads_file );
 }

@@ -90,6 +90,7 @@ sub run {
     # SGA preprocess
     my $sga_preprocessor     = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
             input_files      => $self->input_files,
+            pe_mode			 => $self->pe_mode,
             min_length	     => $self->min_length,
             quality_trim	 => $self->quality_trim,
             output_directory => $self->output_directory,
