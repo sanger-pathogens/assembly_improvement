@@ -32,13 +32,14 @@ GetOptions(
 Usage: fastq_tools [options]
 	
         -i|input_file          <fastq file>
-        -t|task                <task can be kmer, coverage or histogram. If coverage, provide the genome size. See below>
+        -t|task                <task can be kmer, coverage, split or histogram. If coverage, provide the genome size. See below>
         -g|genome_size		   <genome size>
   
         -h|help      		   <this message>
         
 'kmer': Calculate 66% and 90% of median read length as minimum and maximum kmer sizes. Uses for running VelvetOptimiser
 'coverage': Given a genome size, calculates the coverage
+'split': Takes a shuffled fastq file and splits into forward and reverse based on /1 or /2 in the ID
 'histogram': Produces a file called histogram.png in current directory with a histogram of the read lengths
 
 USAGE
@@ -64,6 +65,10 @@ switch ($task) {
 	case "coverage"		{
 						my $coverage = $fastq_processor->calculate_coverage($genome_size);
 						print "Coverage is $coverage x \n"; 
+						}
+	case "split"		{
+						$fastq_processor->split_fastq();
+						print "File split into forward.fastq and reverse.fastq \n";
 						}
 						 
 	else				{ print "Task $task not recognised. Type fastq_tools -h for help."; }
