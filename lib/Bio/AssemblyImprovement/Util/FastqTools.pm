@@ -13,6 +13,7 @@ use Cwd;
 use Cwd 'abs_path';
 use File::Basename;
 use GD::Graph::histogram;
+use Bio::SeqIO;
 
 with 'Bio::AssemblyImprovement::Util::GetReadLengthsRole';
 with 'Bio::AssemblyImprovement::Util::ZipFileRole';
@@ -104,6 +105,37 @@ sub calculate_coverage {
   	return $coverage;
 	
 }
+
+# If the reads are ordered as /1, /2, /1, /2...this subroutine will split them
+# into two separate files
+sub split_fastq {
+
+	my ($self, $outfile_forward, $outfile_reverse) = @_;
+
+	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
+	my $fastq_obj =  Bio::SeqIO->new( -file => $fastq_file , -format => 'Fastq' );
+	
+	$outfile_forward ||= 'forward.fastq';
+	$outfile_reverse ||= 'reverse.fastq';
+		
+	my $forward_fastq = Bio::SeqIO->new( -file => ">$outfile_forward" , -format => 'Fastq' );
+	my $reverse_fastq = Bio::SeqIO->new( -file => ">$outfile_reverse" , -format => 'Fastq' );
+
+    while(my $seq = $fastq_obj->next_seq()){    
+		# Example ID: @IL9_4021:8:1:8:1892#7/1
+    	if($seq->id() =~ m/\/1$/ ){
+    		$forward_fastq->write_seq($seq);   	
+    	}else{
+    		$reverse_fastq->write_seq($seq);   	
+    	
+    	}	   
+    }
+
+	$self->_cleaup_after_ourselves($fastq_file);
+  	
+	return $outfile_forward;
+}
+
 
 sub _cleaup_after_ourselves {
 
