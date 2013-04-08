@@ -36,7 +36,7 @@ use Getopt::Long;
 use Cwd;
 use Cwd 'abs_path';
 
-use Bio::AssemblyImprovement::Assemble::SGA::Main;
+use Bio::AssemblyImprovement::PrimerRemoval::Main;
 
 my ( $input_file, $output_prefix, $output_directory, $primers_file, $leeway, $minimum_length, $median_quality, $quasr_exec, $debug, $help );
 
