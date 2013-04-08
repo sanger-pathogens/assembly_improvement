@@ -12,7 +12,7 @@ use Statistics::Lite qw(:all);
 use Cwd;
 use Cwd 'abs_path';
 use File::Basename;
-use GD::Graph::histogram;
+#use GD::Graph::histogram;
 use Bio::SeqIO;
 
 with 'Bio::AssemblyImprovement::Util::GetReadLengthsRole';
@@ -22,37 +22,37 @@ with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
 
 
-sub draw_histogram_of_read_lengths {
-	my ($self) = @_;
-	
-	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
-	
-	my $arrayref = $self->_get_read_lengths($fastq_file);
-	
-	# Set graph details
-	my $graph = new GD::Graph::histogram(400,600);	
-	$graph->set( 
-                x_label         => 'Read length',
-                y_label         => 'Number of reads',
-                title           => 'Histogram of read lengths for '.$self->input_filename,
-                x_labels_vertical => 1,
-                bar_spacing     => 0,
-                shadow_depth    => 1,
-                shadowclr       => 'dred',
-                transparent     => 0,
-    ) 
-    or warn $graph->error;
-    #Draw the graph
-    my $gd = $graph->plot($arrayref) or die $graph->error;
-    #Store the graph
-    open(IMG, '>histogram.png') or die "Could not open a file called histogram.png";
-    binmode IMG;
-    print IMG $gd->png;
-    
-    $self->_cleaup_after_ourselves($fastq_file);
-	
-  
-}
+# sub draw_histogram_of_read_lengths {
+# 	my ($self) = @_;
+# 	
+# 	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
+# 	
+# 	my $arrayref = $self->_get_read_lengths($fastq_file);
+# 	
+# 	# Set graph details
+# 	my $graph = new GD::Graph::histogram(400,600);	
+# 	$graph->set( 
+#                 x_label         => 'Read length',
+#                 y_label         => 'Number of reads',
+#                 title           => 'Histogram of read lengths for '.$self->input_filename,
+#                 x_labels_vertical => 1,
+#                 bar_spacing     => 0,
+#                 shadow_depth    => 1,
+#                 shadowclr       => 'dred',
+#                 transparent     => 0,
+#     ) 
+#     or warn $graph->error;
+#     #Draw the graph
+#     my $gd = $graph->plot($arrayref) or die $graph->error;
+#     #Store the graph
+#     open(IMG, '>histogram.png') or die "Could not open a file called histogram.png";
+#     binmode IMG;
+#     print IMG $gd->png;
+#     
+#     $self->_cleaup_after_ourselves($fastq_file);
+# 	
+#   
+# }
 
 sub calculate_kmer_sizes {
 
