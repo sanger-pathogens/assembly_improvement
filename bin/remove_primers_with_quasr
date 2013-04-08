@@ -1,0 +1,104 @@
+#!/usr/bin/env perl
+package Bio::AssemblyImprovement::Bin::RemovePrimersWithQUASR;
+# ABSTRACT: Given a shuffled fastq file and a file with primers, it will remove the primers if it appears within a specified distance from the beginning of the read 
+# PODNAME: remove_primers_with_quasr
+=head1 SYNOPSIS
+
+Given a fastq file and a file with primers, it will remove the primers if they appear within a specified distance from the beginning of the read 
+
+  
+Usage: remove_primers_with_quasr [options]
+	
+		-i|input_file          <input fastq file - zipped or unzipped>
+        -o|output_prefix       <prefix for the output file. Default 'primer_removed' >
+        -d|output_directory	   <Directory to place output file. Default current working directory>
+        -p|primers_file	 	   <path to a file containing primers and their reverse complements>
+        -L|leeway			   <maximum distance primer can be within a read. Default 5>
+        -m|minimum_length	   <minimum read length cut off. Default 50>
+        -l|median_quality	   <median read quality cut off. Default 30>
+        -e|quasr_exec		   <path to quasr jar file. Default to pathogen installation>
+        -d|debug			   <debug>
+        -h|help      		   <this message>
+        
+Takes in a shuffled (paired) fastq file and a file with primers, and removes the primers that appear within a specified distance in the reads
+
+# outputs a file called primer_removed.qc.fastq.gz in current working directory
+remove_primers_with_quasr -i shuffled.paired.fastq -p /path/to/primers.txt 
+
+   
+=cut
+
+
+BEGIN { unshift( @INC, '../lib' ) }
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Cwd;
+use Cwd 'abs_path';
+
+use Bio::AssemblyImprovement::Assemble::SGA::Main;
+
+my ( $input_file, $output_prefix, $output_directory, $primers_file, $leeway, $minimum_length, $median_quality, $quasr_exec, $debug, $help );
+
+GetOptions(
+		'i|input_file=s'        => \$input_file,
+		'o|output_prefix=s'		=> \$output_prefix,
+		'd|output_directory=s'	=> \$output_directory,
+		'p|primers_file=s'		=> \$primers_file,
+		'L|leeway=i'			=> \$leeway,
+		'm|minimum_length=i'	=> \$minimum_length,
+		'l|median_quality=i'	=> \$median_quality,
+		'e|quasr_exec=s'		=> \$quasr_exec,
+    	'd|debug'               => \$debug,
+    	'h|help'                => \$help,
+);
+
+# Either a forward AND reverse file should be given, or a single shuffled file should be give
+( defined($input_file) && ( -e $input_file ) && defined($primers_file) && ( -e $primers_file ) && !$help )
+  or die <<USAGE;
+Usage: remove_primers_with_quasr [options]
+	
+       	
+		-i|input_file          <input fastq file - zipped or unzipped>
+        -o|output_prefix       <prefix for the output file. Default 'primer_removed' >
+        -d|output_directory	   <Directory to place output file. Default current working directory>
+        -p|primers_file	 	   <path to a file containing primers and their reverse complements>
+        -L|leeway			   <maximum distance primer can be within a read. Default 5>
+        -m|minimum_length	   <minimum read length cut off. Default 50>
+        -l|median_quality	   <median read quality cut off. Default 30>
+        -e|quasr_exec		   <path to quasr jar file. Default to pathogen installation>
+        -d|debug			   <debug>
+        -h|help      		   <this message>
+        
+Takes in a shuffled (paired) fastq file and a file with primers, and removes the primers that appear within a specified distance in the reads
+
+# outputs a file called primer_removed.qc.fastq.gz in the current working directory
+remove_primers_with_quasr -i shuffled.paired.fastq -p /path/to/primers.txt 
+
+# get a list of options
+remove_primers_with_quasr -h
+
+USAGE
+
+# Set defaults
+
+$output_prefix ||= 'primer_removed'; 
+$output_directory ||= abs_path (getcwd());
+$leeway ||= 5;
+$minimum_length ||= 50;
+$median_quality ||= 30;
+$quasr_exec ||= '/lustre/scratch108/viruses/mc13/scripts/QUASR702_Parser_25July12/readsetProcessor.jar'; #Replace with pathogen installation
+$debug           ||= 0;
+
+
+my $primer_remover = Bio::AssemblyImprovement::PrimerRemoval::Main->new(
+    input_file       	  => $input_file, 
+    output_prefix	 	  => $output_prefix,
+    output_directory 	  => $output_directory,
+    primers_file	 	  => $primers_file,
+    leeway			 	  => $leeway,
+    minimum_length	 	  => $minimum_length,
+    median_quality_cutoff => $median_quality,
+ 	QUASR_exec		 	  => $quasr_exec,
+    debug            	  => $debug,
+)->run();
