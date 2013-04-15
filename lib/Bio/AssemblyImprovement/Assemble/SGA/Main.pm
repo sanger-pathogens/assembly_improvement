@@ -50,9 +50,9 @@ has 'quality_filter'   => ( is => 'ro', isa => 'Num', default => 3);
 has 'quality_trim'	   => ( is => 'ro', isa => 'Num', default => 3);
 
 # Parameters for indexing and correction
-has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'sais'); # BWT construction algorithm: sais or ropebwt
+has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'ropebwt'); # BWT construction algorithm: sais or ropebwt
 has 'threads'	        => ( is => 'ro', isa => 'Num',   default => 1); # Use this many threads for computation
-has 'disk'				=> ( is => 'ro', isa => 'Num', default => 28000000); # suffix array
+has 'disk'				=> ( is => 'ro', isa => 'Num', default => 1000000); # suffix array
 has 'kmer_threshold'	=> ( is => 'ro', isa => 'Num',   default=> 5); # Attempt to correct kmers that are seen less than this many times
 has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 31); # TODO: Calculate sensible default value
 has 'output_filename'   => ( is => 'rw', isa => 'Str',  default  => '_sga_error_corrected.fastq' );
