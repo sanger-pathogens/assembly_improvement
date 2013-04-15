@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+package Bio::AssemblyImprovement::Bin::RenameContigs;
+
+# ABSTRACT: Given an assembly, rename the contigs iteratively
+# PODNAME: rename_contigs
+=head1 SYNOPSIS
+
+Given an assembly, rename the contigs iteratively
+
+   rename_contigs -b ERA0001234 -a contigs.fa
+   
+=cut
+
+
+BEGIN { unshift( @INC, '../lib' ) }
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs;
+
+my ( $assembly_file,$contig_base_name, $help );
+
+GetOptions(
+    'a|assembly=s'          => \$assembly_file,
+    'b|contig_base_name=s'  => \$contig_base_name,
+    'h|help'                => \$help,
+);
+
+( defined($assembly_file) && ( -e $assembly_file ) && defined($contig_base_name) && !$help ) or die <<USAGE;
+Usage: rename_contigs [options]
+Given an assembly, rename the contigs iteratively
+
+# Names contigs as: ABC.1, ABC.2, ABC.3,....
+rename_contigs -b ABC -a contigs.fa 
+
+# This help message
+rename_contigs -h
+
+USAGE
+
+Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs->new(
+  input_assembly   => $assembly_file,
+  base_contig_name => $contig_base_name
+)->run();
