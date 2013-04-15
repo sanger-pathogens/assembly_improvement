@@ -121,7 +121,7 @@ $quality_filter ||= 3;
 
 $algorithm ||= 'ropebwt';
 $threads ||= 1;
-$disk ||= 28000000;
+$disk ||= 1000000;
 $kmer_threshold ||= 5;
 $kmer_length ||=41; 
 $output_directory ||= abs_path (getcwd());
