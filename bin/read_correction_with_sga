@@ -115,15 +115,15 @@ USAGE
 
 $sga_exec ||= '/software/pathogen/external/apps/usr/local/src/SGA/sga'; #Do we need to check if executable available?
 
-$min_length ||= 51;
-$quality_trim ||= 3;
+$min_length ||= 66;
+$quality_trim ||= 20;
 $quality_filter ||= 3;
 
-$algorithm ||= 'sais';
+$algorithm ||= 'ropebwt';
 $threads ||= 1;
-$disk ||= 28000000;
+$disk ||= 1000000;
 $kmer_threshold ||= 5;
-$kmer_length ||=41; #calculate a % of read length
+$kmer_length ||=41; 
 $output_directory ||= abs_path (getcwd());
 $output_filename ||= '_sga_error_corrected.fastq';
 $debug           ||= 0;
