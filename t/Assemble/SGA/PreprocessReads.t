@@ -50,25 +50,5 @@ is(
 
 ok(-e $sga_preprocessor->_output_filename(),
    'SGA preprocessed file exists in expected location');
-   
-   
-   
-# Test: Can the pre-processor accept 1 shuffled file?
-
-ok(
-    (
-    my $sga_preprocessor_shuffled = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
-            input_files     => [ 't/data/shuffled.fastq' ] ,
-            sga_exec        => $current_dir.'/t/dummy_sga_script',
-    	)
-    ),
-    'shuffled fastq'
-);
-
-ok($sga_preprocessor_shuffled->run(), 'Run the SGA preprocess (shuffled) step with a dummy script');
-
-ok(-e $sga_preprocessor_shuffled->_output_filename(),
-   'SGA preprocessed file exists in expected location');
-   
 
 done_testing();

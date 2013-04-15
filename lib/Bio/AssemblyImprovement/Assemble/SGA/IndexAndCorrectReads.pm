@@ -42,7 +42,7 @@ with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 
 has 'input_filename'    => ( is => 'ro', isa => 'Str',   required => 1);
-has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'ropebwt'); # BWT construction algorithm: sais or ropebwt
+has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'sais'); # BWT construction algorithm: sais or ropebwt
 has 'threads'	        => ( is => 'ro', isa => 'Num',   default => 1); # Use this many threads for computation
 has 'disk'				=> ( is => 'ro', isa => 'Num', default => 1000000); # suffix array??
 has 'kmer_threshold'	=> ( is => 'ro', isa => 'Num',   default=> 5); # Attempt to correct kmers that are seen less than this many times
