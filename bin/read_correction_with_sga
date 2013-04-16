@@ -47,6 +47,7 @@ use Moose;
 use Getopt::Long;
 use Cwd;
 use Cwd 'abs_path';
+use File::Path qw(make_path);
 
 use Bio::AssemblyImprovement::Assemble::SGA::Main;
 
@@ -118,7 +119,11 @@ $algorithm ||= 'ropebwt';
 $threads ||= 1;
 $kmer_threshold ||= 5;
 $kmer_length ||=41; 
-$output_directory ||= abs_path (getcwd());
+
+$output_directory ||= getcwd();
+$output_directory  = abs_path($output_directory);
+make_path($output_directory);
+
 $output_filename ||= '_sga_error_corrected.fastq';
 $debug           ||= 0;
 
