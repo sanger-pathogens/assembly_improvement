@@ -1,25 +1,24 @@
 #!/usr/bin/env perl
 package Bio::AssemblyImprovement::Bin::ReadCorrectionWithSGA;
-# ABSTRACT: Given two fastq files (forward and reverse), try and correct the reads using SGA before doing the assembly
+# ABSTRACT: Given a fastq file(s), perform SGA preprocessing and error correction
 # PODNAME: read_correction_with_sga
 =head1 SYNOPSIS
 
-Given two input fastq files, perform error correction on them. The results are put into a fastq file called _sga_error_corrected.fastq in the current
+Given a fastq file(s), perform error correction on them. The results are put into a fastq file called _sga_error_corrected.fastq in the current
 working directory (or, if specified, a directory of your choice).
   
 Usage: read_correction_with_sga [options]
 	
 		-f|forward_fastq       <forward reads file - zipped or unzipped>
         -r|reverse_fastq       <reverse reads files - zipped or unzipped >
+        -fr|shuffled_fastq	   <an interleaved fastq file - zipped or unzipped>
         -s|sga_exec	 		   <path to sga script>
         
         -m|min_length	       <discard sequences that are shorter than this during preprocess>
         -q|quality_trim	       <trim reads using Heng Li's BWT trimming algorithm>
-        -l|quality_filter	   <discard read if it contains more than this many low-quality bases>
         
         -a|algorithm		   <indexing algorithm - ropebwt or sais>
         -t|threads	           <number of threads to use for computation. Choose carefully>
-        -i|disk				   <for disk based index algorithm>
         -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
         -k|kmer_length	       <the length of kmer to be used>
         -o|output_directory	   <output directory for results file>
@@ -27,7 +26,7 @@ Usage: read_correction_with_sga [options]
         -d|debug			   <debug>
         -h|help      		   <this message>
         
-Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
+Takes in one (interleaved) or two FASTQ files (forward and reverse), and then performs read correction using SGA
 
 # outputs a file called _sga_error_corrected.fastq
 read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
@@ -51,19 +50,18 @@ use Cwd 'abs_path';
 
 use Bio::AssemblyImprovement::Assemble::SGA::Main;
 
-my ( $forward_reads_file, $reverse_reads_file, $sga_exec, $min_length, $quality_filter, $quality_trim);
-my ($algorithm, $threads, $disk, $kmer_threshold, $kmer_length, $output_directory, $output_filename, $debug, $help );
+my ( $forward_reads_file, $reverse_reads_file, $shuffled_reads_file, $sga_exec, $min_length, $quality_trim);
+my ( $algorithm, $threads, $kmer_threshold, $kmer_length, $output_directory, $output_filename, $debug, $help );
 
 GetOptions(
     'f|forward_fastq=s'     => \$forward_reads_file,
     'r|reverse_fastq=s'     => \$reverse_reads_file,
+    'fr|shuffled_fastq=s'   => \$shuffled_reads_file,
     's|sga_exec=s'		    => \$sga_exec,
     'm|min_length=i'		=> \$min_length,
     'q|quality_trim=i'		=> \$quality_trim,
-    'l|quality_filter=i'	=> \$quality_filter,
     'a|algorithm=s'		    => \$algorithm,
     't|threads=i'		    => \$threads,
-    'i|disk=i'				=> \$disk,
     'h|kmer_threshold=i'	=> \$kmer_threshold,
     'k|kmer_length=i'       => \$kmer_length,
     'o|output_directory=s'  => \$output_directory,
@@ -72,23 +70,20 @@ GetOptions(
     'h|help'                => \$help,
 );
 
-
-( defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
+# Check if either a forward & reverse file have been provided, or if a single shuffled file has been provided
+( ( (defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file )) or ((defined($shuffled_reads_file) && ( -e $shuffled_reads_file )  ))&& !$help ) or die <<USAGE;
 Usage: read_correction_with_sga [options]
 	
         -f|forward_fastq       <forward reads file - zipped or unzipped>
         -r|reverse_fastq       <reverse reads files - zipped or unzipped >
+        -fr|shuffled_fasta	   <an interleaved fastq file - zipped or unzipped>
         -s|sga_exec	 		   <path to sga script>
         
         -m|min_length	       <discard sequences that are shorter than this during preprocess>
         -q|quality_trim	       <trim reads using Heng Li's BWT trimming algorithm>
-        -l|quality_filter	   <discard read if it contains more than this many low-quality bases>
         
         -a|algorithm		   <indexing algorithm - ropebwt or sais>
         -t|threads	           <number of threads to use for computation>
-        -i|disk				   <use disk-based BWT construction algorithm. The suffix array/BWT will be constructed
-                                for batchs of this many reads at a time. To construct the suffix array of 200 megabases of sequence
-                                requires ~2GB of memory, set this parameter accordingly.>
         -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
         -k|kmer_length	       <the length of kmer to be used>
         
@@ -97,16 +92,17 @@ Usage: read_correction_with_sga [options]
         -d|debug			   <debug>
         -h|help      		   <this message>
         
-Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
+Takes in one (shuffled) or two (forward and reverse) FASTQ files, and then performs read correction using SGA
 
 # outputs a file called _sga_error_corrected.fastq.gz
 read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
+read_correction_with_sga -fr 123_shuffled.fastq
 
 # Gzipped input files are accepted
 read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
 
-# Sga_exec defaults to standard sga installation, threads default to 1, indexing algorithm defaults to ropebwt and kmer_length defaults to 60% of read length if not specified
-read_correction_with_sga -f 123_1.fastq -r 123_2.fastq -a sais -t 8 -k 41
+# Sga_exec defaults to standard sga installation, threads default to 1, indexing algorithm defaults to ropebwt, quality trim score default to 20 and kmer_length defaults to 41
+read_correction_with_sga -f 123_1.fastq -r 123_2.fastq -a sais -t 8 -k 31
 
 # This help message
 read_correction_with_sga -h
@@ -117,27 +113,32 @@ $sga_exec ||= '/software/pathogen/external/apps/usr/local/src/SGA/sga'; #Do we n
 
 $min_length ||= 66;
 $quality_trim ||= 20;
-$quality_filter ||= 3;
 
 $algorithm ||= 'ropebwt';
 $threads ||= 1;
-$disk ||= 1000000;
 $kmer_threshold ||= 5;
 $kmer_length ||=41; 
 $output_directory ||= abs_path (getcwd());
 $output_filename ||= '_sga_error_corrected.fastq';
 $debug           ||= 0;
 
-my @input_files = ( $forward_reads_file, $reverse_reads_file );
+my $pe_mode;
+my @input_files;
+
+if(defined $shuffled_reads_file){ # User's provided a single interleaved fastq file
+	$pe_mode = 2;
+	@input_files = ( $shuffled_reads_files );	
+}else{ # User's provided a forward file and a reverse file
+	$pe_mode = 1;
+	@input_files = ( $forward_reads_file, $reverse_reads_file );	
+}
 
 my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
     input_files      => \@input_files, 
     algorithm 		 => $algorithm,
     min_length	     => $min_length,
-    quality_filter	 => $quality_filter,
     quality_trim	 => $quality_trim,
     threads			 => $threads,
-    disk			 => $disk,
     kmer_threshold   => $kmer_threshold,
     kmer_length		 => $kmer_length,
     output_directory => $output_directory,
