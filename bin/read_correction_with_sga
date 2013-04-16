@@ -71,7 +71,7 @@ GetOptions(
 );
 
 # Check if either a forward & reverse file have been provided, or if a single shuffled file has been provided
-( ( (defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file )) or ((defined($shuffled_reads_file) && ( -e $shuffled_reads_file )  ))&& !$help ) or die <<USAGE;
+( (((defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file )) or ((defined($shuffled_reads_file) && ( -e $shuffled_reads_file )) ) && !$help ) or die <<USAGE;
 Usage: read_correction_with_sga [options]
 	
         -f|forward_fastq       <forward reads file - zipped or unzipped>
@@ -127,7 +127,7 @@ my @input_files;
 
 if(defined $shuffled_reads_file){ # User's provided a single interleaved fastq file
 	$pe_mode = 2;
-	@input_files = ( $shuffled_reads_files );	
+	@input_files = ( $shuffled_reads_file );	
 }else{ # User's provided a forward file and a reverse file
 	$pe_mode = 1;
 	@input_files = ( $forward_reads_file, $reverse_reads_file );	
