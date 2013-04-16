@@ -121,7 +121,6 @@ sub run {
 	# Move the results file from temporary directory to the original cwd and zip it. 
 	if(-e $sga_error_corrector->_output_filename){
 		move ( $sga_error_corrector->_output_filename, $self->_final_results_file);
-		$self->_zip_file(  $self->_final_results_file, $self->output_directory );
 	}
 	
 
