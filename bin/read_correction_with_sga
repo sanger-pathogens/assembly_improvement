@@ -124,7 +124,14 @@ $output_directory ||= getcwd();
 $output_directory  = abs_path($output_directory);
 make_path($output_directory);
 
-$output_filename ||= '_sga_error_corrected.fastq';
+if(defined $output_filename){
+	if ( $output_filename !~ /\.gz$/ ) {
+		$output_filename .= '.gz';
+		print "Changing output filename to $output_filename \n";  
+	}	
+}else{
+	$output_filename ||= '_sga_error_corrected.fastq.gz';
+}
 $debug           ||= 0;
 
 my $pe_mode;
