@@ -20,9 +20,9 @@ ok(
     (
     my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
             input_files     => [ $current_dir.'/t/data/forward.fastq', $current_dir.'/t/data/reverse.fastq' ] ,
-            algorithm      	=> 'ropebwt',
+            pe_mode	        => 1,
       		threads         => 8,
-      		kmer_length	    => 40,
+      		kmer_length	    => 41,
             sga_exec        => $current_dir.'/t/dummy_sga_script',
     	)
     ),
