@@ -22,7 +22,7 @@ Usage: read_correction_with_sga [options]
         -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
         -k|kmer_length	       <the length of kmer to be used>
         -o|output_directory	   <output directory for results file>
-        -z|output_filename	   <name of output filename if not using default of _sga_error_corrected.fastq.gz>
+        -z|output_filename	   <name of output filename if not using default of _sga_error_corrected.fastq If a zipped name is given like abc.fastq.gz, the results are zipped>
         -d|debug			   <debug>
         -h|help      		   <this message>
         
@@ -124,18 +124,26 @@ $output_directory ||= getcwd();
 $output_directory  = abs_path($output_directory);
 make_path($output_directory);
 
-$output_filename ||= '_sga_error_corrected.fastq';
+if(defined $output_filename){
+	if ( $output_filename !~ /\.gz$/ ) {
+		$output_filename .= '.gz';
+		print "Changing output filename to $output_filename \n";  
+	}	
+}else{
+	$output_filename ||= '_sga_error_corrected.fastq.gz';
+}
 $debug           ||= 0;
 
 my $pe_mode;
 my @input_files;
 
+# We get the absolute path below because we later change directories and dont want to lose this path information
 if(defined $shuffled_reads_file){ # User's provided a single interleaved fastq file
 	$pe_mode = 2;
-	@input_files = ( $shuffled_reads_file );	
+	@input_files = ( abs_path($shuffled_reads_file) );	
 }else{ # User's provided a forward file and a reverse file
 	$pe_mode = 1;
-	@input_files = ( $forward_reads_file, $reverse_reads_file );	
+	@input_files = ( abs_path($forward_reads_file), abs_path($reverse_reads_file) );	
 }
 
 my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
