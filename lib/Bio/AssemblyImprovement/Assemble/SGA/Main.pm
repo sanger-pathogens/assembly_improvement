@@ -55,7 +55,7 @@ has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'ropebwt'); 
 has 'threads'	        => ( is => 'ro', isa => 'Num',   default => 1); # Use this many threads for computation
 has 'kmer_threshold'	=> ( is => 'ro', isa => 'Num',   default=> 5); # Attempt to correct kmers that are seen less than this many times
 has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 41); # TODO: Calculate sensible default value
-has 'output_filename'   => ( is => 'rw', isa => 'Str',  default  => '_sga_error_corrected.fastq' );
+has 'output_filename'   => ( is => 'rw', isa => 'Str',  default  => '_sga_error_corrected.fastq' ); #If a zipped filename is provided like abc.fastq.gz the results file will be zipped
 has 'output_directory'  => ( is => 'rw', isa => 'Str', lazy => 1, builder => '_build_output_directory' ); # Default to cwd
 has 'sga_exec'          => ( is => 'rw', isa => 'Str',   required => 1 );
 has 'debug'             => ( is => 'ro', isa => 'Bool',  default => 0);
