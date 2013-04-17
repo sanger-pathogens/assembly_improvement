@@ -22,7 +22,7 @@ Usage: read_correction_with_sga [options]
         -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
         -k|kmer_length	       <the length of kmer to be used>
         -o|output_directory	   <output directory for results file>
-        -z|output_filename	   <name of output filename if not using default of _sga_error_corrected.fastq.gz>
+        -z|output_filename	   <name of output filename if not using default of _sga_error_corrected.fastq If a zipped name is given like abc.fastq.gz, the results are zipped>
         -d|debug			   <debug>
         -h|help      		   <this message>
         
