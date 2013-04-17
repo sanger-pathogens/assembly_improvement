@@ -130,12 +130,13 @@ $debug           ||= 0;
 my $pe_mode;
 my @input_files;
 
+# We get the absolute path below because we later change directories and dont want to lose this path information
 if(defined $shuffled_reads_file){ # User's provided a single interleaved fastq file
 	$pe_mode = 2;
-	@input_files = ( $shuffled_reads_file );	
+	@input_files = ( abs_path($shuffled_reads_file) );	
 }else{ # User's provided a forward file and a reverse file
 	$pe_mode = 1;
-	@input_files = ( $forward_reads_file, $reverse_reads_file );	
+	@input_files = ( abs_path($forward_reads_file), abs_path($reverse_reads_file) );	
 }
 
 my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
