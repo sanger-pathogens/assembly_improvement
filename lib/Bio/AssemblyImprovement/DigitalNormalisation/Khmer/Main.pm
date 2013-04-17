@@ -4,6 +4,22 @@ package Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main;
 
 =head1 SYNOPSIS
 
+Runs SGA preprocess and error correction steps. Final results file made available in current working directory.
+Intermediate files produced are cleaned up.
+
+   use Bio::AssemblyImprovement::Assemble::SGA::Main;
+
+   my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
+            input_files     => [ $current_dir.'/t/data/forward.fastq', $current_dir.'/t/data/reverse.fastq' ] ,
+            algorithm      	=> 'ropebwt',
+      		threads         => 8,
+      		kmer_length	    => 40,
+            sga_exec        => $current_dir.'/t/dummy_sga_script.pl',
+   );
+   $sga->run();
+my $results = $self->_final_results_file;
+  
+
    
 =method 
 
@@ -30,10 +46,10 @@ with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 
 has 'input_file'        => ( is => 'ro', isa => 'Str' , required => 1);
-has 'desired_coverage'  => ( is => 'ro', isa => 'Num', default  => 80 );
-has 'kmer_size'	        => ( is => 'ro', isa => 'Num', default => 40); 
+has 'desired_coverage'  => ( is => 'ro', isa => 'Num', default  => 2 );
+has 'kmer_size'	        => ( is => 'ro', isa => 'Num', default => 31); 
 has 'number_of_hashes'	=> ( is => 'ro', isa => 'Num', default => 4); 
-has 'min_hash_size'	    => ( is => 'ro', isa => 'Str', default => '5e8'); 
+has 'min_hash_size'	    => ( is => 'ro', isa => 'Str', default => '2.5e8'); 
 has 'paired'	        => ( is => 'ro', isa => 'Bool', default => 1); # The pipeline will almost always be sending paired data
 has 'savehash'	        => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.kh'); # We will need this hash if we decide to implement subsequent steps in this program
 has 'report_file'	    => ( is => 'ro', isa => 'Str', default => 'khmer_normalise.report'); # Optional report file that logs that actions of the normalisation
@@ -88,8 +104,8 @@ sub run {
                 '-k', $self->kmer_size,
                 '-N', $self->number_of_hashes,
                 '-x', $self->min_hash_size, 
-                '--report-to-file', $self->report_file,
-                '--savehash', $self->savehash,
+   #             '--report-to-file', $self->report_file,
+   #             '--savehash', $self->savehash,
                	$self->input_file,
                 $stdout_of_program
             )
@@ -100,7 +116,7 @@ sub run {
     # We want to have the flexibility of calling it something we like. Hence, the move below. 
         
     move( $self->_default_output_filename, $self->_final_results_file);
-    $self->_zip_file(  $self->_final_results_file, $self->output_directory );
+    $self->_zip_file( $self->_final_results_file, $self->output_directory ); #As a principle, we always zip our results
     
     return $self;
 }
