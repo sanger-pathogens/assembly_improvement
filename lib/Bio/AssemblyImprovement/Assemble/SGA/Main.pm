@@ -54,7 +54,7 @@ has 'pe_mode'		   => ( is => 'ro', isa => 'Num', default => 2); #We set default 
 has 'algorithm'	        => ( is => 'ro', isa => 'Str',   default => 'ropebwt'); # BWT construction algorithm: sais or ropebwt
 has 'threads'	        => ( is => 'ro', isa => 'Num',   default => 1); # Use this many threads for computation
 has 'kmer_threshold'	=> ( is => 'ro', isa => 'Num',   default=> 5); # Attempt to correct kmers that are seen less than this many times
-has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 41); # TODO: Calculate sensible default value
+has 'kmer_length'	    => ( is => 'ro', isa => 'Num',   default=> 41); 
 has 'output_filename'   => ( is => 'rw', isa => 'Str',  default  => '_sga_error_corrected.fastq' ); #If a zipped filename is provided like abc.fastq.gz the results file will be zipped
 has 'output_directory'  => ( is => 'rw', isa => 'Str', lazy => 1, builder => '_build_output_directory' ); # Default to cwd
 has 'sga_exec'          => ( is => 'rw', isa => 'Str',   required => 1 );
@@ -118,15 +118,26 @@ sub run {
 	
 	chdir($original_cwd);
 	
-	# Move the results file from temporary directory to the chosen output directory, zip it if necessary and get rid of unzipped file 
-	my $temporary_results_file = $sga_error_corrector->_output_filename;
-	if($self->output_filename =~ /\.gz$/){ 
-		$temporary_results_file = $self->_zip_file( $temporary_results_file , $self->output_directory ); 
-	}
-		
-	move ( $temporary_results_file, $self->_final_results_file);
-	unlink($temporary_results_file);
+        # Move the results file from temporary directory to the chosen output directory, zip it if necessary and get rid of unzipped file
+#       my $temporary_results_file = $sga_error_corrector->_output_filename;
+#       if($self->output_filename =~ /\.gz$/){
+#
+#                my ( $filename, $directories, $suffix ) = fileparse( $temporary_results_file );
+#               my $new_filename = join( '/', ( $self->output_directory, $filename.'.gz' ) );
+#               my $new_temporary_results_file = $self->_zip_file( $temporary_results_file , $self->output_directory );
+#       }
+#       system('echo outofif');
+#       move ( $new_temporary_results_file, $self->_final_results_file);
+#       unlink($temporary_results_file);
 
+move ( $sga_error_corrector->_output_filename, $self->_final_results_file);
+$self->_zip_file(  $self->_final_results_file, $self->output_directory );
+
+# 
+# my $input_filename = $sga_error_corrector->_output_filename;
+# my ( $filename, $directories, $suffix ) = fileparse( $input_filename );
+# my $output_filename = join( '/', ( $self->output_directory, $filename.'.gz' ) );
+# gzip $input_filename => $output_filename or die "gzip failed: $GzipError\n";
 	
 
     
