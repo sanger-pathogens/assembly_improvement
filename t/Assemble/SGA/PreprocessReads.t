@@ -20,10 +20,11 @@ ok(
     (
     my $sga_preprocessor = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
             input_files     => [ 't/data/forward.fastq', 't/data/reverse.fastq.gz' ] ,
+            pe_mode			=> 1,
             sga_exec        => $current_dir.'/t/dummy_sga_script',
     	)
     ),
-    'some zipped'
+    'Created with two fastq files; some zipped.'
 );
 
 my $prepared_input_files = $sga_preprocessor->_prepare_input_files();
@@ -52,7 +53,6 @@ ok(-e $sga_preprocessor->_output_filename(),
    'SGA preprocessed file exists in expected location');
    
    
-   
 # Test: Can the pre-processor accept 1 shuffled file?
 
 ok(
@@ -60,7 +60,7 @@ ok(
     my $sga_preprocessor_shuffled = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
             input_files     => [ 't/data/shuffled.fastq' ] ,
             sga_exec        => $current_dir.'/t/dummy_sga_script',
-    	)
+      )
     ),
     'shuffled fastq'
 );
@@ -70,5 +70,10 @@ ok($sga_preprocessor_shuffled->run(), 'Run the SGA preprocess (shuffled) step wi
 ok(-e $sga_preprocessor_shuffled->_output_filename(),
    'SGA preprocessed file exists in expected location');
    
+# Clean up
+unlink($sga_preprocessor->_output_filename());
+unlink($sga_preprocessor_shuffled->_output_filename());
+
+  
 
 done_testing();
