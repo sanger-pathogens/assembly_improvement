@@ -118,11 +118,10 @@ sub run {
 	
 	chdir($original_cwd);
 	
-	# Move the results file from temporary directory to the original cwd, zip it if necessary and get rid of unzipped file 
+	# Move the results file from temporary directory to the chosen output directory, zip it if necessary and get rid of unzipped file 
 	my $temporary_results_file = $sga_error_corrector->_output_filename;
 	if($self->output_filename =~ /\.gz$/){ 
-		$self->_zip_file( $temporary_results_file , $self->output_directory ); 
-		$temporary_results_file = $temporary_results_file.'.gz'; 
+		$temporary_results_file = $self->_zip_file( $temporary_results_file , $self->output_directory ); 
 	}
 		
 	move ( $temporary_results_file, $self->_final_results_file);
