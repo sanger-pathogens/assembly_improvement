@@ -31,6 +31,7 @@ use Moose;
 use Getopt::Long;
 use Cwd;
 use Cwd 'abs_path';
+use File::Path qw(make_path);
 
 use Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main;
 
