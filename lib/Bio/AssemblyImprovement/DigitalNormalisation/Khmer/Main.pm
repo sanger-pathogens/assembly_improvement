@@ -4,19 +4,15 @@ package Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main;
 
 =head1 SYNOPSIS
 
-Runs SGA preprocess and error correction steps. Final results file made available in current working directory.
-Intermediate files produced are cleaned up.
+Runs digital normalisation using khmer. Final results file (zipped) produced in directory of your choice 
+(default: current working directory)
 
-   use Bio::AssemblyImprovement::Assemble::SGA::Main;
-
-   my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
-            input_files     => [ $current_dir.'/t/data/forward.fastq', $current_dir.'/t/data/reverse.fastq' ] ,
-            algorithm      	=> 'ropebwt',
-      		threads         => 8,
-      		kmer_length	    => 40,
-            sga_exec        => $current_dir.'/t/dummy_sga_script.pl',
-   );
-   $sga->run();
+my $digi_norm = Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main->new(
+        input_file     	 => 'abc_shuffled.fastq',
+        desired_coverage => '40',
+        khmer_exec       => '/path/to/normalise/script.py',
+        python_exec      => 'python-2.7',
+); 
 my $results = $self->_final_results_file;
   
 
