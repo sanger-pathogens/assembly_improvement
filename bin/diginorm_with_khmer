@@ -10,13 +10,15 @@ Given a fastq file, perform digital normalisation on it.
 Usage: diginorm_with_khmer [options]
 	
 		-i|input_file          <input fastq file>
+		-c|desired_coverage	   <desired median coverage>
         -k|kmer_length	       <the length of kmer to be used>
         -n|number_of_hashes    <number of hashes>
         -m|minimum_hash_size   <minimum hash size>
         -p|paired			   <is the data paired?>
         -o|output_directory	   <output directory for results file>
-        -z|output_filename	   <name of output filename if not using default of _sga_error_corrected.fastq.gz>
+        -z|output_filename	   <name of output filename if not using default of digitally_normalised.fastq.gz>
         -e|khmer_exec		   <khmer exec>
+        -py|python_exec		   <default is python-2.7>
         -d|debug			   <debug>
         -h|help      		   <this message>
    
@@ -32,105 +34,98 @@ use Cwd 'abs_path';
 
 use Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main;
 
-my ( $input_filename, $kmer_length, $no_of_hashes, $min_hash_size, $paired, $output_directory, $output_filename, $khmer_exec, $debug, $help );
+my ( $input_filename, $coverage, $kmer_length, $no_of_hashes, $min_hash_size, $paired, $output_directory, $output_filename, $khmer_exec, $python_exec, $debug, $help );
 
 GetOptions(
 	'i|input_file=s'		=> \$input_filename,
+	'c|coverage=i'			=> \$coverage,
 	'k|kmer_length=i'       => \$kmer_length,
-	'n|number_of_hashes
-
-
-
-    'f|forward_fastq=s'     => \$forward_reads_file,
-    'r|reverse_fastq=s'     => \$reverse_reads_file,
-    's|sga_exec=s'		    => \$sga_exec,
-    'm|min_length=i'		=> \$min_length,
-    'q|quality_trim=i'		=> \$quality_trim,
-    'l|quality_filter=i'	=> \$quality_filter,
-    'a|algorithm=s'		    => \$algorithm,
-    't|threads=i'		    => \$threads,
-    'i|disk=i'				=> \$disk,
-    'h|kmer_threshold=i'	=> \$kmer_threshold,
-
+	'n|number_of_hashes=i'	=> \$no_of_hashes,
+	'm|minimum_hash_size=s'	=> \$min_hash_size,
+	'p|paired'			    => \$paired,
     'o|output_directory=s'  => \$output_directory,
     'z|output_filename=s'   => \$output_filename,
+    'e|khmer_exec=s'	    => \$khmer_exec,
+    'py|python_exec=s'		=> \$python_exec,
     'd|debug'               => \$debug,
     'h|help'                => \$help,
 );
 
 
-( defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
-Usage: read_correction_with_sga [options]
+( defined($input_filename) && ( -e $input_filename) && !$help ) or die <<USAGE;
+
+Usage: diginorm_with_khmer [options]
 	
-        -f|forward_fastq       <forward reads file - zipped or unzipped>
-        -r|reverse_fastq       <reverse reads files - zipped or unzipped >
-        -s|sga_exec	 		   <path to sga script>
-        
-        -m|min_length	       <discard sequences that are shorter than this during preprocess>
-        -q|quality_trim	       <trim reads using Heng Li's BWT trimming algorithm>
-        -l|quality_filter	   <discard read if it contains more than this many low-quality bases>
-        
-        -a|algorithm		   <indexing algorithm - ropebwt or sais>
-        -t|threads	           <number of threads to use for computation>
-        -i|disk				   <use disk-based BWT construction algorithm. The suffix array/BWT will be constructed
-                                for batchs of this many reads at a time. To construct the suffix array of 200 megabases of sequence
-                                requires ~2GB of memory, set this parameter accordingly.>
-        -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
-        -k|kmer_length	       <the length of kmer to be used>
-        
-        -o|output_directory	   <output directory for results file(s)>
-        -z|output_filename     <output filename if not using default of _sga_error_corrected.fastq.gz>
+		-i|input_file          <input fastq file>
+		-c|coverage			   <desired median coverage. Default = 2>
+        -k|kmer_length	       <the length of kmer to be used. Default = 31. Larger kmers need more memory so choose carefully>
+        -n|number_of_hashes    <number of hashes. Default = 4>
+        -m|minimum_hash_size   <minimum hash size. Default = 2.5e8>
+        -p|paired			   <is the data paired? Default = yes>
+        -o|output_directory	   <output directory for results file>
+        -z|output_filename	   <name of output filename if not using default of digitally_normalised.fastq.gz>
+        -e|khmer_exec		   <khmer exec>
+        -py|python_exec		   <default is python-2.7>
         -d|debug			   <debug>
         -h|help      		   <this message>
         
-Takes in two FASTQ files (forward and reverse), and then performs read correction using SGA
+Takes in a fastq file (zipped or unzipped) and produced a normalised fastq file (zipped)
 
-# outputs a file called _sga_error_corrected.fastq.gz
-read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
+# outputs a file called digitally_normalised.fastq.gz
+diginorm_with_khmer -i 123_shuffled.fastq 
 
 # Gzipped input files are accepted
-read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
+diginorm_with_khmer -i 123_shuffled.fastq.gz
 
-# Sga_exec defaults to standard sga installation, threads default to 1, indexing algorithm defaults to ropebwt and kmer_length defaults to 60% of read length if not specified
-read_correction_with_sga -f 123_1.fastq -r 123_2.fastq -a sais -t 8 -k 41
+# outputs a file called 123_normalised.fastq.gz in current working directory
+diginorm_with_khmer -i 123_shuffled.fastq -z 123_normalised.fastq.gz
 
 # This help message
-read_correction_with_sga -h
+diginorm_with_khmer -h
 
 USAGE
 
-$sga_exec ||= '/software/pathogen/external/apps/usr/local/src/SGA/sga'; #Do we need to check if executable available?
+$khmer_exec ||= '/software/pathogen/external/apps/usr/local/khmer/scripts/normalize-by-median.py';
+$python_exec ||= 'python-2.7';
 
-$min_length ||= 51;
-$quality_trim ||= 3;
-$quality_filter ||= 3;
+$input_filename = abs_path($input_filename);
+$coverage ||= 2;
+$kmer_length ||= 31;
+$no_of_hashes ||= 4;
+$min_hash_size ||= '2.5e8';
+$paired ||= 1;
 
-$algorithm ||= 'sais';
-$threads ||= 1;
-$disk ||= 28000000;
-$kmer_threshold ||= 5;
-$kmer_length ||=41; #calculate a % of read length
-$output_directory ||= abs_path (getcwd());
-$output_filename ||= '_sga_error_corrected.fastq';
-$debug           ||= 0;
+$output_directory ||= getcwd();
+$output_directory  = abs_path($output_directory);
+make_path($output_directory);
 
-my @input_files = ( $forward_reads_file, $reverse_reads_file );
+# We zip the results so make sure that the output filename reflects that by having a .gz at the end
+if(defined $output_filename){
+	if ( $output_filename !~ /\.gz$/ ) {
+		$output_filename .= '.gz';
+		print "Changing output filename to $output_filename \n";  
+	}	
+}else{
+	$output_filename ||= 'digitally_normalised.fastq.gz';
+}
 
-my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
-    input_files      => \@input_files, 
-    algorithm 		 => $algorithm,
-    min_length	     => $min_length,
-    quality_filter	 => $quality_filter,
-    quality_trim	 => $quality_trim,
-    threads			 => $threads,
-    disk			 => $disk,
-    kmer_threshold   => $kmer_threshold,
-    kmer_length		 => $kmer_length,
-    output_directory => $output_directory,
-    output_filename  => $output_filename,
-    sga_exec		 => $sga_exec,
-    debug            => $debug,
-)->run();
+$debug ||= 0;
+
+
+my $digi_norm = Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main->new(
+        input_file     	 => $input_filename,
+        desired_coverage => $coverage,
+        kmer_size		 => $kmer_length,
+        number_of_hashes => $no_of_hashes,
+        min_hash_size	 => $min_hash_size,
+        paired			 => $paired,
+        output_filename	 => $output_filename,
+        output_directory => $output_directory,
+        khmer_exec		 => $khmer_exec,
+        python_exec      => $python_exec,
+        debug			 => $debug,
+)->run; 
+
 
 
 
