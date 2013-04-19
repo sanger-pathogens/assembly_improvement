@@ -105,6 +105,8 @@ sub run {
     
     my $zipped_results = $self->_zip_file( $self->_default_output_filename , $self->output_directory ); #As a principle, we always zip our results
 	move ( $zipped_results, $self->_final_results_file);
+	
+	unlink( $self->_default_output_filename );
 	            
     return $self;
 }
