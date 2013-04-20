@@ -32,8 +32,8 @@ with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 has 'forward_file'           => ( is => 'ro', isa => 'Str' , required => 1); 
 has 'reverse_file'           => ( is => 'ro', isa => 'Str' , required => 1);
 has 'output_directory'       => ( is => 'ro', isa => 'Str' , builder => '_build_output_directory'); # Will default to current working directory
-has 'output_f_filename'		 => ( is => 'ro', isa => 'Str' , removed => 'primer_removed.forward.fastq.gz');
-has 'output_r_filename'		 => ( is => 'ro', isa => 'Str' , removed => 'primer_removed.reverse.fastq.gz');
+has 'output_f_filename'		 => ( is => 'ro', isa => 'Str' , default => 'primer_removed.forward.fastq.gz');
+has 'output_r_filename'		 => ( is => 'ro', isa => 'Str' , default => 'primer_removed.reverse.fastq.gz');
 has 'primers_file'  	     => ( is => 'ro', isa => 'Str', required => 1);
 has 'leeway'	      	     => ( is => 'ro', isa => 'Num', default => 5); #Maximum distance primer can be within a read [ QUASR default: 40]
 has 'minimum_length'	     => ( is => 'ro', isa => 'Num', default => '50'); #Minimum read length cut off
@@ -61,7 +61,7 @@ sub _default_results_files {
 	my @default_results_files;
 	push(@default_results_files, $self->output_directory.'/primer_removed.f.qc.fq.gz');
 	push(@default_results_files, $self->output_directory.'/primer_removed.r.qc.fq.gz');	
-	return @default_results_file;
+	return @default_results_files;
 }
 
 sub run {
