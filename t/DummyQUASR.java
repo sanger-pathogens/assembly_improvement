@@ -6,13 +6,15 @@ public class DummyQUASR {
 
 		String currentDirectory = System.getProperty("user.dir");
 	
-		// create File object
-		File resultsFile = new File(currentDirectory.concat("/primer_removed.qc.fastq.gz"));
+		// create File objects
+		File resultsFile_forward = new File(currentDirectory.concat("/primer_removed.f.qc.fq.gz"));
+		File resultsFile_reverse = new File(currentDirectory.concat("/primer_removed.r.qc.fq.gz"));
 	
 		try {
-			resultsFile.createNewFile();
+			resultsFile_forward.createNewFile();
+			resultsFile_reverse.createNewFile();
 		} catch (IOException ioe) {
-			System.out.println("Error while creating dummy QUASR results file in Java" + ioe);
+			System.out.println("Error while creating dummy QUASR results files in Java" + ioe);
 		}
 
 	}
