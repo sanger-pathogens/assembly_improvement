@@ -59,8 +59,8 @@ sub _default_results_files {
 	my ($self) = @_;
 	# QUASR will produce a forward and reverse file called $output_prefix with a 'f/r.qc.fastq' suffix. We specify the -z flag so it will also be zipped
 	my @default_results_files;
-	push(@default_results_files, $self->output_directory.'/primer_removed.f.qc.fq.gz');
-	push(@default_results_files, $self->output_directory.'/primer_removed.r.qc.fq.gz');	
+	push(@default_results_files, $self->output_directory.'/primer_removed.qc.f.fq.gz');
+	push(@default_results_files, $self->output_directory.'/primer_removed.qc.r.fq.gz');	
 	return @default_results_files;
 }
 

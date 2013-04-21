@@ -7,8 +7,8 @@ public class DummyQUASR {
 		String currentDirectory = System.getProperty("user.dir");
 	
 		// create File objects
-		File resultsFile_forward = new File(currentDirectory.concat("/primer_removed.f.qc.fq.gz"));
-		File resultsFile_reverse = new File(currentDirectory.concat("/primer_removed.r.qc.fq.gz"));
+		File resultsFile_forward = new File(currentDirectory.concat("/primer_removed.qc.f.fq.gz"));
+		File resultsFile_reverse = new File(currentDirectory.concat("/primer_removed.qc.r.fq.gz"));
 	
 		try {
 			resultsFile_forward.createNewFile();
