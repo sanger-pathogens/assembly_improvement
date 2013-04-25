@@ -86,7 +86,7 @@ sub run {
                 $self->sga_exec, 'correct',
                 '-k', $self->kmer_length,
                 #'--discard', #Do not do discard. It creates orphan reads and does not make much of a difference with velvet
-                '--learn',
+                #'--learn', #Do not try to learn the kmer threshold. After normalisation, coverage may drop to below 20 in which case learning will not work
                 '-x', $self->kmer_threshold,
                 '-t', $self->threads, 
                 '-o', $self->output_filename,
