@@ -102,7 +102,7 @@ make_path($output_directory);
 $leeway ||= 5;
 $minimum_length ||= 50;
 $median_quality ||= 30;
-$quasr_exec ||= '/lustre/scratch108/viruses/mc13/scripts/QUASR702_Parser_25July12/readsetProcessor.jar'; #Replace with pathogen installation
+$quasr_exec ||= '/software/pathogen/internal/pathdev/java/QUASR702_Parser/readsetProcessor.jar'; 
 $debug           ||= 0;
 
 
