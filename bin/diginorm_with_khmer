@@ -1,0 +1,132 @@
+#!/usr/bin/env perl
+package Bio::AssemblyImprovement::Bin::DiginormWithKhmer;
+# ABSTRACT: Given a fastq file, it performs digital normalisation on the reads using khmer
+# PODNAME: diginorm_with_khmer
+=head1 SYNOPSIS
+
+Given a fastq file, perform digital normalisation on it. 
+
+  
+Usage: diginorm_with_khmer [options]
+	
+		-i|input_file          <input fastq file>
+		-c|desired_coverage	   <desired median coverage>
+        -k|kmer_length	       <the length of kmer to be used>
+        -n|number_of_hashes    <number of hashes>
+        -m|minimum_hash_size   <minimum hash size>
+        -p|paired			   <is the data paired?>
+        -o|output_directory	   <output directory for results file>
+        -z|output_filename	   <name of output filename if not using default of digitally_normalised.fastq.gz>
+        -e|khmer_exec		   <khmer exec>
+        -py|python_exec		   <default is python-2.7>
+        -d|debug			   <debug>
+        -h|help      		   <this message>
+   
+=cut
+
+
+BEGIN { unshift( @INC, '../lib' ) }
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Cwd;
+use Cwd 'abs_path';
+use File::Path qw(make_path);
+
+use Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main;
+
+my ( $input_filename, $coverage, $kmer_length, $no_of_hashes, $min_hash_size, $paired, $output_directory, $output_filename, $khmer_exec, $python_exec, $debug, $help );
+
+GetOptions(
+	'i|input_file=s'		=> \$input_filename,
+	'c|coverage=i'			=> \$coverage,
+	'k|kmer_length=i'       => \$kmer_length,
+	'n|number_of_hashes=i'	=> \$no_of_hashes,
+	'm|minimum_hash_size=s'	=> \$min_hash_size,
+	'p|paired'			    => \$paired,
+    'o|output_directory=s'  => \$output_directory,
+    'z|output_filename=s'   => \$output_filename,
+    'e|khmer_exec=s'	    => \$khmer_exec,
+    'py|python_exec=s'		=> \$python_exec,
+    'd|debug'               => \$debug,
+    'h|help'                => \$help,
+);
+
+
+( defined($input_filename) && ( -e $input_filename) && !$help ) or die <<USAGE;
+
+Usage: diginorm_with_khmer [options]
+	
+		-i|input_file          <input fastq file>
+		-c|coverage			   <desired median coverage. Default = 2>
+        -k|kmer_length	       <the length of kmer to be used. Default = 31. Larger kmers need more memory so choose carefully>
+        -n|number_of_hashes    <number of hashes. Default = 4>
+        -m|minimum_hash_size   <minimum hash size. Default = 2.5e8>
+        -p|paired			   <is the data paired? Default = yes>
+        -o|output_directory	   <output directory for results file>
+        -z|output_filename	   <name of output filename if not using default of digitally_normalised.fastq.gz>
+        -e|khmer_exec		   <khmer exec>
+        -py|python_exec		   <default is python-2.7>
+        -d|debug			   <debug>
+        -h|help      		   <this message>
+        
+Takes in a fastq file (zipped or unzipped) and produced a normalised fastq file (zipped)
+
+# outputs a file called digitally_normalised.fastq.gz
+diginorm_with_khmer -i 123_shuffled.fastq 
+
+# Gzipped input files are accepted
+diginorm_with_khmer -i 123_shuffled.fastq.gz
+
+# outputs a file called 123_normalised.fastq.gz in current working directory
+diginorm_with_khmer -i 123_shuffled.fastq -z 123_normalised.fastq.gz
+
+# This help message
+diginorm_with_khmer -h
+
+USAGE
+
+$khmer_exec ||= '/software/pathogen/external/apps/usr/local/khmer/scripts/normalize-by-median.py';
+$python_exec ||= 'python-2.7';
+
+$input_filename = abs_path($input_filename);
+$coverage ||= 2;
+$kmer_length ||= 31;
+$no_of_hashes ||= 4;
+$min_hash_size ||= '2.5e8';
+$paired ||= 1;
+
+$output_directory ||= getcwd();
+$output_directory  = abs_path($output_directory);
+make_path($output_directory);
+
+# We zip the results so make sure that the output filename reflects that by having a .gz at the end
+if(defined $output_filename){
+	if ( $output_filename !~ /\.gz$/ ) {
+		$output_filename .= '.gz';
+		print "Changing output filename to $output_filename \n";  
+	}	
+}else{
+	$output_filename ||= 'digitally_normalised.fastq.gz';
+}
+
+$debug ||= 0;
+
+
+my $digi_norm = Bio::AssemblyImprovement::DigitalNormalisation::Khmer::Main->new(
+        input_file     	 => $input_filename,
+        desired_coverage => $coverage,
+        kmer_size		 => $kmer_length,
+        number_of_hashes => $no_of_hashes,
+        min_hash_size	 => $min_hash_size,
+        paired			 => $paired,
+        output_filename	 => $output_filename,
+        output_directory => $output_directory,
+        khmer_exec		 => $khmer_exec,
+        python_exec      => $python_exec,
+        debug			 => $debug,
+)->run; 
+
+
+
+

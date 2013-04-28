@@ -26,13 +26,18 @@ Usage: read_correction_with_sga [options]
         -d|debug			   <debug>
         -h|help      		   <this message>
         
+
 Takes in one (interleaved) or two FASTQ files (forward and reverse), and then performs read correction using SGA
+
 
 # outputs a file called _sga_error_corrected.fastq
 read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
 
 # Gzipped input files are accepted
 read_correction_with_sga -f 123_1.fastq.gz -r 123_2.fastq.gz
+
+# Shuffled fastq file accepted
+read_correction_with_sga -fr 123_shuffled.fastq.gz
 
 # This help message
 read_correction_with_sga -h 
@@ -51,8 +56,10 @@ use File::Path qw(make_path);
 
 use Bio::AssemblyImprovement::Assemble::SGA::Main;
 
+
 my ( $forward_reads_file, $reverse_reads_file, $shuffled_reads_file, $sga_exec, $min_length, $quality_trim);
 my ( $algorithm, $threads, $kmer_threshold, $kmer_length, $output_directory, $output_filename, $debug, $help );
+
 
 GetOptions(
     'f|forward_fastq=s'     => \$forward_reads_file,
@@ -70,6 +77,7 @@ GetOptions(
     'd|debug'               => \$debug,
     'h|help'                => \$help,
 );
+
 
 # Check if either a forward & reverse file have been provided, or if a single shuffled file has been provided
 ( ( ( defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) ) or ( defined($shuffled_reads_file) && ( -e $shuffled_reads_file ) ) ) && !$help ) or die <<USAGE;
@@ -92,7 +100,7 @@ Usage: read_correction_with_sga [options]
         -z|output_filename     <output filename if not using default of _sga_error_corrected.fastq.gz>
         -d|debug			   <debug>
         -h|help      		   <this message>
-        
+
 Takes in one (shuffled) or two (forward and reverse) FASTQ files, and then performs read correction using SGA
 
 # outputs a file called _sga_error_corrected.fastq.gz
@@ -134,6 +142,7 @@ if(defined $output_filename){
 }
 $debug           ||= 0;
 
+
 my $pe_mode;
 my @input_files;
 
@@ -148,6 +157,7 @@ if(defined $shuffled_reads_file){ # User's provided a single interleaved fastq f
 
 my $sga = Bio::AssemblyImprovement::Assemble::SGA::Main->new(
     input_files      => \@input_files, 
+    pe_mode			 => $pe_mode,
     algorithm 		 => $algorithm,
     min_length	     => $min_length,
     quality_trim	 => $quality_trim,

@@ -40,7 +40,7 @@ ok(-e $sga->_intermediate_file, 'SGA preprocessed file in right locations');
 # Test: Is the name of the results file as expected?
 is(
     $sga->_final_results_file,
-    join ('/', $current_dir, '_sga_error_corrected.fastq'),   
+    join ('/', $current_dir, '_sga_error_corrected.fastq.gz'),   
    'Default results file name ok');
    
 

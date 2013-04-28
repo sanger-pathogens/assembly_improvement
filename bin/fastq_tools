@@ -1,0 +1,77 @@
+#!/usr/bin/env perl
+package Bio::AssemblyImprovement::Bin::FastqTools;
+# ABSTRACT: 
+# PODNAME: fastq_tools
+=head1 SYNOPSIS
+
+
+=cut
+
+
+BEGIN { unshift( @INC, '../lib' ) }
+use lib "/software/pathogen/internal/prod/lib";
+use Moose;
+use Getopt::Long;
+use Switch;
+
+
+use Bio::AssemblyImprovement::Util::FastqTools;
+
+my ( $input_file, $task, $genome_size, $help);
+
+
+GetOptions(
+    'i|input_file=s'        => \$input_file,
+    't|task=s'              => \$task,
+    'g|genome_size=i'		=> \$genome_size,
+    'h|help'                => \$help,
+);
+
+
+( defined($input_file)  && !$help ) or die <<USAGE;
+Usage: fastq_tools [options]
+	
+        -i|input_file          <fastq file>
+        -t|task                <task can be kmer, coverage, split or histogram. If coverage, provide the genome size. See below>
+        -g|genome_size		   <genome size>
+  
+        -h|help      		   <this message>
+        
+'kmer': Calculate 66% and 90% of median read length as minimum and maximum kmer sizes. Uses for running VelvetOptimiser
+'coverage': Given a genome size, calculates the coverage
+'split': Takes a shuffled fastq file and splits into forward and reverse based on /1 or /2 in the ID
+'histogram': Produces a file called histogram.png in current directory with a histogram of the read lengths
+
+USAGE
+
+if(($task eq 'coverage') and (not defined($genome_size))){
+
+	die "To calculate coverage, please provide the genome size. Use -h to see options. \n";
+}
+
+my $fastq_processor  = Bio::AssemblyImprovement::Util::FastqTools->new(
+    input_filename   => $input_file, 
+);
+
+switch ($task) {
+
+	#Draws and saves a histogram of the read lengths in a file called histogram.png in the current working directory
+	case "histogram"    { $fastq_processor->draw_histogram_of_read_lengths(); }
+
+	case "kmer"			{
+						my %kmer_sizes = $fastq_processor->calculate_kmer_sizes();
+						print "Minimum kmer size: $kmer_sizes{min} \nMaximum kmer size: $kmer_sizes{max} \n";
+						}
+	case "coverage"		{
+						my $coverage = $fastq_processor->calculate_coverage($genome_size);
+						print "Coverage is $coverage x \n"; 
+						}
+	case "split"		{
+						$fastq_processor->split_fastq();
+						print "File split into forward.fastq and reverse.fastq \n";
+						}
+						 
+	else				{ print "Task $task not recognised. Type fastq_tools -h for help."; }
+}
+							
+		

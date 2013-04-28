@@ -89,6 +89,7 @@ sub run {
     # SGA preprocess
     my $sga_preprocessor     = Bio::AssemblyImprovement::Assemble::SGA::PreprocessReads->new(
             input_files      => $self->input_files,
+            pe_mode			 => $self->pe_mode,
             min_length	     => $self->min_length,
             pe_mode	  		 => $self->pe_mode,
             quality_trim	 => $self->quality_trim,
@@ -116,7 +117,7 @@ sub run {
 	$sga_error_corrector->run();
 	
 	chdir($original_cwd);
-	
+
 	my $zipped_results = $self->_zip_file( $sga_error_corrector->_output_filename , $self->output_directory );
 	move ( $zipped_results, $self->_final_results_file);
 
