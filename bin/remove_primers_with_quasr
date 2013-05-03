@@ -28,26 +28,13 @@ remove_primers_with_quasr -f forward.fastq -r reverse.fastq -p /path/to/primers.
    
 =cut
 
-has 'forward_file'           => ( is => 'ro', isa => 'Str' , required => 1); 
-has 'reverse_file'           => ( is => 'ro', isa => 'Str' , required => 1);
-has 'output_directory'       => ( is => 'ro', isa => 'Str' , builder => '_build_output_directory'); # Will default to current working directory
-has 'output_f_filename'		 => ( is => 'ro', isa => 'Str' , default => 'primer_removed.forward.fastq.gz');
-has 'output_r_filename'		 => ( is => 'ro', isa => 'Str' , default => 'primer_removed.reverse.fastq.gz');
-has 'primers_file'  	     => ( is => 'ro', isa => 'Str', required => 1);
-has 'leeway'	      	     => ( is => 'ro', isa => 'Num', default => 5); #Maximum distance primer can be within a read [ QUASR default: 40]
-has 'minimum_length'	     => ( is => 'ro', isa => 'Num', default => '50'); #Minimum read length cut off
-has 'median_quality_cutoff'	 => ( is => 'ro', isa => 'Num', default => 30); #Median read quality cutoff [QUASR default: 20.0]
-has 'QUASR_exec'             => ( is => 'ro', isa => 'Str', required => 1 );
-has 'debug'                  => ( is => 'ro', isa => 'Bool', default  => 0);
-
-
-
 BEGIN { unshift( @INC, '../lib' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Cwd;
 use Cwd 'abs_path';
+use File::Path qw(make_path);
 
 use Bio::AssemblyImprovement::PrimerRemoval::Main;
 
