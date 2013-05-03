@@ -71,7 +71,7 @@ make_path($output_directory);
 
 my @input_files = ( $forward_reads_file, $reverse_reads_file );
 
-my $preprocess_input_files = Bio::AssemblyImprovement::SSpace::PreprocessInputFiles->new(
+my $preprocess_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles->new(
     input_files    => \@input_files,
     input_assembly => $assembly_file
 );
