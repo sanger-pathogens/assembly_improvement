@@ -83,7 +83,7 @@ USAGE
 $debug           ||= 0;
 $insert_size     ||= 250;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
-$gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+$gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-11_linux-x86_64/GapFiller.pl';
 $scaffolder_exec = 'SSPACE_Basic_v2.0.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec));
 $gapfiller_exec = 'GapFiller.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec));
 
