@@ -64,7 +64,7 @@ USAGE
 
 $debug           ||= 0;
 $insert_size     ||= 250;
-$gapfiller_exec ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+$gapfiller_exec ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-11_linux-x86_64/GapFiller.pl';
 $gapfiller_exec = 'GapFiller.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec));
 
 $output_directory ||= getcwd();
