@@ -12,16 +12,26 @@ use Bio::SeqIO;
 use Cwd 'abs_path';
 
 with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
+with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 
 has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
+has 'output_filename' => ( is => 'rw', isa => 'Str' , lazy => 1, builder => '_build_output_filename' );
+
+
+sub _build_output_filename {
+    my ($self) = @_;
+    return join('/', ($self->_temp_directory, '_filter_by_length.fa'));
+}
+
 
 # Throw away small contigs, but not if the overall size of the genome drops too low
 sub remove_small_contigs {
-    my ($self, $output_filename, $minimum_contig_size_in_assembly, $minimum_perc_to_turn_off_filtering) = @_;
+    my ($self, $minimum_contig_size_in_assembly, $minimum_perc_to_turn_off_filtering) = @_;
+
 
     my $fasta_file = $self->_gunzip_file_if_needed($self->input_filename);
     my $fasta_obj =  Bio::SeqIO->new(-file => $fasta_file, -format => 'Fasta');
-    my $out_fasta_obj = Bio::SeqIO->new(-file => "+>".$output_filename , -format => 'Fasta');
+    my $out_fasta_obj = Bio::SeqIO->new(-file => "+>".$self->output_filename , -format => 'Fasta');
 
     my $sequence_length = 0;
     my $bases_kept = 0;
@@ -32,22 +42,12 @@ sub remove_small_contigs {
         $bases_kept += $seq->length();
     }
 
-    $self->_cleaup_after_ourselves($fasta_file);
-
     if(($bases_kept /$sequence_length) *100 <  $minimum_perc_to_turn_off_filtering) {
-        # FIXME should we delete the file output_filename?
-        return $self->input_filename;
+        $self->output_filename($self->input_filename);
+        return $self;
     }
 
-    return $output_filename;
-}
-
-
-sub _cleaup_after_ourselves {
-    my ($self, $fasta_file) = @_;
-    if($fasta_file ne abs_path($self->input_filename)){ #Which means we unzipped it
-        unlink($fasta_file);
-    }
+    return $self;
 }
 
 
