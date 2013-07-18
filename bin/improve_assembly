@@ -152,7 +152,6 @@ my $fill_gaps_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative->ne
 
 # remove small contigs
 my $fill_gaps_output = $fill_gaps_obj->final_output_filename;
-my $filtered_contigs = $fill_gaps_output . '.filtered.fa';
 my $fasta_processor = Bio::AssemblyImprovement::Util::FastaTools->new(input_filename => $fill_gaps_output);
-$fasta_processor->remove_small_contigs($filtered_contigs, $min_final_contig_length, $min_perc_to_not_filter_final_contigs);
-
+$fasta_processor->remove_small_contigs($min_final_contig_length, $min_perc_to_not_filter_final_contigs);
+move($fasta_processor->output_filename, $output_directory);
