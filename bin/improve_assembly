@@ -31,6 +31,7 @@ BEGIN { unshift( @INC, '../lib' ) }
 use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
+use File::Copy;
 use Cwd;
 use Cwd 'abs_path';
 use File::Path qw(make_path);
