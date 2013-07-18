@@ -7,7 +7,7 @@ package Bio::AssemblyImprovement::Bin::ImproveAssembly;
 Given an assembly, some reads and optionally a reference, reduce the number of contigs and fill gaps.
 
    # Improve the assembly without a reference
-   improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
+   improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq
 
    # Provide a reference
    improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq  -c my_reference.fa
@@ -23,7 +23,7 @@ Given an assembly, some reads and optionally a reference, reduce the number of c
 
    # This help message
    improve_assembly -h
-   
+
 =cut
 
 
@@ -39,8 +39,9 @@ use Bio::AssemblyImprovement::Scaffold::SSpace::Iterative;
 use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
 use Bio::AssemblyImprovement::Abacas::Iterative;
 use Bio::AssemblyImprovement::Validate::Executable;
+use Bio::AssemblyImprovement::Util::FastaTools;
 
-my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference,$output_directory, $help );
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference,$output_directory, $min_final_contig_length, $min_perc_to_not_filter_final_contigs, $help );
 
 GetOptions(
     'a|assembly=s'        => \$assembly_file,
@@ -53,6 +54,8 @@ GetOptions(
     'g|gapfiller_exec=s'  => \$gapfiller_exec,
     'd|debug'             => \$debug,
     'o|output_directory=s' => \$output_directory,
+    'l|min_final_contig_length' => \$min_final_contig_length,
+    'p|min_perc_to_not_filter_final_contigs' => \$min_perc_to_not_filter_final_contigs,
     'h|help'              => \$help,
 );
 
@@ -61,7 +64,7 @@ Usage: improve_assembly [options]
 Take in an assembly in FASTA format,reads in FASTQ format, and optionally a reference and produce a a better reference using Abacas/SSpace and GapFiller.
 
 # Improve the assembly without a reference
-improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
+improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq
 
 # Provide a reference
 improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq  -c my_reference.fa
@@ -71,6 +74,12 @@ improve_assembly -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
 
 # Insert size defaults to 250 if not specified
 improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
+
+# Minimum length of final sequences defaults to 300 if not specified
+improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -l 300
+
+# Filtering only used if at least 95% of bases remain after filtering. Change with -p.
+# improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -p 95
 
 # Output to a specific directory
 improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -o my_directory
@@ -82,6 +91,8 @@ USAGE
 
 $debug           ||= 0;
 $insert_size     ||= 250;
+$min_final_contig_length ||= 300;
+$min_perc_to_not_filter_final_contigs ||= 95;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
 $gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-11_linux-x86_64/GapFiller.pl';
 $scaffolder_exec = 'SSPACE_Basic_v2.0.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec));
@@ -138,3 +149,10 @@ my $fill_gaps_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative->ne
     _output_prefix  => 'gapfilled',
     output_base_directory => $output_directory
 )->run();
+
+# remove small contigs
+my $fill_gaps_output = $fill_gaps_obj->final_output_filename;
+my $filtered_contigs = $fill_gaps_output . '.filtered.fa';
+my $fasta_processor = Bio::AssemblyImprovement::Util::FastaTools->new(input_filename => $fill_gaps_output);
+$fasta_processor->remove_small_contigs($filtered_contigs, $min_final_contig_length, $min_perc_to_not_filter_final_contigs);
+
