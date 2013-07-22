@@ -64,8 +64,8 @@ sub _build_processed_input_assembly {
     my ($self) = @_;
     my $base_filename = fileparse( $self->input_assembly);
     my $output_filename = join( '/', ( $self->_temp_directory, $base_filename.'.filtered' ) );
-    my $fasta_processor = Bio::AssemblyImprovement::Util::FastaTools->new(input_filename => $self->input_assembly);
-    return $fasta_processor->remove_small_contigs($output_filename, $self->minimum_contig_size_in_assembly, $self->minimum_perc_to_turn_off_filtering);
+    my $fasta_processor = Bio::AssemblyImprovement::Util::FastaTools->new(input_filename => $self->input_assembly, output_filename => $output_filename);
+    return $fasta_processor->remove_small_contigs($self->minimum_contig_size_in_assembly, $self->minimum_perc_to_turn_off_filtering)->output_filename;
 }
 
 sub _build_processed_reference {
