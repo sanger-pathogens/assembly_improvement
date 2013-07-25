@@ -1,9 +1,9 @@
 package Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
-# ABSTRACT: Make sure the input files are in the correct format, and paths are resolved. 
+# ABSTRACT: Make sure the input files are in the correct format, and paths are resolved.
 
 =head1 SYNOPSIS
 
-Make sure the input files are in the correct format, and paths are resolved. This object needs to be kept in scope 
+Make sure the input files are in the correct format, and paths are resolved. This object needs to be kept in scope
 because it creates temp files which are cleaned up when it goes out of scope.
 
    use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
@@ -15,7 +15,7 @@ because it creates temp files which are cleaned up when it goes out of scope.
 
    $process_input_files->processed_input_files;
    $process_input_files->processed_input_assembly;
-   
+
 =method processed_input_files
 
 Process the input FASTQ files and return their location.
@@ -30,6 +30,7 @@ use Moose;
 use Cwd 'abs_path';
 use File::Basename;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+use Bio::AssemblyImprovement::Util::FastaTools;
 
 with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 with 'Bio::AssemblyImprovement::Abacas::DelimiterRole';
@@ -61,41 +62,16 @@ sub _build_processed_input_files {
 
 sub _build_processed_input_assembly {
     my ($self) = @_;
-    return $self->_remove_small_contigs($self->_gunzip_file_if_needed($self->input_assembly));
+    my $base_filename = fileparse( $self->input_assembly);
+    my $output_filename = join( '/', ( $self->_temp_directory, $base_filename.'.filtered' ) );
+    my $fasta_processor = Bio::AssemblyImprovement::Util::FastaTools->new(input_filename => $self->input_assembly, output_filename => $output_filename);
+    return $fasta_processor->remove_small_contigs($self->minimum_contig_size_in_assembly, $self->minimum_perc_to_turn_off_filtering)->output_filename;
 }
 
 sub _build_processed_reference {
     my ($self) = @_;
     return undef unless(defined($self->reference));
     return $self->_gunzip_file_if_needed($self->reference, $self->_temp_directory);
-}
-
-# Throw away small contigs, but not if the overall size of the genome drops too low
-sub _remove_small_contigs
-{
-  my ($self,$input_filename) = @_;
-  my $base_filename = fileparse( $input_filename);
-  my $output_filename = join( '/', ( $self->_temp_directory, $base_filename.'.filtered' ) );
-  
-  my $fasta_obj =  Bio::SeqIO->new( -file => $input_filename , -format => 'Fasta');
-  my $out_fasta_obj = Bio::SeqIO->new(-file => "+>".$output_filename , -format => 'Fasta');
- 
-  my $sequence_length = 0;
-  my $sequences_kept = 0;
-  while(my $seq = $fasta_obj->next_seq())
-  {
-    $sequence_length +=  $seq->length();
-    next if($seq->length < $self->minimum_contig_size_in_assembly);
-    $out_fasta_obj->write_seq($seq);
-    $sequences_kept += $seq->length();
-  }
-  
-  if(($sequences_kept /$sequence_length) *100 <  $self->minimum_perc_to_turn_off_filtering )
-  {
-    return $input_filename;
-  }
-  
-  return $output_filename;
 }
 
 no Moose;
