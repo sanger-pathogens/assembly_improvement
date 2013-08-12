@@ -58,9 +58,9 @@ sub run
         $self->_output_fh->write_seq( $seq );
     }
 
-    # move sorted temp file to outputfile 
+    # copy sorted temp file to outputfile 
     $self->output_filename($self->input_filename) unless defined $self->output_filename();
-    move($self->_temp_output_file->filename, $self->output_filename);
+    copy($self->_temp_output_file->filename, $self->output_filename);
 }
 
 
