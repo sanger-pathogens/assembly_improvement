@@ -24,14 +24,14 @@ has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
 
 # sub draw_histogram_of_read_lengths {
 # 	my ($self) = @_;
-# 	
+#
 # 	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
-# 	
+#
 # 	my $arrayref = $self->_get_read_lengths($fastq_file);
-# 	
+#
 # 	# Set graph details
-# 	my $graph = new GD::Graph::histogram(400,600);	
-# 	$graph->set( 
+# 	my $graph = new GD::Graph::histogram(400,600);
+# 	$graph->set(
 #                 x_label         => 'Read length',
 #                 y_label         => 'Number of reads',
 #                 title           => 'Histogram of read lengths for '.$self->input_filename,
@@ -40,7 +40,7 @@ has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
 #                 shadow_depth    => 1,
 #                 shadowclr       => 'dred',
 #                 transparent     => 0,
-#     ) 
+#     )
 #     or warn $graph->error;
 #     #Draw the graph
 #     my $gd = $graph->plot($arrayref) or die $graph->error;
@@ -48,10 +48,10 @@ has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
 #     open(IMG, '>histogram.png') or die "Could not open a file called histogram.png";
 #     binmode IMG;
 #     print IMG $gd->png;
-#     
+#
 #     $self->_cleaup_after_ourselves($fastq_file);
-# 	
-#   
+#
+#
 # }
 
 sub calculate_kmer_sizes {
@@ -98,7 +98,7 @@ sub calculate_coverage {
 	my $total_length_of_reads = 0;
 	$total_length_of_reads += $_ for @$arrayref;
 	my $coverage = $total_length_of_reads/$expected_genome_size;
-	$coverage = sprintf ("%.0f", $coverage);	# Rounding it up 
+	$coverage = sprintf ("%.0f", $coverage);	# Rounding it up
 	
 	$self->_cleaup_after_ourselves($fastq_file);
   	
@@ -121,14 +121,14 @@ sub split_fastq {
 	my $forward_fastq = Bio::SeqIO->new( -file => ">$outfile_forward" , -format => 'Fastq' );
 	my $reverse_fastq = Bio::SeqIO->new( -file => ">$outfile_reverse" , -format => 'Fastq' );
 
-    while(my $seq = $fastq_obj->next_seq()){    
+    while(my $seq = $fastq_obj->next_seq()){
 		# Example ID: @IL9_4021:8:1:8:1892#7/1
     	if($seq->id() =~ m/\/1$/ ){
-    		$forward_fastq->write_seq($seq);   	
+    		$forward_fastq->write_seq($seq);
     	}else{
-    		$reverse_fastq->write_seq($seq);   	
+    		$reverse_fastq->write_seq($seq);
     	
-    	}	   
+    	}
     }
 
 	$self->_cleaup_after_ourselves($fastq_file);
@@ -147,6 +147,25 @@ sub _cleaup_after_ourselves {
 
 }
 
+
+# Returns the length of the first read in the file
+sub first_read_length {
+    my ($self) = @_;
+    my $fastq_obj;
+
+    if ( $self->input_filename =~ /\.fq$/ || $self->input_filename =~ /\.fastq$/  ) {
+    	$fastq_obj =  Bio::SeqIO->new( -file => $self->input_filename , -format => 'Fastq');
+    }
+    elsif ( $self->input_filename =~ /\.fq\.gz$/ || $self->input_filename =~ /\.fastq\.gz$/  ) {
+    	$fastq_obj =  Bio::SeqIO->new( -file => "gunzip -c " . $self->input_filename . " |" , -format => 'Fastq');
+    }
+    else {
+        die "File '$self->input_filename' not recognised as fastq. Needs to end in .fastq[.gz] or .fq[.gz]";
+    }
+
+    my $seq = $fastq_obj->next_seq();
+    return length($seq->seq());
+}
 
 no Moose;
 __PACKAGE__->meta->make_immutable;

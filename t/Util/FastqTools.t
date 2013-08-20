@@ -18,14 +18,14 @@ my $current_dir = getcwd();
 ok(
 	(
 		my $fastq_processor  = Bio::AssemblyImprovement::Util::FastqTools->new(
-    		input_filename   =>  $current_dir.'/t/data/variable_length_zipped.fastq.gz', 
+    		input_filename   =>  $current_dir.'/t/data/variable_length_zipped.fastq.gz',
 		)
 	),
 	'Creating an object with a zipped fastq file OK'
 );
 
 
-#$fastq_processor->draw_histogram_of_read_lengths(); 
+#$fastq_processor->draw_histogram_of_read_lengths();
 
 # Test: kmer sizes
 my %kmer_sizes = $fastq_processor->calculate_kmer_sizes();
@@ -40,7 +40,7 @@ is($coverage,2, 'Coverage is ok');
 ok(
 	(
 		my $fastq_processor_2  = Bio::AssemblyImprovement::Util::FastqTools->new(
-    		input_filename   =>  $current_dir.'/t/data/shuffled.fastq', 
+    		input_filename   =>  $current_dir.'/t/data/shuffled.fastq',
 		)
 	),
 	'Creating an object with a shuffled fastq file OK'
@@ -51,6 +51,8 @@ $fastq_processor_2->split_fastq('forward_test.fastq', 'reverse_test.fastq');
 files_eq($current_dir.'/forward_test.fastq', $current_dir.'/t/data/split_forward.fastq', "Forward reads split ok");
 files_eq($current_dir.'/reverse_test.fastq', $current_dir.'/t/data/split_reverse.fastq', "Reverse reads split ok");
 
-
+# Test getting length of first read in a file
+is($fastq_processor->first_read_length(), 150, 'Length from unzipped file OK');
+is($fastq_processor_2->first_read_length(), 54, 'Length from zipped file OK');
 
 done_testing();
