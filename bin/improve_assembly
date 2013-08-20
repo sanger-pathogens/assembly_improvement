@@ -41,6 +41,7 @@ use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
 use Bio::AssemblyImprovement::Abacas::Iterative;
 use Bio::AssemblyImprovement::Validate::Executable;
 use Bio::AssemblyImprovement::Util::FastaTools;
+use Bio::AssemblyImprovement::Util::OrderContigsByLength;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $abacas_exec,$gapfiller_exec, $debug,$reference,$output_directory, $min_final_contig_length, $min_perc_to_not_filter_final_contigs, $help );
 
@@ -151,8 +152,13 @@ my $fill_gaps_obj = Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative->ne
     output_base_directory => $output_directory
 )->run();
 
-# remove small contigs
+# sort contigs by length
 my $fill_gaps_output = $fill_gaps_obj->final_output_filename;
-my $fasta_processor = Bio::AssemblyImprovement::Util::FastaTools->new(input_filename => $fill_gaps_output);
+my $order_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => $fill_gaps_output );
+$order_contigs->run();
+
+# remove small contigs
+my $order_contigs_output = $order_contigs->output_filename();
+my $fasta_processor = Bio::AssemblyImprovement::Util::FastaTools->new(input_filename => $order_contigs_output);
 $fasta_processor->remove_small_contigs($min_final_contig_length, $min_perc_to_not_filter_final_contigs);
 move($fasta_processor->output_filename, $output_directory);
