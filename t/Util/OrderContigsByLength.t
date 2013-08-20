@@ -29,6 +29,11 @@ is $sort_contigs->output_filename(), join('/',($temp_directory,$output_filename)
 # sort config
 ok $sort_contigs->run(), 'sort contigs';
 files_eq($sort_contigs->output_filename(),join('/',($data_dir,$expected_sorted_file)));
+my $user_file_name = join('/',($temp_directory,'user_file_name.fa'));
+ok $sort_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => join('/',($temp_directory,$input_file)), output_filename => $user_file_name ), 'use user outfile';
+is $sort_contigs->output_filename(), $user_file_name, 'confirm set user outfile';
+ok $sort_contigs->run(), 'sort contigs';
+files_eq($user_file_name,join('/',($data_dir,$expected_sorted_file)));
 
 # check renumber function
 is $sort_contigs->_rename_contig('NODE_3_length_14_cov_10.00',99), 'NODE_99_length_14_cov_10.00', 'renamed velvet/spades contig';
