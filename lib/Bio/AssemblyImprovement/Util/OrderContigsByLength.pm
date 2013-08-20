@@ -27,7 +27,15 @@ sub _build_output_filename
 {
     my ($self) = @_;
     my ( $filename, $directories, $suffix ) = fileparse( $self->input_filename, qr/\.[^.]*/ );
-    $directories . $filename . "." . $self->_output_prefix . $suffix;    
+    if($suffix =~ m/^\.fa$|^\.fasta$/)
+    {
+        # keep fa or fasta suffix
+        return $directories . $filename . "." . $self->_output_prefix . $suffix;
+    }
+    else 
+    {
+        return $directories . $filename . $suffix . "." . $self->_output_prefix;
+    }
 }
 
 sub _build__temp_output_filename
