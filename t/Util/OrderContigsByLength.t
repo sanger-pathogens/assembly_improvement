@@ -32,7 +32,7 @@ files_eq($sort_contigs->output_filename(),join('/',($data_dir,$expected_sorted_f
 
 # check renumber function
 is $sort_contigs->_rename_contig('NODE_3_length_14_cov_10.00',99), 'NODE_99_length_14_cov_10.00', 'renamed velvet/spades contig';
-is $sort_contigs->_rename_contig('NODE_3',99), 'NODE_99', 'renamed NODE_ contig';
+is $sort_contigs->_rename_contig('NODE_3_length_14_cov_10.00_ID_12345',99), 'NODE_99_length_14_cov_10.00_ID_12345', 'renamed NODE_ plus ID contig';
 is $sort_contigs->_rename_contig('NODE_3',99), 'NODE_99', 'renamed NODE_ contig';
 is $sort_contigs->_rename_contig('scaffold3|size14',99), 'scaffold99|size14', 'renamed scaffold with size contig';
 is $sort_contigs->_rename_contig('scaffold3',99), 'scaffold99', 'renamed scaffold contig';
