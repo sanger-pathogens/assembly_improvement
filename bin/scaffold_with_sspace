@@ -30,6 +30,7 @@ use Cwd;
 use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 use Bio::AssemblyImprovement::Scaffold::SSpace::Iterative;
 use Bio::AssemblyImprovement::Validate::Executable;
+use Bio::AssemblyImprovement::Util::OrderContigsByLength;
 
 my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $debug,$output_directory, $help );
 
@@ -77,7 +78,7 @@ my $preprocess_input_files = Bio::AssemblyImprovement::Scaffold::SSpace::Preproc
 );
 my $process_input_files_tmp_dir_obj = $preprocess_input_files->_temp_directory_obj();
 
-my $iterative_scaffolding = Bio::AssemblyImprovement::SSpace::Iterative->new(
+my $iterative_scaffolding = Bio::AssemblyImprovement::Scaffold::SSpace::Iterative->new(
     input_files     => $preprocess_input_files->processed_input_files,
     input_assembly  => $preprocess_input_files->processed_input_assembly,
     insert_size     => $insert_size,
@@ -85,3 +86,9 @@ my $iterative_scaffolding = Bio::AssemblyImprovement::SSpace::Iterative->new(
     debug           => $debug,
     output_base_directory => $output_directory
 )->run();
+
+# sort contigs by length
+my $scaffolding_output = $iterative_scaffolding->final_output_filename;
+my $order_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => $scaffolding_output );
+$order_contigs->run();
+
