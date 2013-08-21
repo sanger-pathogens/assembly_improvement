@@ -28,7 +28,7 @@ has 'input_filename'        => ( is => 'ro', isa => 'Str',        required => 1 
 has 'contig_basename'       => ( is => 'rw', isa => 'Maybe[Str]', default => undef    );
 has 'rename_contigs'        => ( is => 'rw', isa => 'Bool',       default => 1        );
 has 'output_filename'       => ( is => 'rw', isa => 'Str',        lazy_build => 1     );
-has '_output_prefix'        => ( is => 'ro', isa => 'Str',        default => "sorted" );
+has '_output_suffix'        => ( is => 'ro', isa => 'Str',        default => "sorted" );
 has '_temp_output_filename' => ( is => 'ro', isa => 'Str',        lazy_build => 1     );
 has '_input_fh'             => ( is => 'ro', isa => 'Bio::SeqIO', lazy_build => 1     );
 has '_output_fh'            => ( is => 'ro', isa => 'Bio::SeqIO', lazy_build => 1     );
@@ -37,15 +37,7 @@ sub _build_output_filename
 {
     my ($self) = @_;
     my ( $filename, $directories, $suffix ) = fileparse( $self->input_filename, qr/\.[^.]*/ );
-    if($suffix =~ m/^\.fa$|^\.fasta$/)
-    {
-        # keep fa or fasta suffix
-        return $directories . $filename . "." . $self->_output_prefix . $suffix;
-    }
-    else 
-    {
-        return $directories . $filename . $suffix . "." . $self->_output_prefix;
-    }
+    return $directories . $filename . $suffix . "." . $self->_output_suffix;
 }
 
 sub _build__temp_output_filename

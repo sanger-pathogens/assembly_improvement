@@ -14,7 +14,7 @@ BEGIN {
 
 my $data_dir              = 't/data';
 my $input_file            = 'contigs_needing_sorted.fa';
-my $output_filename       = 'contigs_needing_sorted.sorted.fa';
+my $output_filename       = 'contigs_needing_sorted.fa.sorted';
 my $expected_sorted_file  = 'expected_contigs_needing_sorted.fa';
 
 # work in temp directory
@@ -44,13 +44,5 @@ is $sort_contigs->_rename_contig('scaffold3',99), 'scaffold99', 'renamed scaffol
 is $sort_contigs->_rename_contig('random_contig_name',99), 'random_contig_name.99', 'renamed contig';
 ok $sort_contigs->contig_basename('sorted'), 'set contig basename';
 is $sort_contigs->_rename_contig('NODE_3_length_14_cov_10.00',99), 'sorted99', 'renamed contig with new contig basename';
-
-# check output name
-$sort_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => 'contigs.signed.queried.lost.found.fa' );
-is $sort_contigs->output_filename(), './contigs.signed.queried.lost.found.sorted.fa', 'output file keeps .fa as suffix';
-$sort_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => 'contigs.signed.queried.lost.found.fasta' );
-is $sort_contigs->output_filename(), './contigs.signed.queried.lost.found.sorted.fasta', 'output file keeps .fasta as suffix';
-$sort_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => 'contigs.fa.signed.queried.lost.found' );
-is $sort_contigs->output_filename(), './contigs.fa.signed.queried.lost.found.sorted', 'output file appends .sorted when suffix not fa';
 
 done_testing();
