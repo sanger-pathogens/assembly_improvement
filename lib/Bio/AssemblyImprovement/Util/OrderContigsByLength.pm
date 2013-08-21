@@ -4,6 +4,16 @@ package Bio::AssemblyImprovement::Util::OrderContigsByLength;
 
 =head1 SYNOPSIS
 
+$sort_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => 'input_file.fa' );
+
+# get/set the output filename
+$sort_contigs->output_filename('my_output_file.fa');
+
+# set rename contigs
+$sort_contigs->contig_basename('scaffold');
+
+# sort contigs
+$sort_contigs->run();
 
 =cut
 
