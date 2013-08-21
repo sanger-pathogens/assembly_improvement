@@ -168,4 +168,5 @@ move($fasta_processor2->output_filename, "$output_directory/scaffolds.scaffolded
 
 # sort contigs by length
 my $order_contigs = Bio::AssemblyImprovement::Util::OrderContigsByLength->new( input_filename  => "$output_directory/scaffolds.scaffolded.gapfilled.length_filtered.fa" );
+$order_contigs->output_filename("$output_directory/scaffolds.scaffolded.gapfilled.length_filtered.sorted.fa");
 $order_contigs->run();
