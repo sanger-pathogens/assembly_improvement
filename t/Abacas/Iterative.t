@@ -17,6 +17,7 @@ ok((my $abacas_obj = Bio::AssemblyImprovement::Abacas::Iterative->new(
   input_assembly => 't/data/contigs.fa',
   reference      => 't/data/my_reference.fa',
   abacas_exec => $cwd.'/t/dummy_abacas_script.pl',
+  minimum_perc_to_keep => 0,
   debug  => 0
 )),'Create overall main object');
 
