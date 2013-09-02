@@ -32,6 +32,15 @@ my %kmer_sizes = $fastq_processor->calculate_kmer_sizes();
 is($kmer_sizes{min},99, 'Minimum kmer size ok');
 is($kmer_sizes{max},135, 'Maximum kmer size ok');
 
+# Test: kmer sizes for single cell data
+$fastq_processor  = Bio::AssemblyImprovement::Util::FastqTools->new(
+    		input_filename   =>  $current_dir.'/t/data/variable_length_zipped.fastq.gz',
+            single_cell => 1);
+%kmer_sizes = $fastq_processor->calculate_kmer_sizes();
+is($kmer_sizes{min},75, 'Minimum single cell kmer size ok');
+is($kmer_sizes{max},141, 'Maximum single cell kmer size ok');
+
+
 # Test: coverage
 my $coverage = $fastq_processor->calculate_coverage(300);
 is($coverage,2, 'Coverage is ok');
