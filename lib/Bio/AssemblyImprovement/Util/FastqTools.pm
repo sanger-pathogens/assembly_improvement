@@ -20,6 +20,7 @@ with 'Bio::AssemblyImprovement::Util::ZipFileRole';
 with 'Bio::AssemblyImprovement::Util::UnzipFileIfNeededRole';
 
 has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
+has 'single_cell'      => ( is => 'ro', isa => 'Bool', default => 0);
 
 
 # sub draw_histogram_of_read_lengths {
@@ -57,31 +58,37 @@ has 'input_filename'   => ( is => 'ro', isa => 'Str' , required => 1 );
 sub calculate_kmer_sizes {
 
 	my ($self) = @_;
+    my %kmer_size;
 	
-	my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
-		
-	my $arrayref = $self->_get_read_lengths($fastq_file);
-	my $median = median(@$arrayref);
-	
-	# Set a minimum median so that the min kmer length stays at a reasonable value
-	if($median < 30){
-		$median = 30;
-	}
+    if ($self->single_cell) {
+        my $read_length = $self->first_read_length();
+        $kmer_size{min} = int($read_length * 0.5);
+        $kmer_size{max} = int($read_length * 0.95);
+    }
+    else {
+        my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
 
-	my %kmer_size;
-	
-	$kmer_size{min} = int($median*0.66); #66% of median read length will be minimum kmer length
-  	$kmer_size{max} = int($median*0.90); #90% of median read length will be maximum kmer length
-  
-  	if($kmer_size{min} % 2 == 0){
-    	$kmer_size{min}--;
-  	}
-  	
-  	if($kmer_size{max} % 2 == 0){
-    	$kmer_size{max}--;
-  	}
-  	
-    $self->_cleaup_after_ourselves($fastq_file);
+        my $arrayref = $self->_get_read_lengths($fastq_file);
+        my $median = median(@$arrayref);
+
+        # Set a minimum median so that the min kmer length stays at a reasonable value
+        if($median < 30){
+            $median = 30;
+        }
+
+        $kmer_size{min} = int($median*0.66); #66% of median read length will be minimum kmer length
+        $kmer_size{max} = int($median*0.90); #90% of median read length will be maximum kmer length
+
+        $self->_cleaup_after_ourselves($fastq_file);
+    }
+
+    if($kmer_size{min} % 2 == 0){
+        $kmer_size{min}--;
+    }
+
+    if($kmer_size{max} % 2 == 0){
+        $kmer_size{max}--;
+    }
   	
   	return %kmer_size;
 	
