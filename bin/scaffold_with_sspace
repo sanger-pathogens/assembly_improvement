@@ -35,7 +35,7 @@ use Bio::AssemblyImprovement::Scaffold::SSpace::Iterative;
 use Bio::AssemblyImprovement::Validate::Executable;
 use Bio::AssemblyImprovement::Util::OrderContigsByLength;
 
-my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $scaffolder_exec, $debug,$output_directory, $help );
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $threads, $scaffolder_exec, $debug,$output_directory, $help );
 
 GetOptions(
     'a|assembly=s'        => \$assembly_file,
