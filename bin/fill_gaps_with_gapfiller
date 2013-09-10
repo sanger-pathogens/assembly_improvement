@@ -9,6 +9,9 @@ Given an assembly and some reads in fastq format, try and fill in the gaps. Do m
 
    # outputs a file called contigs.scaffolded.fa
    fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
+   
+   # use two threads (default 1)
+   fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq -t 2
 
    # Gzipped input files are accepted
    fill_gaps_with_gapfiller -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
@@ -31,13 +34,14 @@ use Bio::AssemblyImprovement::Scaffold::SSpace::PreprocessInputFiles;
 use Bio::AssemblyImprovement::FillGaps::GapFiller::Iterative;
 use Bio::AssemblyImprovement::Validate::Executable;
 
-my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $gapfiller_exec, $debug,$output_directory, $help );
+my ( $assembly_file, $forward_reads_file, $reverse_reads_file, $insert_size, $threads, $gapfiller_exec, $debug, $output_directory, $help );
 
 GetOptions(
     'a|assembly=s'        => \$assembly_file,
     'f|forward_fastq=s'   => \$forward_reads_file,
     'r|reverse_fastq=s'   => \$reverse_reads_file,
     'i|insert_size=i'     => \$insert_size,
+    't|threads=i'	      => \$threads,
     's|gapfiller_exec=s'  => \$gapfiller_exec,
     'd|debug'             => \$debug,
     'o|output_directory=s' => \$output_directory,
@@ -50,6 +54,9 @@ Take in an assembly in FASTA format and reads in FASTQ format, then iteratively 
 
 # outputs a file called contigs.scaffolded.fa
 fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
+
+# use two threads (default 1)
+fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq -t 2
 
 # Gzipped input files are accepted
 fill_gaps_with_gapfiller -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
@@ -64,6 +71,7 @@ USAGE
 
 $debug           ||= 0;
 $insert_size     ||= 250;
+$threads		 ||= 1;
 $gapfiller_exec ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-11_linux-x86_64/GapFiller.pl';
 $gapfiller_exec = 'GapFiller.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec));
 
@@ -82,6 +90,7 @@ my $iterative_scaffolding = Bio::AssemblyImprovement::FillGaps::GapFiller::Itera
     input_files     => $preprocess_input_files->processed_input_files,
     input_assembly  => $preprocess_input_files->processed_input_assembly,
     insert_size     => $insert_size,
+    threads			=> $threads,
     gap_filler_exec  => $gapfiller_exec,
     debug           => $debug,
     _output_prefix  => 'gapfilled',

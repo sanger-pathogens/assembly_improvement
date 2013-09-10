@@ -9,6 +9,9 @@ Given an assembly and some reads in fastq format, try and scaffold the assembly.
    # outputs a file called contigs.scaffolded.fa
    scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
 
+   # use two threads (default 1)
+   scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq -t 2
+   
    # Gzipped input files are accepted
    scaffold_with_sspace -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
 
@@ -39,6 +42,7 @@ GetOptions(
     'f|forward_fastq=s'   => \$forward_reads_file,
     'r|reverse_fastq=s'   => \$reverse_reads_file,
     'i|insert_size=i'     => \$insert_size,
+    't|threads=i'		  => \$threads,
     's|scaffolder_exec=s' => \$scaffolder_exec,
     'd|debug'             => \$debug,
     'o|output_directory=s' => \$output_directory,
@@ -51,6 +55,9 @@ Take in an assembly in FASTA format and reads in FASTQ format, then iteratively 
 
 # outputs a file called contigs.scaffolded.fa
 scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
+
+# use two threads (default 1)
+scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq -t 2
 
 # Gzipped input files are accepted
 scaffold_with_sspace -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
@@ -65,6 +72,7 @@ USAGE
 
 $debug           ||= 0;
 $insert_size     ||= 250;
+$threads		 ||= 1;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
 $scaffolder_exec = 'SSPACE_Basic_v2.0.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec));
 $output_directory ||= getcwd();
@@ -82,6 +90,7 @@ my $iterative_scaffolding = Bio::AssemblyImprovement::Scaffold::SSpace::Iterativ
     input_files     => $preprocess_input_files->processed_input_files,
     input_assembly  => $preprocess_input_files->processed_input_assembly,
     insert_size     => $insert_size,
+    threads			=> $threads,
     scaffolder_exec => $scaffolder_exec,
     debug           => $debug,
     output_base_directory => $output_directory

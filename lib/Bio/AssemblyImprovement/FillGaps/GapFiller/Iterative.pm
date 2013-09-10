@@ -12,7 +12,8 @@ Iteratively close gaps. Use different mappers in rotation, picking the most conf
      input_assembly => 'contigs.fa'
      insert_size => 250,
      gap_filler_exec => '/path/to/SSPACE.pl',
-     merge_sizes => [100,50,30,10]
+     merge_sizes => [100,50,30,10],
+     threads => 2,
    )->run;
    
 =method run
@@ -41,6 +42,7 @@ has 'insert_size'     => ( is => 'ro', isa => 'Int',           required => 1 );
 has 'gap_filler_exec' => ( is => 'ro', isa => 'Str',           required => 1 );
 has 'mappers'         => ( is => 'ro', isa => 'ArrayRef',      lazy     => 1, builder => '_build_mappers' );
 has 'merge_sizes'     => ( is => 'ro', isa => 'ArrayRef[Int]', lazy     => 1, builder => '_build_merge_sizes' );
+has 'threads'		  => ( is => 'ro', isa => 'Int',      	   default  => 1     );
 
 has 'output_base_directory'  => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build_output_base_directory' );
 has '_intermediate_filename' => ( is => 'ro', isa => 'Str', lazy => 1, builder => '_build__intermediate_filename' );
@@ -87,6 +89,7 @@ sub _single_scaffolding_iteration {
         gap_filler_exec => $self->gap_filler_exec,
         debug           => $self->debug,
         mapper          => $mapper,
+        threads			=> $self->threads,
         _output_prefix  => $self->_output_prefix,
     )->run;
     move( $scaffold->output_filename, $self->_intermediate_filename );
