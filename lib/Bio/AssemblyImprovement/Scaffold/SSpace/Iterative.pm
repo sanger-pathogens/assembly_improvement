@@ -37,6 +37,7 @@ with 'Bio::AssemblyImprovement::Scaffold::SSpace::TempDirectoryRole';
 has 'input_files'     => ( is => 'ro', isa => 'ArrayRef',      required => 1 );
 has 'insert_size'     => ( is => 'ro', isa => 'Int',           required => 1 );
 has 'merge_sizes'     => ( is => 'ro', isa => 'ArrayRef[Int]', lazy     => 1, builder => '_build_merge_sizes' );
+has 'threads'		  => ( is => 'ro', isa => 'Int',      default  => 1     );
 has 'scaffolder_exec' => ( is => 'ro', isa => 'Str',           required => 1 );
 has 'debug'           => ( is => 'ro', isa => 'Bool', default => 0);
 
@@ -68,6 +69,7 @@ sub _single_scaffolding_iteration {
         input_assembly  => $self->_intermediate_filename,
         insert_size     => $self->insert_size,
         merge_size      => $merge_size,
+        threads			=> $self->threads,
         scaffolder_exec => $self->scaffolder_exec,
         debug           => $self->debug
     )->run;

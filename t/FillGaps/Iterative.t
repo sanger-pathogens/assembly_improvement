@@ -17,6 +17,7 @@ ok((my $iterative_scaffolding = Bio::AssemblyImprovement::FillGaps::GapFiller::I
   input_files => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
+  threads => 2,
   gap_filler_exec => $cwd.'/t/dummy_gap_filler_script.pl',
   _output_prefix => 'gapfilled',
   debug  => 0,

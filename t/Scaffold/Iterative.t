@@ -17,6 +17,7 @@ ok((my $iterative_scaffolding = Bio::AssemblyImprovement::Scaffold::SSpace::Iter
   input_files => [ 't/data/forward.fastq', 't/data/reverse.fastq' ],
   input_assembly => 't/data/contigs.fa',
   insert_size => 250,
+  threads	  => 2,
   scaffolder_exec => $cwd.'/t/dummy_sspace_script.pl',
   debug  => 0
 )),'Create overall iterative object');
