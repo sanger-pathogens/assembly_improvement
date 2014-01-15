@@ -118,7 +118,7 @@ read_correction_with_sga -h
 
 USAGE
 
-$sga_exec ||= '/software/pathogen/external/apps/usr/local/src/SGA/sga'; #Do we need to check if executable available?
+$sga_exec ||= '/software/pathogen/external/apps/usr/local/bin/sga'; #Do we need to check if executable available?
 
 $min_length ||= 66;
 $quality_trim ||= 20;
