@@ -89,7 +89,7 @@ make_path($output_directory);
 $leeway ||= 5;
 $minimum_length ||= 50;
 $median_quality ||= 30;
-$quasr_exec ||= '/software/pathogen/internal/pathdev/java/QUASR702_Parser/readsetProcessor.jar'; 
+$quasr_exec ||= '/software/pathogen/external/apps/usr/local/QUASR/readsetProcessor.jar'; 
 $debug           ||= 0;
 
 
