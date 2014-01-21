@@ -92,6 +92,11 @@ improve_assembly -h
 
 USAGE
 
+# abs_path to inputs
+$assembly_file = abs_path($assembly_file) if(defined $assembly_file);
+$forward_reads_file = abs_path($forward_reads_file) if(defined $forward_reads_file);
+$reverse_reads_file = abs_path($reverse_reads_file) if(defined $reverse_reads_file);
+
 $debug           ||= 0;
 $insert_size     ||= 250;
 $min_final_contig_length ||= 300;
