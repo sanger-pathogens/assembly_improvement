@@ -74,7 +74,7 @@ sub run {
                 '--pe-mode', $self->pe_mode, 
                 #'--permute-ambiguous', # Do not randomly change ambiguous base calls - we would rather reads with ambiguous bases be thrown away
                 '--min-length', $self->min_length,
-                #'--quality-filter', $self->quality_filter,
+                #'--quality-filter', $self->quality_filter, # Not doing any filtering since 1.3.2013
                 '--quality-trim', $self->quality_trim,
                 '--out', $self->output_filename, 
                	$files_string,
