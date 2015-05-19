@@ -117,9 +117,26 @@ $min_perc_to_not_filter_final_contigs ||= 95;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
 $gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
 $abacas_exec     ||= '/software/pathogen/internal/prod/bin/abacas.pl';
-$scaffolder_exec = 'SSPACE_Basic_v2.0.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec));
-$gapfiller_exec = 'GapFiller.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec));
-$abacas_exec = 'abacas.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($abacas_exec));
+
+# Validate the executables
+if(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec)){
+	$scaffolder_exec = 'SSPACE_Basic_v2.0.pl';
+} else {
+	die "$scaffolder_exec does not exist.";
+}
+
+if(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec)){
+	$gapfiller_exec = 'GapFiller.pl';
+} else {
+	die "$gapfiller_exec does not exist.";
+}
+
+if(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($abacas_exec)){
+	$abacas_exec = 'abacas.pl';
+} else {
+	die "$abacas_exec does not exist.";
+}
+
 
 $output_directory ||= getcwd();
 $output_directory  = abs_path($output_directory);
