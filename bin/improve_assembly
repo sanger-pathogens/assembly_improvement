@@ -65,6 +65,19 @@ GetOptions(
 ( defined($assembly_file) && defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
 Usage: improve_assembly [options]
 Take in an assembly in FASTA format,reads in FASTQ format, and optionally a reference and produce a a better reference using Abacas/SSpace and GapFiller.
+	
+        -a|assembly            <assembly file in fasta format - zipped or unzipped>
+        -f|forward_fastq	   <forward reads file - zipped or unzipped>       
+        -r|reverse_fastq       <reverse reads files - zipped or unzipped>
+        -c|reference       	   <reference file in fasta format - zipped or unzipped>
+    	-i|insert_size         <insert size, default 250>
+    	-s|scaffolder_exec     <path to scaffolder, defaults to SSPACE on /software>
+    	-b|abacas_exec		   <path to ABACUS, default to ABACUS on /software>
+    	-g|gapfiller_exec      <path to GapFiller, default to GapFiller on /software>
+    	-d|debug			   <debug use this to be told if something goes wrong when running SSPACE, ABACUS and GapFiller, default false>
+    	-o|output_directory    <output directory, default current working directory>
+    	-h|help				   <print this help message>
+
 
 # Improve the assembly without a reference
 improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq
@@ -102,11 +115,12 @@ $insert_size     ||= 250;
 $min_final_contig_length ||= 300;
 $min_perc_to_not_filter_final_contigs ||= 95;
 $scaffolder_exec ||= '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
-$gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-11_linux-x86_64/GapFiller.pl';
+$gapfiller_exec  ||= '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+$abacas_exec     ||= '/software/pathogen/internal/prod/bin/abacas.pl';
 $scaffolder_exec = 'SSPACE_Basic_v2.0.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($scaffolder_exec));
 $gapfiller_exec = 'GapFiller.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($gapfiller_exec));
+$abacas_exec = 'abacus.pl' unless(Bio::AssemblyImprovement::Validate::Executable->new()->does_executable_exist($abacus_exec));
 
-$abacas_exec     ||= 'abacas.pl';
 $output_directory ||= getcwd();
 $output_directory  = abs_path($output_directory);
 make_path($output_directory);
