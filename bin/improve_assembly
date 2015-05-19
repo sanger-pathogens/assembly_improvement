@@ -67,16 +67,16 @@ Usage: improve_assembly [options]
 Take in an assembly in FASTA format,reads in FASTQ format, and optionally a reference and produce a a better reference using Abacas/SSpace and GapFiller.
 	
         -a|assembly            <assembly file in fasta format - zipped or unzipped>
-        -f|forward_fastq	   <forward reads file - zipped or unzipped>       
+        -f|forward_fastq       <forward reads file - zipped or unzipped>       
         -r|reverse_fastq       <reverse reads files - zipped or unzipped>
         -c|reference       	   <reference file in fasta format - zipped or unzipped>
     	-i|insert_size         <insert size, default 250>
     	-s|scaffolder_exec     <path to scaffolder, defaults to SSPACE on /software>
-    	-b|abacas_exec		   <path to ABACAS, default to ABACAS on /software>
+    	-b|abacas_exec         <path to ABACAS, default to ABACAS on /software>
     	-g|gapfiller_exec      <path to GapFiller, default to GapFiller on /software>
-    	-d|debug			   <debug use this to be told if something goes wrong when running SSPACE, ABACUS and GapFiller, default false>
+    	-d|debug               <debug use this to be told if something goes wrong when running SSPACE, ABACUS and GapFiller, default false>
     	-o|output_directory    <output directory, default current working directory>
-    	-h|help				   <print this help message>
+    	-h|help                <print this help message>
 
 
 # Improve the assembly without a reference
