@@ -16,7 +16,6 @@ Usage: read_correction_with_sga [options]
         
         -m|min_length	       <discard sequences that are shorter than this during preprocess>
         -q|quality_trim	       <trim reads using Heng Li's BWT trimming algorithm>
-        
         -a|algorithm		   <indexing algorithm - ropebwt or sais>
         -t|threads	           <number of threads to use for computation. Choose carefully>
         -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
@@ -122,6 +121,7 @@ $sga_exec ||= '/software/pathogen/external/apps/usr/local/bin/sga'; #Do we need 
 
 $min_length ||= 66;
 $quality_trim ||= 20;
+# $quality_filter ||= 3; # Not doing any filtering since 1.3.2013
 
 $algorithm ||= 'ropebwt';
 $threads ||= 1;

@@ -23,7 +23,6 @@ sub _zip_file {
 	
     $output_directory ||= abs_path (getcwd()); 
     
-    #my $filename = fileparse( $input_filename );
     my ( $filename, $directories, $suffix ) = fileparse( $input_filename );
     my $output_filename = join( '/', ( $output_directory, $filename.'.gz' ) );
     gzip $input_filename => $output_filename or die "gzip failed: $GzipError\n";

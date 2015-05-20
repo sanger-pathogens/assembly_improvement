@@ -23,14 +23,29 @@ use File::Which;
 sub does_executable_exist
 {
   my($self, $exec) = @_;
-  # if its a full path then skip over it
-  return 1 if($exec =~ m!/!);
+	if(-x $exec){
+		return 1;
+	}
+	return 0;
 
-  my @full_paths_to_exec = which($exec);
-  return 0 if(@full_paths_to_exec == 0);
-  
-  return 1;
 }
+
+sub check_executable_and_set_default
+{
+	my($self, $exec, $default) = @_;
+	
+	if(!defined $exec){
+		return $default;
+	}else{
+		if($self->does_executable_exist($exec)){
+			return $exec;
+		}else{
+			warn "$exec does not exist. Using default: $default";
+			return $default;
+		}
+	}
+}
+
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
