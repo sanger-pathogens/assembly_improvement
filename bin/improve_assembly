@@ -123,7 +123,7 @@ my $abacas_default     = '/software/pathogen/internal/prod/bin/abacas.pl';
 # If executables not specified or do not exist, use the default
 $scaffolder_exec = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($scaffolder_exec, $scaffolder_default);
 $gapfiller_exec = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($gapfiller_exec, $gapfiller_default);
-$abacac_exec = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($abacas_exec, $abacas_default);
+$abacas_exec = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($abacas_exec, $abacas_default);
 
 $output_directory ||= getcwd();
 $output_directory  = abs_path($output_directory);
