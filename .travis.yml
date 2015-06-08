@@ -3,7 +3,6 @@ addons:
   apt:
     packages:
     - libssl-dev
-    - default-jre
 perl:
   - "5.14"
 sudo: false
