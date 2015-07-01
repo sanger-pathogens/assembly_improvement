@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+system("touch iva_qc.stats.txt");
+system("touch iva_qc.assembly_contigs_hit_ref.fasta");
+system("touch iva_qc.assembly_vs_ref.coords");
+system("touch iva_qc.assembly_v_ref.act.sh");
+system("touch iva_qc.assembly_v_ref.blastn");
