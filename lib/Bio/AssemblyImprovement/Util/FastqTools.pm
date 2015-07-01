@@ -160,13 +160,11 @@ sub first_read_length {
     my ($self) = @_;
     my $fastq_obj;
 
-    if ( $self->input_filename =~ /\.fq$/ || $self->input_filename =~ /\.fastq$/  ) {
-    	$fastq_obj =  Bio::SeqIO->new( -file => $self->input_filename , -format => 'Fastq');
-    }
-    elsif ( $self->input_filename =~ /\.fq\.gz$/ || $self->input_filename =~ /\.fastq\.gz$/  ) {
-    	$fastq_obj =  Bio::SeqIO->new( -file => "gunzip -c " . $self->input_filename . " |" , -format => 'Fastq');
-    }
-    else {
+    my $fastq_file = $self->_gunzip_file_if_needed( $self->input_filename );
+
+    if ( $fastq_file =~ /\.fq$/ || $fastq_file =~ /\.fastq$/  ) {
+    	$fastq_obj =  Bio::SeqIO->new( -file => $fastq_file , -format => 'Fastq');
+    }else {
         die "File '$self->input_filename' not recognised as fastq. Needs to end in .fastq[.gz] or .fq[.gz]";
     }
 
