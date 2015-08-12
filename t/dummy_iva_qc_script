@@ -5,3 +5,12 @@ system("touch iva_qc.assembly_contigs_hit_ref.fasta");
 system("touch iva_qc.assembly_vs_ref.coords");
 system("touch iva_qc.assembly_v_ref.act.sh");
 system("touch iva_qc.assembly_v_ref.blastn");
+system("touch out.contig_placement.R");
+system("touch out.reads_mapped_to_assembly.bam");
+system("touch out.reads_mapped_to_assembly.bam.bai");
+system("touch out.reads_mapped_to_assembly.bam.flagstat");
+system("touch out.reads_mapped_to_ref.bam");
+system("touch out.reads_mapped_to_ref.bam.flagstat");   
+system("mkdir out.gage");
+
+    
