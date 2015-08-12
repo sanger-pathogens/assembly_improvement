@@ -16,7 +16,7 @@ has 'db'               => ( is => 'ro', isa => 'Str', required => 0, default => 
 has 'forward_reads'    => ( is => 'ro', isa => 'Str', required => 1 ); 
 has 'reverse_reads'    => ( is => 'ro', isa => 'Str', required => 1 ); 
 has 'assembly'         => ( is => 'ro', isa => 'Str', required => 1 ); 
-has 'prefix'		   => ( is => 'ro', isa => 'Str', required => 0, default => "iva_qc_");
+has 'prefix'		   => ( is => 'ro', isa => 'Str', required => 0, default => "iva_qc");
 has 'iva_qc_exec'	   => ( is => 'ro', isa => 'Str', required => 0, default => "iva_qc");
 has 'working_directory'=> ( is => 'ro', isa => 'Str', required => 0, default => getcwd());
 
@@ -27,7 +27,11 @@ sub run {
 
     # remember cwd and cd into working directory
     my $cwd = getcwd();
-    chdir( $self->working_directory );
+    my $iva_qc_dir = $self->working_directory."/iva_qc";
+    if (! -d $iva_qc_dir) {
+		mkdir $iva_qc_dir or die "Could not create $iva_qc_dir";
+    } 
+    chdir( $iva_qc_dir );
     
     my $cmd = join(
         ' ',
