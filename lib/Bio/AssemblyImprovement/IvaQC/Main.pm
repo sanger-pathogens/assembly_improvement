@@ -54,6 +54,7 @@ sub run {
            $self->prefix.'.reads_mapped_to_assembly.bam.bai',
            $self->prefix.'.reads_mapped_to_assembly.bam.flagstat',
            $self->prefix.'.reads_mapped_to_ref.bam',
+           $self->prefix.'.reads_mapped_to_ref.bam.bai',
            $self->prefix.'.reads_mapped_to_ref.bam.flagstat',    
     );
     rmtree($self->prefix.'.gage');

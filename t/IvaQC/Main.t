@@ -37,6 +37,7 @@ my @files_should_not_exist = ('.contig_placement.R',
                               '.reads_mapped_to_assembly.bam.bai',
                               '.reads_mapped_to_assembly.bam.flagstat',
                               '.reads_mapped_to_ref.bam',
+                              '.reads_mapped_to_ref.bam.bai',
                               '.reads_mapped_to_ref.bam.flagstat',
                               );
 my @dir_should_not_exist = ('.gage');
