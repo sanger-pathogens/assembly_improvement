@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+
+system("touch test_iva_qc.stats.txt");
+system("touch test_iva_qc.assembly_contigs_hit_ref.fasta");
+system("touch test_iva_qc.assembly_vs_ref.coords");
+system("touch test_iva_qc.assembly_v_ref.act.sh");
+system("touch test_iva_qc.assembly_v_ref.blastn");
+system("touch test_iva_qc.contig_placement.R");
+system("touch test_iva_qc.reads_mapped_to_assembly.bam");
+system("touch test_iva_qc.reads_mapped_to_assembly.bam.bai");
+system("touch test_iva_qc.reads_mapped_to_assembly.bam.flagstat");
+system("touch test_iva_qc.reads_mapped_to_ref.bam");
+system("touch test_iva_qc.reads_mapped_to_ref.bam.bai");
+system("touch test_iva_qc.reads_mapped_to_ref.bam.flagstat");   
+system("mkdir test_iva_qc.gage");
+
+    
