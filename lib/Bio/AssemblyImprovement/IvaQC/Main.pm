@@ -49,14 +49,14 @@ sub run {
         die "Error running iva_qc with:\n$cmd";
     }
     # delete files and directories that were considered unnecessary
-    unlink('out.contig_placement.R',
-           'out.reads_mapped_to_assembly.bam',
-           'out.reads_mapped_to_assembly.bam.bai',
-           'out.reads_mapped_to_assembly.bam.flagstat',
-           'out.reads_mapped_to_ref.bam',
-           'out.reads_mapped_to_ref.bam.flagstat',    
+    unlink($self->prefix.'.contig_placement.R',
+           $self->prefix.'.reads_mapped_to_assembly.bam',
+           $self->prefix.'.reads_mapped_to_assembly.bam.bai',
+           $self->prefix.'.reads_mapped_to_assembly.bam.flagstat',
+           $self->prefix.'.reads_mapped_to_ref.bam',
+           $self->prefix.'.reads_mapped_to_ref.bam.flagstat',    
     );
-    rmtree('out.gage');
+    rmtree($self->prefix.'.gage');
     
     #change back to cwd
     chdir ($cwd);

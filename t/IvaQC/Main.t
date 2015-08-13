@@ -12,6 +12,7 @@ BEGIN {
 }
 
 my $current_dir = getcwd();
+my $prefix = 'test_iva_qc';
 
 ok(my $obj = Bio::AssemblyImprovement::IvaQC::Main->new(
     'db'      			  => $current_dir.'/t/data/database',
@@ -19,37 +20,38 @@ ok(my $obj = Bio::AssemblyImprovement::IvaQC::Main->new(
     'reverse_reads'       => $current_dir.'/t/data/reverse.fastq',
     'assembly'			  => $current_dir.'/t/data/contigs.fa',
     'iva_qc_exec'         => $current_dir.'/t/dummy_iva_qc_script',
+    'prefix'              => $prefix,
 ), 'initialize object');
 
 $obj->run();
 
-my @files_exist = ('iva_qc.stats.txt',
-			       'iva_qc.assembly_contigs_hit_ref.fasta',
-			       'iva_qc.assembly_vs_ref.coords',
-			       'iva_qc.assembly_v_ref.act.sh',
-			       'iva_qc.assembly_v_ref.blastn',
+my @files_exist = ('.stats.txt',
+			       '.assembly_contigs_hit_ref.fasta',
+			       '.assembly_vs_ref.coords',
+			       '.assembly_v_ref.act.sh',
+			       '.assembly_v_ref.blastn',
 			       );
 			       
-my @files_should_not_exist = ('out.contig_placement.R',
-                              'out.reads_mapped_to_assembly.bam',
-                              'out.reads_mapped_to_assembly.bam.bai',
-                              'out.reads_mapped_to_assembly.bam.flagstat',
-                              'out.reads_mapped_to_ref.bam',
-                              'out.reads_mapped_to_ref.bam.flagstat',
+my @files_should_not_exist = ('.contig_placement.R',
+                              '.reads_mapped_to_assembly.bam',
+                              '.reads_mapped_to_assembly.bam.bai',
+                              '.reads_mapped_to_assembly.bam.flagstat',
+                              '.reads_mapped_to_ref.bam',
+                              '.reads_mapped_to_ref.bam.flagstat',
                               );
-my @dir_should_not_exist = ('out.gage');
+my @dir_should_not_exist = ('.gage');
 
 foreach my $file (@files_exist){
-	ok(-e "iva_qc/$file", "$file OK");
-	unlink("iva_qc/$file");
+	ok(-e "iva_qc/$prefix$file", "$prefix$file OK");
+	unlink("iva_qc/$prefix$file");
 }
 
 foreach my $file(@files_should_not_exist){
-	ok(! -e "iva_qc/$file", "$file should not exist OK");
+	ok(! -e "iva_qc/$prefix$file", "$prefix$file should not exist OK");
 }
 
 foreach my $dir(@dir_should_not_exist){
-	ok(! -d "iva_qc/$dir", "$dir should not exist OK");
+	ok(! -d "iva_qc/$prefix$dir", "$prefix$dir should not exist OK");
 
 }
 rmtree($current_dir.'/iva_qc');
