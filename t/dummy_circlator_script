@@ -1,0 +1,4 @@
+#!/usr/bin/env perl
+
+system("mkdir circularised");
+system("touch circularised/06.fixstart.fasta");
