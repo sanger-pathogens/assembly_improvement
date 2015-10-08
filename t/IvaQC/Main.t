@@ -59,7 +59,7 @@ rmtree($current_dir.'/iva_qc');
 
 # Test iva qc error
 
-ok(my $obj = Bio::AssemblyImprovement::IvaQC::Main->new(
+ok(my $obj_error = Bio::AssemblyImprovement::IvaQC::Main->new(
     'db'      			  => $current_dir.'/t/data/database',
     'forward_reads'       => $current_dir.'/t/data/forward.fastq',
     'reverse_reads'       => $current_dir.'/t/data/reverse.fastq',
@@ -68,7 +68,7 @@ ok(my $obj = Bio::AssemblyImprovement::IvaQC::Main->new(
     'prefix'              => $prefix,
 ), 'initialize object with script returning error');
 
-$obj->run();
+$obj_error->run();
 
 
 done_testing();
