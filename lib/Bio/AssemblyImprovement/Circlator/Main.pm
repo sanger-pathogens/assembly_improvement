@@ -35,11 +35,7 @@ sub run {
             $self->output_directory, # assumed that this directory does not already exist
         )
     );
-	# run command
-    if (system($cmd)) {
-        die "Error running circlator with:\n$cmd";
-    }
-    #change back to cwd
+    system($cmd);
     chdir ($cwd);
     
 }
