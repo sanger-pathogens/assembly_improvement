@@ -29,7 +29,7 @@ sub run {
     my $cwd = getcwd();
     my $iva_qc_dir = $self->working_directory."/iva_qc";
     if (! -d $iva_qc_dir) {
-		mkdir $iva_qc_dir or die "Could not create $iva_qc_dir";
+		mkdir $iva_qc_dir;
     } 
     chdir( $iva_qc_dir );
     
@@ -44,21 +44,20 @@ sub run {
             $self->prefix,
         )
     );
-	# run command
-    if (system($cmd)) {
-        die "Error running iva_qc with:\n$cmd";
-    }
-    # delete files and directories that were considered unnecessary
-    unlink($self->prefix.'.contig_placement.R',
-           $self->prefix.'.reads_mapped_to_assembly.bam',
-           $self->prefix.'.reads_mapped_to_assembly.bam.bai',
-           $self->prefix.'.reads_mapped_to_assembly.bam.flagstat',
-           $self->prefix.'.reads_mapped_to_ref.bam',
-           $self->prefix.'.reads_mapped_to_ref.bam.bai',
-           $self->prefix.'.reads_mapped_to_ref.bam.flagstat',    
-    );
-    rmtree($self->prefix.'.gage');
-    
+	
+    system($cmd); 
+
+	# delete files and directories that were considered unnecessary
+	unlink($self->prefix.'.contig_placement.R',
+		   $self->prefix.'.reads_mapped_to_assembly.bam',
+		   $self->prefix.'.reads_mapped_to_assembly.bam.bai',
+		   $self->prefix.'.reads_mapped_to_assembly.bam.flagstat',
+		   $self->prefix.'.reads_mapped_to_ref.bam',
+		   $self->prefix.'.reads_mapped_to_ref.bam.bai',
+		   $self->prefix.'.reads_mapped_to_ref.bam.flagstat',    
+	);
+	rmtree($self->prefix.'.gage');
+
     #change back to cwd
     chdir ($cwd);
 

@@ -57,4 +57,18 @@ foreach my $dir(@dir_should_not_exist){
 }
 rmtree($current_dir.'/iva_qc');
 
+# Test iva qc error
+
+ok(my $obj_error = Bio::AssemblyImprovement::IvaQC::Main->new(
+    'db'      			  => $current_dir.'/t/data/database',
+    'forward_reads'       => $current_dir.'/t/data/forward.fastq',
+    'reverse_reads'       => $current_dir.'/t/data/reverse.fastq',
+    'assembly'			  => $current_dir.'/t/data/contigs.fa',
+    'iva_qc_exec'         => $current_dir.'/t/dummy_iva_qc_script_raise_error.py',
+    'prefix'              => $prefix,
+), 'initialize object with script returning error');
+
+$obj_error->run();
+
+
 done_testing();
