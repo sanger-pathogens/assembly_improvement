@@ -1,4 +1,40 @@
 #!/usr/bin/env perl
+use Cwd;
 
+my @circlator_output_files         = ("00.info.txt",
+									  "00.input_assembly.fasta",
+									  "00.input_assembly.fasta.fai",
+									  "01.mapreads.bam",
+									  "01.mapreads.bam.bai",
+									  "02.bam2reads.log",
+									  "02.bam2reads.fasta",
+									  "04.merge.coords",
+									  "04.merge.fasta",
+									  "04.merge.circularise.log",
+									  "05.clean.contigs_to_keep",
+									  "05.clean.log",
+									  "05.clean.coords",
+									  "05.clean.fasta",
+									  "05.clean.remove_small.fa",
+									  "06.fixstart.fasta",
+									  "06.fixstart.contigs_to_not_change",
+									  "06.fixstart.log",
+									  "06.fixstart.fasta",
+									  "06.fixstart.ALL_FINISHED",
+									  );
+									  
+my @circlator_output_dir			= ("03.assemble");
+
+my $cwd = getcwd();
 system("mkdir circularised");
-system("touch circularised/06.fixstart.fasta");
+chdir ("circularised");
+system("touch ".join(" ", @circlator_output_files));
+system("mkdir ".join(" ", @circlator_output_dir));
+
+# test logs
+system("echo log_1 > 02.bam2reads.log");
+system("echo log_2 > 04.merge.circularise.log");
+system("echo log_3 > 05.clean.log");
+system("echo log_4 > 06.fixstart.log");
+
+chdir $cwd;
