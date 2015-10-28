@@ -36,6 +36,34 @@ sub run {
         )
     );
     system($cmd);
+
+    
+   if(-e $self->output_directory."/06.fixstart.fasta" and -e $self->output_directory."/06.fixstart.ALL_FINISHED"){
+    	chdir ($self->output_directory);
+    	# clean up, rename and cat files
+    	system("mv 00.info.txt circlator.info.txt");
+    	system("cat 02.bam2reads.log 04.merge.circularise.log 05.clean.log 06.fixstart.log > circlator.log");
+    	my @circlator_output_to_delete = ("00.input_assembly.fasta",
+    									  "00.input_assembly.fasta.fai",
+    									  "01.mapreads.bam",
+    									  "01.mapreads.bam.bai",
+    				                      "02.bam2reads.log",
+    				                      "02.bam2reads.fasta",
+    				                      "03.assemble",
+    				                      "04.merge.coords", #symlink
+    				                      "04.merge.fasta",
+    				                      "04.merge.circularise.log",
+    				                      "05.clean.contigs_to_keep",
+    				                      "05.clean.log",
+    				                      "05.clean.coords",
+    				                      "05.clean.fasta",
+    				                      "05.clean.remove_small.fa",
+    				                      "06.fixstart.contigs_to_not_change",
+    				                      "06.fixstart.log",
+    				                      );  
+    	system("rm -rf ".join(" ", @circlator_output_to_delete));    	
+    }
+    
     chdir ($cwd);
     
 }
