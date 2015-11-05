@@ -22,10 +22,9 @@ ok(my $obj = Bio::AssemblyImprovement::Circlator::Main->new(
 
 $obj->run();
 
-ok(-e "circularised/06.fixstart.fasta", "06.fixstart.fasta exists OK");
-ok(-e "circularised/06.fixstart.ALL_FINISHED", "06.fixstart.ALL_FINISIHED exists OK");
 ok(-e "circularised/circlator.info.txt", "circlator.info.txt exists OK");
 ok(-e "circularised/circlator.log", "circlator.log exists OK");
+ok(-e "circularised/circlator.final.fasta", "circlator.final.fasta exists OK");
 
 my $expected_log = read_file($current_dir.'/t/data/expected_circlator.log');
 my $got_log = read_file("circularised/circlator.log");
@@ -33,7 +32,7 @@ is($got_log, $expected_log, "Logs concatenated in right order");
 
 opendir my $dh, "circularised" or warn "opendir circularised - $!";
 my @files = readdir $dh;
-is( @files - 2, 4, "File count OK"); # subtract 2 because readdir returns . and .. files too
+is( @files - 2, 3, "File count OK"); # subtract 2 because readdir returns . and .. files too
 
 rmtree('circularised');
 
