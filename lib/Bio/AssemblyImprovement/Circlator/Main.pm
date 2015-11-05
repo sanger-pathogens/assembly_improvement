@@ -20,7 +20,7 @@ has 'circlator_exec'   => ( is => 'ro', isa => 'Str', required => 0, default => 
 
 sub _get_number_in_filename {
 	my ($self, $name) = @_;
-	$name =~ /\S+\/04.merge.merge.iter.(\d+).reads/;
+	$name =~ /\S+\/04.merge.merge.iter.(\d+).reads.log/;
 	return $1;
 }
 
@@ -57,7 +57,7 @@ sub run {
     	system("mv $temp_dir/00.info.txt ".$self->output_directory."/circlator.info.txt") and die "Could not move $temp_dir/00.info.txt to ".$self->output_directory."/circlator.info.txt";
     	system("mv $temp_dir/06.fixstart.fasta ".$self->output_directory."/circlator.final.fasta") and die "Could not move $temp_dir/06.fixstart.fasta to ".$self->output_directory."/circlator.final.fasta";
     	
-    	my @iterative_merge_files = sort {$self->_get_number_in_filename($a) <=> $self->_get_number_in_filename($b)} glob("$temp_dir/04.merge.merge.iter.*.reads"); #cannot rely on glob's lexical sorting
+    	my @iterative_merge_files = sort {$self->_get_number_in_filename($a) <=> $self->_get_number_in_filename($b)} glob("$temp_dir/04.merge.merge.iter.*.reads.log"); #cannot rely on glob's lexical sorting
     	
     	my @log_files = ("$temp_dir/02.bam2reads.log",
 						 @iterative_merge_files,

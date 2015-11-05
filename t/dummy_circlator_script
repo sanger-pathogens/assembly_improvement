@@ -15,9 +15,9 @@ my @circlator_output_files         = ("00.info.txt",
 									  "04.merge.merge.log",
 									  "04.merge.circularise_details.log",
 									  "04.merge.circularise.log",
-									  "04.merge.merge.iter.1.reads",
-									  "04.merge.merge.iter.2.reads",
-									  "04.merge.merge.iter.10.reads",
+									  "04.merge.merge.iter.1.reads.log",
+									  "04.merge.merge.iter.2.reads.log",
+									  "04.merge.merge.iter.10.reads.log",
 									  "05.clean.contigs_to_keep",
 									  "05.clean.log",
 									  "05.clean.coords",
@@ -40,9 +40,9 @@ system("mkdir ".join(" ", @circlator_output_dir));
 
 # test logs
 system("echo log_1 > 02.bam2reads.log");
-system("echo log_2 > 04.merge.merge.iter.1.reads");
-system("echo log_3 > 04.merge.merge.iter.2.reads");
-system("echo log_4 > 04.merge.merge.iter.10.reads");
+system("echo log_2 > 04.merge.merge.iter.1.reads.log");
+system("echo log_3 > 04.merge.merge.iter.2.reads.log");
+system("echo log_4 > 04.merge.merge.iter.10.reads.log");
 system("echo log_5 > 04.merge.merge.iterations.log");
 system("echo log_6 > 04.merge.merge.log");
 system("echo log_7 > 04.merge.circularise_details.log");
