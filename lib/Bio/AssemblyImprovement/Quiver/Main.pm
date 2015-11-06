@@ -59,7 +59,7 @@ sub run {
 	move (join('/', $self->temp_output_directory, 'All_output', 'input.xml'), join('/', $self->output_directory, 'quiver.input.xml'));
 	move (join('/', $self->temp_output_directory, 'All_output', 'settings.xml'), join('/', $self->output_directory, 'quiver.settings.xml'));
     
-    #rmtree ($self->temp_output_directory);
+    rmtree ($self->temp_output_directory);
     
     # check the status of bsub.o file and if it's memory then resubmit with more - try twice
     
