@@ -61,7 +61,7 @@ sub run {
     
     rmtree ($self->temp_output_directory);
     
-    # check the status of bsub.o file and if it's memory then resubmit with more - try twice
+    # TODO: check the status of bsub.o file and if it failed because the memory was low, then resubmit with more - try twice
     
 }
 
