@@ -22,6 +22,8 @@ ok(my $obj = Bio::AssemblyImprovement::Quiver::Main->new(
 $obj->run();
 
 my @files_exist = ('quiver.final.fasta',
+				   'quiver.aligned_reads.bam',
+				   'quiver.aligned_reads.bam.bai',
 			       'quiver.settings.xml',
 			       'quiver.run-assembly.sh',
 			       'quiver.input.xml',
