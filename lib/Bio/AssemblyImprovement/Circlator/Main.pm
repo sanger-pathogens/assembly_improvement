@@ -59,17 +59,23 @@ sub run {
     	
     	my @iterative_merge_files = sort {$self->_get_number_in_filename($a) <=> $self->_get_number_in_filename($b)} glob("$temp_dir/04.merge.merge.iter.*.reads.log"); #cannot rely on glob's lexical sorting
     	
-    	my @log_files = ("$temp_dir/02.bam2reads.log",
-						 @iterative_merge_files,
-						"$temp_dir/04.merge.merge.iterations.log",
-						"$temp_dir/04.merge.merge.log",
-						"$temp_dir/04.merge.circularise_details.log",
-						"$temp_dir/04.merge.circularise.log",
-						"$temp_dir/05.clean.log",
-						"$temp_dir/06.fixstart.log");
+    	my @log_files_1 = ("$temp_dir/02.bam2reads.log",
+						   @iterative_merge_files,
+						   "$temp_dir/04.merge.merge.iterations.log",
+						  );
+						  
+		my $merge_summary = "$temp_dir/04.merge.merge.log"; # may not always be there
+						
+		my @log_files_2 = ("$temp_dir/04.merge.circularise_details.log",
+						   "$temp_dir/04.merge.circularise.log",
+						   "$temp_dir/05.clean.log",
+						   "$temp_dir/06.fixstart.log",
+						  );
     	
-    	system("cat ".join(" ", @log_files)." > ".$self->output_directory."/circlator.log") and die "Could not cat circlator log files to ".$self->output_directory."/circlator.log";
-    	system("rm -rf $temp_dir") and die "Could not delete $temp_dir"; 
+    	system("cat ".join(" ", @log_files_1)." > ".$self->output_directory."/circlator.log") and warn "Could not cat circlator log files to ".$self->output_directory."/circlator.log";
+    	system("cat $merge_summary >> ".$self->output_directory."/circlator.log") if (-e $merge_summary);
+    	system("cat ".join(" ", @log_files_2)." >> ".$self->output_directory."/circlator.log") and warn "Could not cat circlator log files to ".$self->output_directory."/circlator.log";
+    	system("rm -rf $temp_dir") and warn "Could not delete $temp_dir"; 
     }
     
     chdir ($cwd);
