@@ -55,6 +55,8 @@ sub run {
 	}
 	
 	move (join('/', $self->temp_output_directory, 'consensus.fasta'), join('/', $self->output_directory, 'quiver.final.fasta'));
+	move (join('/', $self->temp_output_directory, 'aligned_reads.bam'), join('/', $self->output_directory, 'quiver.aligned_reads.bam'));
+	move (join('/', $self->temp_output_directory, 'aligned_reads.bam.bai'), join('/', $self->output_directory, 'quiver.aligned_reads.bam.bai'));
 	move (join('/', $self->temp_output_directory, 'run-assembly.sh'), join('/', $self->output_directory, 'quiver.run-assembly.sh'));
 	move (join('/', $self->temp_output_directory, 'All_output', 'input.xml'), join('/', $self->output_directory, 'quiver.input.xml'));
 	move (join('/', $self->temp_output_directory, 'All_output', 'settings.xml'), join('/', $self->output_directory, 'quiver.settings.xml'));
