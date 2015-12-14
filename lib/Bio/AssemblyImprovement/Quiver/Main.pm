@@ -8,7 +8,7 @@ package Bio::AssemblyImprovement::Quiver::Main;
 
 use Moose;
 use File::Copy;
-use File::Path qw( rmtree );
+use File::Path qw(make_path remove_tree);
 use Cwd;
 
 has 'reference'			=> ( is => 'ro', isa => 'Str', required => 1);
@@ -33,6 +33,8 @@ sub run {
     my $cwd = getcwd();
     chdir ($self->working_directory);
     my $temp_dir = "tmp_quiver"; 
+		remove_tree($temp_dir) if(-d $temp_dir);
+		remove_tree($self->output_directory) if(-d $self->output_directory);
     
     my $cmd = join(
         ' ',
@@ -58,7 +60,7 @@ sub run {
     # Keep some files, delete the rest
     # consensus.fasta, run-assembly.sh, All_output/input.xml, All_output/settings.xml
 	if(! -d $self->output_directory){	
-		mkdir $self->output_directory;
+		make_path($self->output_directory);
 	}
 	
 	move (join('/', $temp_dir, 'consensus.fasta'), join('/', $self->output_directory, 'quiver.final.fasta'));
@@ -68,7 +70,7 @@ sub run {
 	move (join('/', $temp_dir, 'All_output', 'input.xml'), join('/', $self->output_directory, 'quiver.input.xml'));
 	move (join('/', $temp_dir, 'All_output', 'settings.xml'), join('/', $self->output_directory, 'quiver.settings.xml'));
     
-    rmtree ($temp_dir);
+    remove_tree($temp_dir);
     chdir ($cwd);
     # TODO: check the status of bsub.o file and if it failed because the memory was low, then resubmit with more - try twice
     
