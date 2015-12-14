@@ -71,7 +71,7 @@ sub run {
 						   "$temp_dir/06.fixstart.log",
 						  );
     	my $filtered_log_files = $self->_filter_out_non_existant_files(\@log_files);
-    	system("cat ".join(" ", @{$filtered_log_files])." > ".$self->output_directory."/circlator.log") and warn "Could not cat circlator log files to ".$self->output_directory."/circlator.log";
+    	system("cat ".join(" ", @{$filtered_log_files})." > ".$self->output_directory."/circlator.log") and warn "Could not cat circlator log files to ".$self->output_directory."/circlator.log";
 
 			remove_tree($temp_dir) if(-d $temp_dir);
     }
