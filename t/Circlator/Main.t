@@ -36,4 +36,20 @@ is( @files - 2, 3, "File count OK"); # subtract 2 because readdir returns . and 
 
 rmtree('circularised');
 
+#--- test case when no merge.merge.log file is created ----#
+
+ok(my $obj_no_merge = Bio::AssemblyImprovement::Circlator::Main->new(
+    'assembly'      	  => $current_dir.'/t/data/contigs.fa',
+    'corrected_reads'     => $current_dir.'/t/data/shuffled.fastq',
+    'circlator_exec'      => $current_dir.'/t/dummy_circlator_script_no_merge_log',
+), 'initialize object');
+
+$obj_no_merge->run();
+
+my $expected_log_no_merge = read_file($current_dir.'/t/data/expected_circlator_no_merge.log');
+my $got_log_no_merge = read_file("circularised/circlator.log");
+is($got_log_no_merge, $expected_log_no_merge, "Logs concatenated in right order");
+
+rmtree('circularised');
+
 done_testing();

@@ -16,7 +16,7 @@ my $current_dir = getcwd();
 ok(my $obj = Bio::AssemblyImprovement::Quiver::Main->new(
     'reference'      	  => $current_dir.'/t/data/contigs.fa',
     'bax_files'           => $current_dir.'/t/data/',
-    'pacbio_exec'         => $current_dir.'/t/dummy_quiver_script.pl',
+    'quiver_exec'         => $current_dir.'/t/dummy_quiver_script.pl',
 ), 'initialize object');
 
 $obj->run();
