@@ -14,7 +14,6 @@ Given an assembly and a reference, order the contigs.
 =cut
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Cwd;
@@ -35,13 +34,14 @@ GetOptions(
 );
 
 ( defined($assembly_file) && defined($reference) && ( -e $assembly_file ) && ( -e $reference ) && !$help ) or die <<USAGE;
-Usage: order_contigs_with_abacas [options]
-Take in an assembly in FASTA format and a reference, and order the contigs.
+Usage: order_contigs_with_abacas -a <FASTA> -c <FASTA>
+Take in an assembly and a reference in FASTA format and order the contigs.
 
-order_contigs_with_abacas -a contigs.fa -c my_reference.fa
-
-# This help message
-order_contigs_with_abacas -h
+Required: 
+    -a STR  assembly FASTA(.gz) file
+    -c STR  reference genome FASTA(.gz) file
+Options: 
+    -h      print this message and exit
 
 USAGE
 

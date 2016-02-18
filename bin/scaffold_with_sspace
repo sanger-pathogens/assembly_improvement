@@ -25,7 +25,6 @@ Given an assembly and some reads in fastq format, try and scaffold the assembly.
 
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use File::Path qw(make_path);
@@ -50,23 +49,19 @@ GetOptions(
 );
 
 ( defined($assembly_file) && defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
-Usage: scaffold_with_sspace [options]
+Usage: scaffold_with_sspace [options] -a <FASTA> -f <FASTQ> -r <FASTQ> -s <EXEC>
 Take in an assembly in FASTA format and reads in FASTQ format, then iteratively scaffold with SSPACE.
-
-# outputs a file called contigs.scaffolded.fa
-scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
-
-# use two threads (default 1)
-scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq -t 2
-
-# Gzipped input files are accepted
-scaffold_with_sspace -a contigs.fa.gz -f 123_1.fastq.gz -r 123_2.fastq.gz
-
-# Insert size defaults to 250 if not specified
-scaffold_with_sspace -a contigs.fa -f 123_1.fastq -r 123_2.fastq -i 3000
-
-# This help message
-scaffold_with_sspace -h
+Required: 	
+    -a STR  assembly FASTA(.gz) file
+    -f STR  forward reads FASTQ(.gz) file
+    -r STR  reverse reads FASTQ(.gz) file
+    -s STR  path to SSPACE executable
+Options:    
+    -i INT  insert size [250]
+    -t INT  number of threads [1]
+    -o STR  output directory [.]
+    -d      debug output []
+    -h      print this message and exit
 
 USAGE
 

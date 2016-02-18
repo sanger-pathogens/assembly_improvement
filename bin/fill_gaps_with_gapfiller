@@ -25,7 +25,6 @@ Given an assembly and some reads in fastq format, try and fill in the gaps. Do m
 =cut
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use File::Path 2.07 qw(make_path);
@@ -49,9 +48,21 @@ GetOptions(
 );
 
 ( defined($assembly_file) && defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
-Usage: fill_gaps_with_gapfiller [options]
+Usage: fill_gaps_with_gapfiller [options] -a <FASTA> -f <FASTQ> -r <FASTQ> -g <EXEC>
 Take in an assembly in FASTA format and reads in FASTQ format, then iteratively fill in the gaps with GapFiller.
-
+Required: 	
+    -a STR  assembly FASTA(.gz) file
+    -f STR  forward reads FASTQ(.gz) file
+    -r STR  reverse reads FASTQ(.gz) file
+    -g STR  path to GapFiller executable
+Options:    
+    -c STR  reference FASTA(.gz) file
+    -i INT  insert size [250]
+    -t INT  number of threads [1]
+    -o STR  output directory [.]
+    -d      debug output []
+    -h      print this message and exit
+		
 # outputs a file called contigs.scaffolded.fa
 fill_gaps_with_gapfiller -a contigs.fa -f 123_1.fastq -r 123_2.fastq 
 

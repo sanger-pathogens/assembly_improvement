@@ -46,7 +46,6 @@ read_correction_with_sga -h
 
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Cwd;
@@ -80,28 +79,24 @@ GetOptions(
 
 # Check if either a forward & reverse file have been provided, or if a single shuffled file has been provided
 ( ( ( defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) ) or ( defined($shuffled_reads_file) && ( -e $shuffled_reads_file ) ) ) && !$help ) or die <<USAGE;
-Usage: read_correction_with_sga [options]
-	
-        -f|forward_fastq       <forward reads file - zipped or unzipped>
-        -r|reverse_fastq       <reverse reads files - zipped or unzipped >
-        -fr|shuffled_fasta	   <an interleaved fastq file - zipped or unzipped>
-        -s|sga_exec	 		   <path to sga script>
-        
-        -m|min_length	       <discard sequences that are shorter than this during preprocess>
-        -q|quality_trim	       <trim reads using Heng Li's BWT trimming algorithm>
-        
-        -a|algorithm		   <indexing algorithm - ropebwt or sais>
-        -t|threads	           <number of threads to use for computation>
-        -h|kmer_threshold	   <kmer threshold. Attempt to correct kmers that appear less than this many times>
-        -k|kmer_length	       <the length of kmer to be used>
-        
-        -o|output_directory	   <output directory for results file(s)>
-        -z|output_filename     <output filename if not using default of _sga_error_corrected.fastq.gz>
-        -d|debug			   <debug>
-        -h|help      		   <this message>
+Usage: read_correction_with_sga [options] -f <FASTQ> -r <FASTQ> -s <EXEC>
+Takes in FASTQ files and produces read corrected fastq files using SGA.
 
-Takes in one (shuffled) or two (forward and reverse) FASTQ files, and then performs read correction using SGA
-
+Required:
+    -f STR  forward reads FASTQ(.gz) file
+    -r STR  reverse reads FASTQ(.gz) file
+    -s STR  path to SGA executable
+Options:    
+    -m INT  minimum read length [66]
+    -q      trim reads using BWT trimming algorithm
+    -a STR  indexing algorithm to use (ropebwt/sais) [ropebwt]
+    -t INT  number of threads [1]
+    -o STR  output directory [.]
+    -h INT  kmer threshold [5]
+    -k INT  length of kmer to be used [41]
+    -z STR  output filename [_sga_error_corrected.fastq.gz]
+    -d      debug output []
+		
 # outputs a file called _sga_error_corrected.fastq.gz
 read_correction_with_sga -f 123_1.fastq -r 123_2.fastq 
 read_correction_with_sga -fr 123_shuffled.fastq

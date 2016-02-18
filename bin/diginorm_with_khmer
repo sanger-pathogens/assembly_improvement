@@ -26,7 +26,6 @@ Usage: diginorm_with_khmer [options]
 
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Cwd;
@@ -54,21 +53,21 @@ GetOptions(
 
 
 ( defined($input_filename) && ( -e $input_filename) && !$help ) or die <<USAGE;
+Usage: diginorm_with_khmer [options] -i <FASTQ>
 
-Usage: diginorm_with_khmer [options]
-	
-		-i|input_file          <input fastq file>
-		-c|coverage			   <desired median coverage. Default = 2>
-        -k|kmer_length	       <the length of kmer to be used. Default = 31. Larger kmers need more memory so choose carefully>
-        -n|number_of_hashes    <number of hashes. Default = 4>
-        -m|minimum_hash_size   <minimum hash size. Default = 2.5e8>
-        -p|paired			   <is the data paired? Default = yes>
-        -o|output_directory	   <output directory for results file>
-        -z|output_filename	   <name of output filename if not using default of digitally_normalised.fastq.gz>
-        -e|khmer_exec		   <khmer exec>
-        -py|python_exec		   <default is python-2.7>
-        -d|debug			   <debug>
-        -h|help      		   <this message>
+Required:
+    -i  STR   input FASTQ(.gz) file of shuffled reads
+Options:
+    -c  INT   target median coverage [2]
+    -k  INT   length of kmer to be used, higher numbers require more RAM [31]
+    -n  INT   number of hashes [4]
+    -m  FLOAT minimum hash size. [2.5e8]
+    -o  STR   output directory [.]
+    -z  STR   output filename [digitally_normalised.fastq.gz]
+    -e  STR   path to normalize-by-median.py
+    -py STR   python executable [python-2.7]
+    -d        debug output []
+    -h        print this message and exit
         
 Takes in a fastq file (zipped or unzipped) and produced a normalised fastq file (zipped)
 
