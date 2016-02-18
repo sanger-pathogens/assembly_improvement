@@ -9,7 +9,6 @@ package Bio::AssemblyImprovement::Bin::FastqTools;
 
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Switch;
@@ -29,13 +28,13 @@ GetOptions(
 
 
 ( defined($input_file)  && !$help ) or die <<USAGE;
-Usage: fastq_tools [options]
-	
-        -i|input_file          <fastq file>
-        -t|task                <task can be kmer, coverage, split or histogram. If coverage, provide the genome size. See below>
-        -g|genome_size		   <genome size>
-  
-        -h|help      		   <this message>
+Usage: fastq_tools [options] -i <FASTQ>
+Required:	
+    -i STR  input FASTQ(.gz) file of shuffled reads
+    -t STR  task to be run (kmer/coverage/split/histogram)
+Options:
+    -g INT  genome size of the coverage task []
+    -h      print this message and exit
         
 'kmer': Calculate 66% and 90% of median read length as minimum and maximum kmer sizes. Uses for running VelvetOptimiser
 'coverage': Given a genome size, calculates the coverage

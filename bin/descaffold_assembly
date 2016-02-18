@@ -13,7 +13,6 @@ Given an assembly in FASTA format, output a descaffolded assembly.
 
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Bio::AssemblyImprovement::Scaffold::Descaffold;

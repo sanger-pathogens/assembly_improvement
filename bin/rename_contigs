@@ -13,7 +13,6 @@ Given an assembly, rename the contigs iteratively
 
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs;

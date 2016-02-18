@@ -28,7 +28,6 @@ Given an assembly, some reads and optionally a reference, reduce the number of c
 
 
 BEGIN { unshift( @INC, '../lib' ) }
-use lib "/software/pathogen/internal/prod/lib";
 use Moose;
 use Getopt::Long;
 use File::Copy;
@@ -63,21 +62,24 @@ GetOptions(
 );
 
 ( defined($assembly_file) && defined($forward_reads_file) && defined($reverse_reads_file) && ( -e $assembly_file ) && ( -e $forward_reads_file ) && ( -e $reverse_reads_file ) && !$help ) or die <<USAGE;
-Usage: improve_assembly [options]
-Take in an assembly in FASTA format,reads in FASTQ format, and optionally a reference and produce a a better reference using Abacas/SSpace and GapFiller.
-	
-        -a|assembly            <assembly file in fasta format - zipped or unzipped>
-        -f|forward_fastq       <forward reads file - zipped or unzipped>       
-        -r|reverse_fastq       <reverse reads files - zipped or unzipped>
-        -c|reference       	   <reference file in fasta format - zipped or unzipped>
-    	-i|insert_size         <insert size, default 250>
-    	-s|scaffolder_exec     <path to scaffolder, defaults to version of SSPACE on /software>
-    	-b|abacas_exec         <path to ABACAS, defaults to version of ABACAS on /software>
-    	-g|gapfiller_exec      <path to GapFiller, defaults to version of GapFiller on /software>
-    	-d|debug               <debug use this to be told if something goes wrong when running SSPACE, ABACAS and GapFiller, default false>
-    	-o|output_directory    <output directory, default current working directory>
-    	-h|help                <print this help message>
+Usage: improve_assembly [options] -a <FASTA> -f <FASTQ> -r <FASTQ> -s <EXEC> -g <EXEC>
+Given an assembly in FASTA format and paired ended reads in FASTQ format, output a scaffolded and gapfilled assembly.
 
+Required: 	
+    -a STR  assembly FASTA(.gz) file
+    -f STR  forward reads FASTQ(.gz) file
+    -r STR  reverse reads FASTQ(.gz) file
+    -s STR  path to SSPACE executable
+    -g STR  path to GapFiller executable
+Options:    
+    -c STR  reference FASTA(.gz) file
+    -i INT  insert size [250]
+    -b STR  path to abacas.pl executable
+    -o STR  output directory [.]
+    -l INT  Minimum final contig length [300]
+    -p INT  Only filter if this percentage of bases left [95]
+    -d      debug output []
+    -h      print this message and exit
 
 # Improve the assembly without a reference
 improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq
