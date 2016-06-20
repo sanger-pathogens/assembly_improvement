@@ -1,0 +1,74 @@
+v1.7.0 - 2016-06-20
+------
+Add a CHANGELOG.
+Change versioning to x.y.z instead of year and day of year.
+
+v1.6.49 - 2016-02-18
+------
+Improve the usage text.
+Add an example dataset and instructions for running it.
+
+v1.5.348 - 2015-12-14
+------
+Add a wrapper script for running circlator.
+Bug fix for IVA QC.
+
+v1.5.225 - 2015-08-14
+------
+Add a script to perform QC on IVA assemblies.
+
+v1.5.166 - 2015-06-15
+------
+Add to Travis continous integration system and display test status on github repo.
+
+v1.5.140 - 2015-05-20
+------
+Added more sanity checking for external dependancies.
+
+v1.4.310 - 2014-11-06
+------
+Add support for Trimmomatic adapter trimming.
+
+v1.4.21 - 2014-01-21
+------
+General bugfixes to make the scripts more robust.
+Java added as a dependency (for QUASR).
+
+v1.3.254 - 2013-09-11
+------
+Allow for multithreaded support for SSPACE and GapFiller.
+
+v1.3.245 - 2013-09-02
+------
+Add support for single cell assemblies.
+
+v1.3.233 - 2013-08-21
+------
+Order the contigs in the assembly by size.
+
+v1.3.206 - 2013-07-25
+------
+Assume an insert size of 300 if none is provided.
+
+v1.3.203 - 2013-07-22
+------
+Filter out very small contigs from the assembly.
+
+v1.3.121 - 2013-05-01
+------
+Add support for virus assemblies. Assemblies have massively uneven coverage (0 to 20,000X), lots of adapters and mixed populations.
+Automatic primer removal with QUASR.
+Coverage normalisation support with khmer, for amplified virus data.
+Add SGA read correction.
+
+v1.2.353 - 2012-12-18
+------
+Add support for ABACAS for ordering contigs against a reference genome.
+Improve the automatic documentation generation in the perl modules.
+
+v1.2.265 - 2012-09-21
+------
+Initial working version of the code.
+Descaffold an assembly back to contigs (break sequences on gap).
+Iteratively run ABACAS, SSPACE, and GapFiller.
+
