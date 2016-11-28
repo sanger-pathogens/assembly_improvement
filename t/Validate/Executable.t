@@ -33,7 +33,18 @@ my $my_gapfiller = $current_dir.'/t/does_not_exist.pl'; # script does not exist
 my $my_abacas; # not defined
 
 $my_sspace = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($my_sspace, $sspace_default);
-$my_gapfiller = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($my_gapfiller, $gapfiller_default);
+
+# Capture the does not exist warning from Bio::AssemblyImprovement::Validate::Executable line 43
+open OLDERR, '>&STDERR';
+{
+    local *STDERR;
+    open STDERR, '>/dev/null' or warn "Can't open /dev/null: $!";
+    $my_gapfiller = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($my_gapfiller, $gapfiller_default);
+    close STDERR;
+}
+open STDERR, '>&OLDERR' or die "Can't restore stderr: $!";
+close OLDERR or die "Can't close OLDERR: $!";
+
 $my_abacas = Bio::AssemblyImprovement::Validate::Executable->new()->check_executable_and_set_default($my_abacas, $abacas_default);
 
 is($my_sspace, $current_dir.'/t/dummy_sspace_v2_script.pl');
