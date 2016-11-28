@@ -9,5 +9,5 @@ sudo: false
 install:
   - "cpanm Dist::Zilla"
   - "dzil authordeps --missing | cpanm"
-  - "cpanm Bio::SeqIO Test::File::Contents Statistics::Lite File::Slurp"
+  - "cpanm Bio::SeqIO Test::File::Contents Statistics::Lite File::Slurper"
 script: "dzil test"
