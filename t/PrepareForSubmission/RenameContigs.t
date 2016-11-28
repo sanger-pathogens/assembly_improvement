@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use File::Temp;
 use File::Copy;
-use File::Slurp;
+use File::Slurper;
 
 
 BEGIN { unshift( @INC, './lib' ) }
@@ -15,8 +15,8 @@ BEGIN {
 
 my $tmp_file_obj = File::Temp->new();
 my $original_assembly = 't/data/contigs_needing_to_be_renamed.fa';
-my $pre_processed_assembly  = read_file($original_assembly);
-my $expected_post_processed_assembly =  read_file('t/data/expected_contigs_needing_to_be_renamed.fa');
+my $pre_processed_assembly  = read_text($original_assembly);
+my $expected_post_processed_assembly =  read_text('t/data/expected_contigs_needing_to_be_renamed.fa');
 
 copy($original_assembly, $tmp_file_obj->filename);
 
@@ -27,7 +27,7 @@ ok(my $obj = Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs->new(
 
 is($obj->_generate_contig_name(5),'ERS00001234.5', 'Contig names follow convention');
 
-my $post_processed_assembly  = read_file($obj->input_assembly);
+my $post_processed_assembly  = read_text($obj->input_assembly);
 isnt($post_processed_assembly, $pre_processed_assembly , 'Input and output assemblies should not be the same');
 is($expected_post_processed_assembly,$post_processed_assembly, 'Output assembly has correct naming scheme' );
 

@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Cwd;
 use File::Path qw( rmtree );
-use File::Slurp;
+use File::Slurper;
 
 BEGIN { unshift( @INC, './lib' ) }
 
@@ -26,8 +26,8 @@ ok(-e "circularised/circlator.info.txt", "circlator.info.txt exists OK");
 ok(-e "circularised/circlator.log", "circlator.log exists OK");
 ok(-e "circularised/circlator.final.fasta", "circlator.final.fasta exists OK");
 
-my $expected_log = read_file($current_dir.'/t/data/expected_circlator.log');
-my $got_log = read_file("circularised/circlator.log");
+my $expected_log = read_text($current_dir.'/t/data/expected_circlator.log');
+my $got_log = read_text("circularised/circlator.log");
 is($got_log, $expected_log, "Logs concatenated in right order");
 
 opendir my $dh, "circularised" or warn "opendir circularised - $!";
@@ -46,8 +46,8 @@ ok(my $obj_no_merge = Bio::AssemblyImprovement::Circlator::Main->new(
 
 $obj_no_merge->run();
 
-my $expected_log_no_merge = read_file($current_dir.'/t/data/expected_circlator_no_merge.log');
-my $got_log_no_merge = read_file("circularised/circlator.log");
+my $expected_log_no_merge = read_text($current_dir.'/t/data/expected_circlator_no_merge.log');
+my $got_log_no_merge = read_text("circularised/circlator.log");
 is($got_log_no_merge, $expected_log_no_merge, "Logs concatenated in right order");
 
 rmtree('circularised');
