@@ -45,7 +45,7 @@ sub run {
         )
     );
 	
-    system($cmd) and warn "Error running iva_qc with: $cmd \n"; 
+    system("$cmd 2>/dev/null") and warn "Error running iva_qc with: $cmd \n"; 
 
 	# delete files and directories that were considered unnecessary
 	unlink($self->prefix.'.contig_placement.R',

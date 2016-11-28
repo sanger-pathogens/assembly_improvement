@@ -68,7 +68,14 @@ ok(my $obj_error = Bio::AssemblyImprovement::IvaQC::Main->new(
     'prefix'              => $prefix,
 ), 'initialize object with script returning error');
 
-$obj_error->run();
-
+open OLDERR, '>&STDERR';
+{
+  local *STDERR;
+  open STDERR, '>/dev/null' or warn "Can't open /dev/null: $!";
+  $obj_error->run();
+    close STDERR;
+}
+open STDERR, '>&OLDERR' or die "Can't restore stderr: $!";
+close OLDERR or die "Can't close OLDERR: $!";
 
 done_testing();
