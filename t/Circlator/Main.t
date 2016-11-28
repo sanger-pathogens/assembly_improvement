@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Cwd;
 use File::Path qw( rmtree );
-use File::Slurper;
+use File::Slurper qw(read_text);
 
 BEGIN { unshift( @INC, './lib' ) }
 

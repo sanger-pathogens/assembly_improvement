@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use File::Temp;
 use File::Copy;
-use File::Slurper;
+use File::Slurper qw(read_text);
 
 BEGIN { unshift( @INC, './lib' ) }
 
