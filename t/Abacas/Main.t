@@ -4,6 +4,7 @@ use warnings;
 use Cwd;
 use Cwd 'abs_path';
 use File::Path qw(make_path remove_tree);
+use File::Slurper qw(read_text);
 
 BEGIN { unshift( @INC, './lib' ) }
 
@@ -70,11 +71,8 @@ sub compare_files
   my($expected_file, $actual_file) = @_;
   ok((-e $actual_file),' results file exist');
   ok((-e $expected_file)," $expected_file expected file exist");
-  local $/ = undef;
-  open(EXPECTED, $expected_file);
-  open(ACTUAL, $actual_file);
-  my $expected_line = <EXPECTED>;
-  my $actual_line = <ACTUAL>;
+  my $expected_line = read_text($expected_file);
+  my $actual_line = read_text($actual_file);
   
   # parallel processes mean the order isnt guaranteed.
   my @split_expected  = split(/\n/,$expected_line);
