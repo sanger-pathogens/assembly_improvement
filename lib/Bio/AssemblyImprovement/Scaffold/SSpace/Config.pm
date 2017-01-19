@@ -29,6 +29,7 @@ use Moose;
 has 'input_files'     => ( is => 'ro', isa => 'ArrayRef', required => 1 );
 has '_default_insert_size' => ( is => 'ro', isa => 'Int',      default => 300 );
 has 'insert_size'     => ( is => 'rw', isa => 'Int',      required => 1 );
+has 'mapper'          => ( is => 'ro', isa => 'Str',      default  => 'bwa' );
 has 'output_filename' => ( is => 'rw', isa => 'Str',      default  => '_scaffolder.config' );
 
 sub create_config_file {
@@ -41,7 +42,7 @@ sub create_config_file {
 
     my $input_file_names = join( ' ', @{ $self->input_files } );
     open( my $lib_fh, "+>", $self->output_filename );
-    print $lib_fh "LIB " . $input_file_names . " " . $self->insert_size . " 0.3 FR";
+    print $lib_fh "LIB ".$self->mapper . " ". $input_file_names . " " . $self->insert_size . " 0.3 FR";
     close($lib_fh);
 
     return $self;
