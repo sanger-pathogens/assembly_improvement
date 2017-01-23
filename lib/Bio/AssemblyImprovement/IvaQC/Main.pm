@@ -12,7 +12,7 @@ use Cwd;
 use File::Path qw( rmtree );
 
 
-has 'db'               => ( is => 'ro', isa => 'Str', required => 0, default => "/lustre/scratch108/pathogen/pathpipe/kraken/assemblyqc_fluhiv_20150728" );
+has 'db'               => ( is => 'ro', isa => 'Str', required => 0, default => "/lustre/scratch118/pathogen/pathpipe/kraken/assemblyqc_fluhiv_20150728" );
 has 'forward_reads'    => ( is => 'ro', isa => 'Str', required => 1 ); 
 has 'reverse_reads'    => ( is => 'ro', isa => 'Str', required => 1 ); 
 has 'assembly'         => ( is => 'ro', isa => 'Str', required => 1 ); 
