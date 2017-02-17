@@ -35,6 +35,8 @@ is_deeply(
     'unzipped contigs file the same location'
 );
 
+is($process_input_files->number_of_sequences, 3, 'number of sequences counted correctly');
+
 
 ok(
     (
@@ -96,5 +98,6 @@ is($forward_filename_post_unzip, 'forward.fastq', 'correct unzipped filename');
 
 my $reverse_filename_post_unzip = fileparse($process_input_files->processed_input_files->[1] );
 is($reverse_filename_post_unzip, 'reverse.fastq', 'correct unzipped filename');
+
 
 done_testing();
