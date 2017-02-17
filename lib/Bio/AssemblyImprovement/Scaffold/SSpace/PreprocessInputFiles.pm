@@ -29,6 +29,7 @@ Process the input FASTA file and return its location.
 use Moose;
 use Cwd 'abs_path';
 use File::Basename;
+use Bio::SeqIO;
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Bio::AssemblyImprovement::Util::FastaTools;
 
@@ -47,7 +48,18 @@ has 'processed_input_assembly' => ( is => 'ro', isa => 'Str',        lazy => 1, 
 has 'processed_input_files'    => ( is => 'ro', isa => 'Maybe[ArrayRef]',   lazy => 1, builder => '_build_processed_input_files' );
 has 'processed_reference'      => ( is => 'ro', isa => 'Maybe[Str]', lazy => 1, builder => '_build_processed_reference' );
 
-
+# get the sum total of all sequences in all input files
+sub number_of_sequences
+{
+    my ($self) = @_;
+    my $counter = 0;
+    my $in = Bio::SeqIO->new( -file => $self->input_assembly, '-format' => 'Fasta');
+    while ( my $seq = $in->next_seq() ) 
+    {
+        $counter++;
+    }
+    return $counter;
+}
 
 sub _build_processed_input_files {
     my ($self) = @_;
