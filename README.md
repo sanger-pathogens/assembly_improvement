@@ -1,12 +1,52 @@
-#Assembly Improvement
+# Assembly Improvement
 
 Take in an assembly in FASTA format, reads in FASTQ format, and make the assembly better by scaffolding and gap filling. 
 
 [![Build Status](https://travis-ci.org/sanger-pathogens/assembly_improvement.svg?branch=master)](https://travis-ci.org/sanger-pathogens/assembly_improvement)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/sanger-pathogens/assembly_improvement/blob/master/software-license)
 
-Instructions for installing the software can be found in INSTALL.md.
+## Contents
+  * [Introduction](#introduction)
+  * [Installation](#installation)
+    * [Required external dependancies](#required-external-dependancies)
+    * [Optional external dependancies](#optional-external-dependancies)
+  * [Usage](#usage)
+    * [improve\_assembly](#improve_assembly)
+    * [descaffold\_assembly](#descaffold_assembly)
+    * [diginorm\_with\_khmer](#diginorm_with_khmer)
+    * [fastq\_tools](#fastq_tools)
+    * [fill\_gaps\_with\_gapfiller](#fill_gaps_with_gapfiller)
+    * [order\_contigs\_with\_abacas](#order_contigs_with_abacas)
+    * [read\_correction\_with\_sga](#read_correction_with_sga)
+    * [remove\_primers\_with\_quasr](#remove_primers_with_quasr)
+    * [rename\_contigs](#rename_contigs)
+    * [scaffold\_with\_sspace](#scaffold_with_sspace)
+  * [License](#license)
+  * [Feedback/Issues](#feedbackissues)
 
-## improve_assembly
+## Introduction
+This software takes an assembly in FASTA format along with reads in FATSQ format and improves the assembly by scaffolding and gap filling. The software contains several separate scripts, including improve_assembly, descaffold_assembly, diginorm_with_khmer, fastq_tools, order_contigs_with_abacas, read_correction_with_sga, remove_primers_with_quasr, rename_contigs and scaffold_with_sspace. For more information on what each scrips does, please see the usage below.
+
+## Installation
+
+### Required external dependancies
+ * SSPACE and GapFiller - This is used by the improve_assembly, fill_gaps_with_gapfiller, and scaffold_with_sspace scripts. Download SSPACE-standard and GapFiller from [Baseclear](http://www.baseclear.com/genomics/bioinformatics/basetools/SSPACE). The software is free for academic use.
+
+### Optional external dependancies
+ * khmer - This is used for the diginorm_with_khmer script and can be downloaded and installed from the [khmer github repository](https://github.com/dib-lab/khmer). It requires python 2.7.
+ * MUMmer - This is used by ABACAS for reference based scaffolding as part of the improve_assembly and order_contigs_with_abacas scripts. It is widely available from package management systems such as HomeBrew/LinuxBrew and apt (Debian/Ubuntu) and the homepage is on [sourceforge](http://mummer.sourceforge.net/).
+ * SGA - This is used by the read_correction_with_sga script and can be downloaded from the [SGA github repository](https://github.com/jts/sga). It is widely available from package management systems such as HomeBrew/LinuxBrew and apt (Debian/Ubuntu).
+ * QUASR - This is used by the remove_primers_with_quasr script. It requires JAVA and can be downloaded from the [QUASR github repository](https://github.com/sanger-pathogens/QUASR).
+
+The software and its Perl dependancies can be downloaded from CPAN. It requires Perl 5.14 or greater.
+
+```cpanm -f Bio::AssemblyImprovement```
+
+If you encounter an issue when installing assembly_improvement please contact your local system administrator. If you encounter a bug please log it [here](https://github.com/sanger-pathogens/assembly_improvement/issues) or email us at path-help@sanger.ac.uk
+
+## Usage
+
+### improve_assembly
 The improve_assembly script is the main script for the repository. The usage is:
 
 ```
@@ -61,12 +101,12 @@ The output directory for the results can be set using -o.
 ```improve_assembly -a contigs.fa -f 123_1.fastq -r 123_2.fastq -o my_directory```
 
 
-## descaffold_assembly
+### descaffold_assembly
 Given a FASTA file, break up each sequence where there is a gap.
 
 ```Usage: descaffold_assembly -a <FASTA>```
 
-## diginorm_with_khmer
+### diginorm_with_khmer
 A wrapper script around the khmer normalize-by-median.py script. This is useful where you have uneven coverage. For example in certain virus sequencing experiments, there can be 10,000X coverage however different parts of the genome may have been amplified so the actual coverage can have massive peaks and troughs.  
 
 ```
@@ -87,7 +127,7 @@ Options:
     -h        print this message and exit
 ```
 
-## fastq_tools
+### fastq_tools
 This script has some useful utilities for analysing a shuffled paired ended FASTQ file. We know they are available in other applications but to minimise dependancies we reimplemented them and have exposed them here for completeness sake.
 
 ```
@@ -117,7 +157,7 @@ To produce a histogram (histogram.png) of the read lengths found in the FASTQ fi
 
 ```fastq_tools -i input.fastq -t histogram```
 
-## fill_gaps_with_gapfiller
+### fill_gaps_with_gapfiller
 Given an assembly in FASTA format and paired ended reads in FASTQ format, iteratively fill in gaps with GapFiller. Initially a high level of read coverage is required to close a gap, which decreases with subsequent iterations. The means that bases with the highest level of evidence are filled in first, reducing the possiblity of errors.
 
 ```
@@ -137,7 +177,7 @@ Options:
 
 ```
 
-## order_contigs_with_abacas
+### order_contigs_with_abacas
 A wrapper script around ABACAS for ordering contigs against a reference.
 
 ```
@@ -152,7 +192,7 @@ Options:
     -h      print this message and exit
 ```
 
-## read_correction_with_sga
+### read_correction_with_sga
 A wrapper script around SGA read correction which sets some common defaults.
 
 ```
@@ -175,10 +215,10 @@ Options:
     -d      debug output []
 ```
 
-## remove_primers_with_quasr
+### remove_primers_with_quasr
 A wrapper script around QUASR.
 
-## rename_contigs
+### rename_contigs
 Rename all sequences in a FASTA file with a common base name and a sequential number.
 
 ```
@@ -191,7 +231,7 @@ Options:
     -h      print this message and exit
 ```
 
-## scaffold_with_sspace
+### scaffold_with_sspace
 A script to iteratively run scaffold an assembly using paired ended reads using SSPACE. Multiple iterations of scaffolding are run, begining where there is the highest level of read pair evidence linking together 2 contigs. It then outputs the scaffolded assembly in FASTA format.
 
 ```
@@ -209,3 +249,8 @@ Options:
     -d      debug output []
     -h      print this message and exit
 ```
+## License
+assembly_improvement is free software, licensed under [GPLv3](https://github.com/sanger-pathogens/assembly_improvement/blob/master/software-license).
+
+## Feedback/Issues
+Please report any issues to the [issues page](https://github.com/sanger-pathogens/assembly_improvement/issues) or email path-help@sanger.ac.uk
