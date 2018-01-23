@@ -4,6 +4,7 @@ Take in an assembly in FASTA format, reads in FASTQ format, and make the assembl
 
 [![Build Status](https://travis-ci.org/sanger-pathogens/assembly_improvement.svg?branch=master)](https://travis-ci.org/sanger-pathogens/assembly_improvement)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/sanger-pathogens/assembly_improvement/blob/master/software-license)
+[![status](https://img.shields.io/badge/MGEN-10.1099%2Fmgen.0.000083-brightgreen.svg)](http://mgen.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000083)
 
 ## Contents
   * [Introduction](#introduction)
@@ -23,6 +24,7 @@ Take in an assembly in FASTA format, reads in FASTQ format, and make the assembl
     * [scaffold\_with\_sspace](#scaffold_with_sspace)
   * [License](#license)
   * [Feedback/Issues](#feedbackissues)
+  * [Citation](#citation)
 
 ## Introduction
 This software takes an assembly in FASTA format along with reads in FATSQ format and improves the assembly by scaffolding and gap filling. The software contains several separate scripts, including improve_assembly, descaffold_assembly, diginorm_with_khmer, fastq_tools, order_contigs_with_abacas, read_correction_with_sga, remove_primers_with_quasr, rename_contigs and scaffold_with_sspace. For more information on what each scrips does, please see the usage below.
@@ -254,3 +256,10 @@ assembly_improvement is free software, licensed under [GPLv3](https://github.com
 
 ## Feedback/Issues
 Please report any issues to the [issues page](https://github.com/sanger-pathogens/assembly_improvement/issues) or email path-help@sanger.ac.uk
+
+## Citation
+If you use this software please cite:
+
+   "Robust high throughput prokaryote de novo assembly and improvement pipeline for Illumina data",
+   Page AJ, De Silva, N., Hunt M, Quail MA, Parkhill J, Harris SR, Otto TD, Keane JA,
+   Microbial Genomics, 2016. doi: [10.1099/mgen.0.000083](http://mgen.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000083)
