@@ -2,15 +2,16 @@
 
 Take in an assembly in FASTA format, reads in FASTQ format, and make the assembly better by scaffolding and gap filling. 
 
-[![Build Status](https://travis-ci.org/sanger-pathogens/assembly_improvement.svg?branch=master)](https://travis-ci.org/sanger-pathogens/assembly_improvement)
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/sanger-pathogens/assembly_improvement/blob/master/software-license)
-[![status](https://img.shields.io/badge/MGEN-10.1099%2Fmgen.0.000083-brightgreen.svg)](http://mgen.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000083)
+[![Build Status](https://travis-ci.org/sanger-pathogens/assembly_improvement.svg?branch=master)](https://travis-ci.org/sanger-pathogens/assembly_improvement)   
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/sanger-pathogens/assembly_improvement/blob/master/software-license)   
+[![status](https://img.shields.io/badge/MGEN-10.1099%2Fmgen.0.000083-brightgreen.svg)](http://mgen.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000083)   
 
 ## Contents
   * [Introduction](#introduction)
   * [Installation](#installation)
     * [Required external dependancies](#required-external-dependancies)
     * [Optional external dependancies](#optional-external-dependancies)
+    * [Running the tests](#running-the-tests)
   * [Usage](#usage)
     * [improve\_assembly](#improve_assembly)
     * [descaffold\_assembly](#descaffold_assembly)
@@ -45,6 +46,11 @@ The software and its Perl dependancies can be downloaded from CPAN. It requires 
 ```cpanm -f Bio::AssemblyImprovement```
 
 If you encounter an issue when installing assembly_improvement please contact your local system administrator. If you encounter a bug please log it [here](https://github.com/sanger-pathogens/assembly_improvement/issues) or email us at path-help@sanger.ac.uk
+
+### Running the tests
+The test can be run with dzil from the top level directory:  
+  
+`dzil test`  
 
 ## Usage
 
