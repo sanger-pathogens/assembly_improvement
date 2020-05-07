@@ -1,13 +1,43 @@
+dist: bionic
 language: perl
+os: linux
+if: tag IS blank AND env(GITHUB_OAUTH_TOKEN) IS present AND type IN (push, pull_request)
+branches:
+  only:
+  - master
 addons:
   apt:
     packages:
+    - build-essential
     - libssl-dev
-perl:
-  - "5.14"
-sudo: false
+    - libz-dev
+    - libexpat1-dev
+    - cpanminus
+cache:
+  directories:
+  - perl_modules
+before_install:
+- cpanm local::lib
+- eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+- cpanm --notest Dist::Zilla
 install:
-  - "cpanm Dist::Zilla"
-  - "dzil authordeps --missing | cpanm"
-  - "cpanm Bio::SeqIO Test::File::Contents Statistics::Lite File::Slurper"
-script: "dzil test"
+- git config --local user.name "Pathogen Informatics CI"
+- git config --local user.email "pathdev@sanger.ac.uk"
+- export UUID=$(cat /proc/sys/kernel/random/uuid)
+- git checkout -b $UUID
+- export TIMESTAMP_VERSION=$(date -u '+%Y.%m.%d.%H.%M.%S.%3N')
+- export TRAVIS_TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "v${TIMESTAMP_VERSION}"; else echo "$TRAVIS_BRANCH-${TIMESTAMP_VERSION}"; fi)
+- sed -i 's:^version = .*$:version = '"$TIMESTAMP_VERSION"':g' dist.ini
+- git commit -am "Updated the version number to $TIMESTAMP_VERSION"
+- git tag $TRAVIS_TAG
+- if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git push -q "https://${GITHUB_OAUTH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}" $TRAVIS_TAG; fi
+- dzil authordeps --missing | cpanm --notest
+- dzil listdeps --missing | cpanm --notest
+script:
+- dzil build
+deploy:
+  provider: releases
+  api_key: "$GITHUB_OAUTH_TOKEN"
+  file_glob: true
+  file: "*.tar.gz"
+  skip_cleanup: true
