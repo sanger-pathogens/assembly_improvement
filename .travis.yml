@@ -12,6 +12,7 @@ addons:
     - libssl-dev
     - libz-dev
     - libexpat1-dev
+    - libdb-dev
     - cpanminus
 cache:
   directories:
