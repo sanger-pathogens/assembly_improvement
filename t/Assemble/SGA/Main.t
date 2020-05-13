@@ -5,8 +5,6 @@ use File::Basename;
 use Cwd;
 use Cwd qw(abs_path);
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::Assemble::SGA::Main');

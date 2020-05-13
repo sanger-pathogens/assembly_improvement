@@ -6,8 +6,6 @@ use Cwd 'abs_path';
 use File::Path qw(make_path remove_tree);
 use File::Slurper qw(read_text);
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::Abacas::Main');

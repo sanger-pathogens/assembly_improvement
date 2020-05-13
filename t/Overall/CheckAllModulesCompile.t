@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-BEGIN { unshift(@INC, './lib') }
 BEGIN {
     use Test::Most;
     my @all_modules;

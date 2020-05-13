@@ -3,8 +3,6 @@ use strict;
 use warnings;
 use File::Temp;
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::Scaffold::SSpace::Config');

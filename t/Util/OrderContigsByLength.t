@@ -4,8 +4,6 @@ use warnings;
 use File::Temp;
 use File::Copy;
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use Test::File::Contents;

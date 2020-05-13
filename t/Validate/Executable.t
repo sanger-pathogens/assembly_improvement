@@ -5,8 +5,6 @@ use Cwd;
 use File::Spec;
 use File::Which;
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::Validate::Executable');

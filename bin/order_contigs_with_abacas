@@ -13,7 +13,6 @@ Given an assembly and a reference, order the contigs.
    
 =cut
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use Cwd;

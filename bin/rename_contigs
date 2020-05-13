@@ -12,7 +12,6 @@ Given an assembly, rename the contigs iteratively
 =cut
 
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs;

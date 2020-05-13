@@ -38,7 +38,7 @@ script:
 - dzil build
 deploy:
   provider: releases
-  api_key: "$GITHUB_OAUTH_TOKEN"
+  token: "$GITHUB_OAUTH_TOKEN"
   file_glob: true
   file: "*.tar.gz"
   skip_cleanup: true

@@ -5,8 +5,6 @@ use File::Temp;
 use File::Copy;
 use File::Slurper qw(read_text);
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::PrepareForSubmission::RenameContigs');

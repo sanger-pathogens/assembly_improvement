@@ -45,7 +45,6 @@ read_correction_with_sga -h
 =cut
 
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use Cwd;

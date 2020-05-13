@@ -25,7 +25,6 @@ Usage: diginorm_with_khmer [options]
 =cut
 
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use Cwd;

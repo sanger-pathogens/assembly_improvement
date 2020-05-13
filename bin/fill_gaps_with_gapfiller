@@ -24,7 +24,6 @@ Given an assembly and some reads in fastq format, try and fill in the gaps. Do m
    
 =cut
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use File::Path 2.07 qw(make_path);

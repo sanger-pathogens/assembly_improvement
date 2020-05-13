@@ -4,8 +4,6 @@ use warnings;
 use Cwd;
 use File::Path qw(make_path remove_tree);
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::Scaffold::SSpace::Iterative');
