@@ -15,7 +15,7 @@ addons:
     - libdb-dev
     - cpanminus
     - python
-    - openjdk-14-jdk
+    - openjdk-11-jdk
 cache:
   directories:
   - perl_modules
