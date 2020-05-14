@@ -4,8 +4,6 @@ use warnings;
 use Cwd;
 use Cwd qw(abs_path);
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::PrimerRemoval::Main');

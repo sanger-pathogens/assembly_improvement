@@ -27,7 +27,6 @@ Given an assembly, some reads and optionally a reference, reduce the number of c
 =cut
 
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use File::Copy;

@@ -28,7 +28,6 @@ remove_primers_with_quasr -f forward.fastq -r reverse.fastq -p /path/to/primers.
    
 =cut
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use Cwd;

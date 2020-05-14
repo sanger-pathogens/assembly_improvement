@@ -8,7 +8,6 @@ package Bio::AssemblyImprovement::Bin::FastqTools;
 =cut
 
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use Switch;

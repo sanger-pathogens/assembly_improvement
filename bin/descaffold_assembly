@@ -12,7 +12,6 @@ Given an assembly in FASTA format, output a descaffolded assembly.
 =cut
 
 
-BEGIN { unshift( @INC, '../lib' ) }
 use Moose;
 use Getopt::Long;
 use Bio::AssemblyImprovement::Scaffold::Descaffold;

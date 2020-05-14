@@ -5,8 +5,6 @@ use Cwd;
 use File::Path qw( rmtree );
 use File::Slurper qw(read_text);
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::Circlator::Main');

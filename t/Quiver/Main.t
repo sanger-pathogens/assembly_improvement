@@ -4,8 +4,6 @@ use warnings;
 use Cwd;
 use File::Path qw( rmtree );
 
-BEGIN { unshift( @INC, './lib' ) }
-
 BEGIN {
     use Test::Most;
     use_ok('Bio::AssemblyImprovement::Quiver::Main');
