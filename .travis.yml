@@ -14,6 +14,8 @@ addons:
     - libexpat1-dev
     - libdb-dev
     - cpanminus
+    - python
+    - openjdk-14-jdk
 cache:
   directories:
   - perl_modules
@@ -35,6 +37,7 @@ install:
 - dzil authordeps --missing | cpanm --notest
 - dzil listdeps --missing | cpanm --notest
 script:
+- dzil test
 - dzil build
 deploy:
   provider: releases
