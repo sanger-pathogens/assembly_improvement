@@ -118,7 +118,7 @@ $min_perc_to_not_filter_final_contigs ||= 95;
 
 #Default executables
 my $scaffolder_default = '/software/pathogen/external/apps/usr/local/SSPACE-BASIC-2.0_linux-x86_64/SSPACE_Basic_v2.0.pl';
-my $gapfiller_default  = '/software/pathogen/external/apps/usr/local/GapFiller_v1-10_linux-x86_64/GapFiller.pl';
+my $gapfiller_default  = '/software/pathogen/external/apps/usr/local/GapFiller_v1-11_linux-x86_64/GapFiller.pl';
 my $abacas_default     = '/software/pathogen/internal/prod/bin/abacas.pl';
 
 # If executables not specified or do not exist, use the default
