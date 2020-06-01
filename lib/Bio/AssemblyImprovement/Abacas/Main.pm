@@ -53,7 +53,6 @@ sub _intermediate_file_name {
     
     my $input_assembly_filename = fileparse( $self->input_assembly);
     my $reference_filename = fileparse( $self->reference);
-    $input_assembly_filename.'_'.$reference_filename.'.fasta';
     return join( '/', ( $self->_temp_directory, $input_assembly_filename.'_'.$reference_filename.'.fasta' ) );
 }
 
