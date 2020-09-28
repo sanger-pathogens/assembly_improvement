@@ -1,7 +1,7 @@
 dist: bionic
 language: perl
 os: linux
-if: tag IS blank AND env(GITHUB_OAUTH_TOKEN) IS present AND type IN (push, pull_request)
+if: tag IS blank AND env(GITHUB_OAUTH_TOKEN) IS present AND type IN (push, pull_request, cron)
 branches:
   only:
   - master
